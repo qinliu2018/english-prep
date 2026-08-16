@@ -272,7 +272,7 @@
   }
 
   /* ---------------- 测一测 ---------------- */
-  const ABSTRACT_EMOJI = /[❓➕👉⏰🍽🙋🌈🤔🚫✅❌🎨🔤]/; // 太抽象的表情不用于"看图选词"
+  const ABSTRACT_EMOJI = /[❓➕👉⏰🍽🙋🌈🤔🚫✅❌🎨🔤📝🔢👌😮🤲🙇💬🛠️🩺🎁🙌]/; // 太抽象的表情不用于"看图选词"
   function buildQuestions(pool, distract) {
     return shuffle(pool).slice(0, Math.min(10, pool.length)).map(w => {
       const others = shuffle(distract.filter(x => x.en !== w.en && x.zh !== w.zh)).slice(0, 3);
