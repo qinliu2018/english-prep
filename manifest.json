@@ -1,0 +1,11 @@
+{
+  "name": "英语预习小助手",
+  "short_name": "英语预习",
+  "description": "苏教版小学英语课前预习小工具",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#dff3ff",
+  "theme_color": "#ff9f1c"
+}
