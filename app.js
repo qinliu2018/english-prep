@@ -35,13 +35,23 @@
   if (TTS_OK) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
   function speak(text, rate) {
     if (!TTS_OK) return;
+    const doSpeak = () => {
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        if (VOICE) u.voice = VOICE;
+        u.rate = rate || 0.9;
+        speechSynthesis.speak(u);
+      } catch (e) {}
+    };
     try {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US';
-      if (VOICE) u.voice = VOICE;
-      u.rate = rate || 0.9;
-      speechSynthesis.speak(u);
+      // 有语音正在播/排队时，先 cancel 再延时播，避免 Chrome 下新语音被吞掉
+      if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+        setTimeout(doSpeak, 80);
+      } else {
+        doSpeak();
+      }
     } catch (e) {}
   }
   /* iOS 需要在用户手势里先"解锁"一次语音 */
@@ -180,15 +190,20 @@
       <div class="row">
         <button class="round" id="prev" ${i === 0 ? 'disabled' : ''}>⬅️</button>
         <button class="btn" id="say">🔊 听</button>
-        <button class="btn alt" id="slow">🐢 慢</button>
+        <button class="btn alt${slowMode ? ' on2' : ''}" id="slow">${slowMode ? '🐢 慢速中' : '🐢 慢速'}</button>
         <button class="round" id="next" ${i === ws.length - 1 ? 'disabled' : ''}>➡️</button>
       </div>
       <button class="btn ghost big" id="auto">▶️ 从这张卡连播</button>`;
-    speak(w.en);
-    $('#wcard').addEventListener('click', () => { stopAuto(); speak(w.en); });
-    const ex = $('#exBtn'); if (ex) ex.addEventListener('click', e => { e.stopPropagation(); stopAuto(); speak(w.ex, 0.85); });
-    $('#say').addEventListener('click', () => { stopAuto(); speak(w.en); });
-    $('#slow').addEventListener('click', () => { stopAuto(); speak(w.en, 0.6); });
+    speak(w.en, playRate());
+    $('#wcard').addEventListener('click', () => { stopAuto(); speak(w.en, playRate()); });
+    const ex = $('#exBtn'); if (ex) ex.addEventListener('click', e => { e.stopPropagation(); stopAuto(); speak(w.ex, playRate()); });
+    $('#say').addEventListener('click', () => { stopAuto(); speak(w.en, playRate()); });
+    $('#slow').addEventListener('click', () => {
+      slowMode = !slowMode;
+      store.set('slow', slowMode);
+      stopAuto();
+      renderWords(); // 重新渲染按钮状态，并立即用新语速朗读一遍
+    });
     $('#prev').addEventListener('click', () => { stopAuto(); view.wi = i - 1; renderWords(); });
     $('#next').addEventListener('click', () => { stopAuto(); view.wi = i + 1; renderWords(); });
     $('#auto').addEventListener('click', autoPlay);
@@ -207,7 +222,9 @@
   }
 
   /* ---------------- 课文跟读 ---------------- */
-  let showZh = false, slowMode = false;
+  let showZh = false;
+  let slowMode = store.get('slow', false); // 慢速模式：全局记忆，下次打开仍然生效
+  const playRate = () => slowMode ? 0.5 : 0.9;
   function renderSents() {
     const ss = book(view.book).units[view.unit].sentences || [];
     $('#tabbody').innerHTML = `
@@ -223,9 +240,9 @@
       </div>
       <button class="btn big" id="follow">🎙 跟读模式</button>
       <div class="tip">点句子单独听 · 跟读模式：播放一句 → 停 5 秒等你读 → 自动下一句</div>`;
-    const rate = slowMode ? 0.65 : 0.85;
+    const rate = playRate();
     $('#zhBtn').addEventListener('click', () => { showZh = !showZh; renderSents(); });
-    $('#slowBtn').addEventListener('click', () => { slowMode = !slowMode; renderSents(); });
+    $('#slowBtn').addEventListener('click', () => { slowMode = !slowMode; store.set('slow', slowMode); renderSents(); });
     $all('[data-play]', $('#tabbody')).forEach(el => el.addEventListener('click', e => {
       e.stopPropagation(); speak(ss[+el.dataset.play].en, rate);
     }));
@@ -240,7 +257,7 @@
   function followMode() {
     const ss = book(view.book).units[view.unit].sentences || [];
     if (!ss.length) { following = false; return; }
-    const rate = slowMode ? 0.65 : 0.85;
+    const rate = playRate();
     const tok = autoToken;
     const rows = $all('.sent', $('#tabbody'));
     const btn = $('#follow');
@@ -323,8 +340,8 @@
       else go('unit', { book: view.book, unit: view.unit, tab: 'words', wi: 0 });
     });
     if (q.type === 'listen') {
-      $('#qplay').addEventListener('click', () => speak(q.w.en, 0.8));
-      setTimeout(() => speak(q.w.en, 0.8), 350);
+      $('#qplay').addEventListener('click', () => speak(q.w.en, playRate()));
+      setTimeout(() => speak(q.w.en, playRate()), 350);
     }
     $all('.opt').forEach(el => el.addEventListener('click', () => answer(+el.dataset.j)));
   }
@@ -339,7 +356,7 @@
     if (right) view.ok++;
     else {
       els[j].classList.add('wrong');
-      speak(q.w.en, 0.8); // 把正确答案读一遍
+      speak(q.w.en, playRate()); // 把正确答案读一遍
       view.wr.push(q.w);
       addWrong(q.w);
     }
@@ -373,7 +390,7 @@
       if (view.book === 'wrong') go('wrong');
       else go('unit', { book: view.book, unit: view.unit, tab: 'words', wi: 0 });
     });
-    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, 0.8)));
+    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
   }
 
   /* ---------------- 错题本 ---------------- */
@@ -405,7 +422,7 @@
         <button class="btn big" id="wquiz">🎯 错题重练（答对一次就移出）</button>` : `
         <div class="card empty">错题本空空的，太棒了！🎉</div>`}`;
     $('#bk').addEventListener('click', () => go('home'));
-    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, 0.8)));
+    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
     const wq = $('#wquiz'); if (wq) wq.addEventListener('click', () => go('quiz', { book: 'wrong' }));
   }
 
