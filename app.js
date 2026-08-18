@@ -92,6 +92,11 @@
     else if (view.name === 'unit') renderUnit();
     else if (view.name === 'quiz') renderQuiz();
     else if (view.name === 'wrong') renderWrong();
+    else if (view.name === 'homework') renderHomework();
+    else if (view.name === 'report') renderReport();
+    else if (view.name === 'dictation') renderDictation();
+    else if (view.name === 'spell') renderSpellGame();
+    else if (view.name === 'trace') renderTrace();
   }
 
   /* ---------------- 数据 ---------------- */
@@ -103,32 +108,127 @@
   }
   const dedupeByEn = arr => { const seen = new Set(); return arr.filter(w => !seen.has(w.en) && seen.add(w.en)); };
 
+  /* ---------------- 作业与学习记录 ---------------- */
+  const hwKey = () => 'hw_' + dayKey(0);
+  const dailyKey = () => 'daily_' + dayKey(0);
+  function logActivity(type) {
+    const d = store.get(dailyKey(), { quiz: 0, dictation: 0, spell: 0, trace: 0 });
+    d[type] = (d[type] || 0) + 1;
+    store.set(dailyKey(), d);
+  }
+  const homeworkList = () => (typeof HOMEWORK !== 'undefined' ? HOMEWORK : []);
+  function getHomework() {
+    const done = store.get(hwKey(), {});
+    return homeworkList().map(t => Object.assign({}, t, { done: !!done[t.id] }));
+  }
+  function toggleHomework(id) {
+    const done = store.get(hwKey(), {});
+    done[id] = !done[id];
+    store.set(hwKey(), done);
+  }
+  function markHomeworkDone(id) {
+    const done = store.get(hwKey(), {});
+    done[id] = true;
+    store.set(hwKey(), done);
+  }
+  function autoMarkHomework(book, unit, action) {
+    const idx = typeof unit === 'number' ? unit : -1;
+    homeworkList().forEach(t => {
+      if (t.book === book && (idx < 0 || t.unit === idx) && t.action === action) markHomeworkDone(t.id);
+    });
+  }
+  function homeworkProgress() {
+    const list = getHomework();
+    if (!list.length) return { done: 0, total: 0 };
+    const done = list.filter(t => t.done).length;
+    return { done, total: list.length };
+  }
+
+  /* ---------------- 学习报告数据 ---------------- */
+  function reportStats() {
+    let totalUnits = 0, tested = 0, mastered = 0, starsSum = 0;
+    BOOKS.forEach(b => {
+      if (!b.ready) return;
+      b.units.forEach((u, i) => {
+        if (!u.words || !u.words.length) return;
+        totalUnits++;
+        const s = store.get('stars_' + b.id + '_' + i, 0);
+        if (s) { tested++; starsSum += s; if (s === 3) mastered++; }
+      });
+    });
+    return { totalUnits, tested, mastered, starsSum, wrong: store.get('wrong', []).length, streak: streakDays() };
+  }
+  function weekActivity() {
+    const arr = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = store.get('daily_' + dayKey(i), { quiz: 0, dictation: 0, spell: 0, trace: 0 });
+      arr.push({ date: dayKey(i), total: (d.quiz || 0) + (d.dictation || 0) + (d.spell || 0) + (d.trace || 0) });
+    }
+    return arr;
+  }
+  function normalizeAns(s) {
+    return String(s || '').toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9'\-\s]/g, '').trim().replace(/\s+/g, ' ');
+  }
+
   /* ---------------- 首页 ---------------- */
   function renderHome() {
     const days = streakDays();
     const wrong = store.get('wrong', []);
+    const hw = homeworkProgress();
+    const firstReady = BOOKS.find(b => b.ready);
     app.innerHTML = `
       <div class="topbar"><div></div><div class="title">📘 英语预习小助手</div><div class="streak">🔥${days}天</div></div>
       ${TTS_OK ? '' : '<div class="warn">⚠️ 当前浏览器不支持发音，请用 Edge / Chrome / Safari 打开</div>'}
+      ${hw.total ? `
+        <div class="card hwcard" id="hwCard">
+          <div class="hwinfo">
+            <div class="hwtit">📋 今日作业</div>
+            <div class="hwsub">${hw.done === hw.total ? '全部完成！太棒了' : '还有 ' + (hw.total - hw.done) + ' 项未完成'}</div>
+          </div>
+          <div class="hwprog">${hw.done}/${hw.total}</div>
+        </div>` : ''}
       <div class="grid">${BOOKS.map(b => `
         <button class="book${b.ready ? '' : ' lock'}" data-book="${b.id}">
           <div>${esc(b.name)}</div>
           <div class="bsub">${b.ready ? '✅ 已录入' : '待录入'}</div>
         </button>`).join('')}
       </div>
+      <div class="section-title">工具</div>
+      <div class="tools">
+        <button class="tool primary" id="toolHw"><span class="ticon">📋</span>作业本</button>
+        <button class="tool alt" id="toolReport"><span class="ticon">📊</span>学习报告</button>
+        <button class="tool" id="toolDict"${firstReady ? '' : ' disabled'}><span class="ticon">✍️</span>听写</button>
+        <button class="tool" id="toolSpell"${firstReady ? '' : ' disabled'}><span class="ticon">🎮</span>拼词</button>
+        <button class="tool" id="toolTrace"${firstReady ? '' : ' disabled'}><span class="ticon">✏️</span>书写</button>
+      </div>
       ${wrong.length ? `<button class="btn wrongbtn" id="wrongBtn">📒 错题本（${wrong.length} 个词）</button>` : ''}
       <div class="tip">点单词卡、课文句子即可发音<br>在微信里打开若没有声音，请点右上角「···」→ 在浏览器打开</div>`;
     $all('.book').forEach(el => el.addEventListener('click', () => go('units', { book: el.dataset.book })));
     const wb = $('#wrongBtn'); if (wb) wb.addEventListener('click', () => go('wrong'));
+    const hwc = $('#hwCard'); if (hwc) hwc.addEventListener('click', () => go('homework'));
+    $('#toolHw').addEventListener('click', () => go('homework'));
+    $('#toolReport').addEventListener('click', () => go('report'));
+    if (firstReady) {
+      $('#toolDict').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'dictation' }));
+      $('#toolSpell').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'spell' }));
+      $('#toolTrace').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'trace' }));
+    }
   }
 
   /* ---------------- 单元列表 ---------------- */
   function renderUnits() {
     const b = book(view.book); if (!b) return go('home');
+    const mode = view.mode || '';
+    const modeNames = { dictation: '听写', spell: '拼词游戏', trace: '书写练习' };
     app.innerHTML = `
       <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">${esc(b.name)}</div><div></div></div>
+      ${mode ? `<div class="card" style="padding:12px 16px;font-size:14px;color:#666;text-align:center;margin-bottom:12px;">请选择一课开始${esc(modeNames[mode] || mode)}</div>` : ''}
+      ${!mode && b.units.some(u => u.words && u.words.length) ? `
+        <div class="actbar">
+          <button class="btn" id="bookQuiz">🎯 全册总测</button>
+        </div>` : ''}
       <div class="list">${b.units.map((u, i) => {
-        const st = store.get(`stars_${b.id}_${i}`, 0);
+        const st = store.get('stars_' + b.id + '_' + i, 0);
         return `<button class="unit" data-i="${i}">
           <span>${esc(u.title)}</span>
           <span class="stars">${st ? '⭐'.repeat(st) + '☆'.repeat(3 - st) : '未测试'}</span>
@@ -136,8 +236,15 @@
       }).join('')}
       </div>`;
     $('#bk').addEventListener('click', () => go('home'));
-    $all('.unit').forEach(el => el.addEventListener('click', () =>
-      go('unit', { book: b.id, unit: +el.dataset.i, tab: 'words', wi: 0 })));
+    const bq = $('#bookQuiz');
+    if (bq) bq.addEventListener('click', () => go('quiz', { book: b.id, unit: 'all' }));
+    $all('.unit').forEach(el => el.addEventListener('click', () => {
+      const i = +el.dataset.i;
+      if (mode === 'dictation') go('dictation', { book: b.id, unit: i });
+      else if (mode === 'spell') go('spell', { book: b.id, unit: i });
+      else if (mode === 'trace') go('trace', { book: b.id, unit: i });
+      else go('unit', { book: b.id, unit: i, tab: 'words', wi: 0 });
+    }));
   }
 
   /* ---------------- 单元页（单词卡 / 课文跟读 两个标签） ---------------- */
@@ -145,7 +252,7 @@
     const b = book(view.book);
     const u = b.units[view.unit];
     const tab = view.tab || 'words';
-    const st = store.get(`stars_${b.id}_${view.unit}`, 0);
+    const st = store.get('stars_' + b.id + '_' + view.unit, 0);
     const hasWords = !!(u.words && u.words.length);
     const hasSents = !!(u.sentences && u.sentences.length);
     app.innerHTML = `
@@ -157,7 +264,13 @@
           <button class="tab${tab === 'sent' ? ' on' : ''}" data-t="sent" ${hasSents ? '' : 'disabled'}>📖 课文跟读</button>
         </div>
         <div id="tabbody"></div>
-        ${hasWords ? '<button class="btn big" id="quizBtn">🎯 测一测</button>' : ''}
+        ${hasWords ? `
+          <button class="btn big" id="quizBtn">🎯 测一测</button>
+          <div class="row" style="margin-top:4px;">
+            <button class="btn ghost small" id="dictBtn">✍️ 听写</button>
+            <button class="btn ghost small" id="spellBtn">🎮 拼词</button>
+            <button class="btn ghost small" id="traceBtn">✏️ 书写</button>
+          </div>` : ''}
       ` : `
         <div class="card empty">这一课的内容还没录入。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>照着《三年级上册》的格式添加就行 🙂</div>
       `}`;
@@ -167,6 +280,9 @@
       view.tab = el.dataset.t; stopAuto(); render();
     }));
     const qb = $('#quizBtn'); if (qb) qb.addEventListener('click', () => go('quiz', { book: b.id, unit: view.unit }));
+    const dict = $('#dictBtn'); if (dict) dict.addEventListener('click', () => go('dictation', { book: b.id, unit: view.unit }));
+    const spell = $('#spellBtn'); if (spell) spell.addEventListener('click', () => go('spell', { book: b.id, unit: view.unit }));
+    const trace = $('#traceBtn'); if (trace) trace.addEventListener('click', () => go('trace', { book: b.id, unit: view.unit }));
     if (hasWords || hasSents) {
       if (tab === 'words' && hasWords) renderWords(); else if (hasSents) renderSents();
     }
@@ -190,7 +306,7 @@
       <div class="row">
         <button class="round" id="prev" ${i === 0 ? 'disabled' : ''}>⬅️</button>
         <button class="btn" id="say">🔊 听</button>
-        <button class="btn alt${slowMode ? ' on2' : ''}" id="slow">${slowMode ? '🐢 慢速中' : '🐢 慢速'}</button>
+        <button class="btn${slowMode ? ' alt' : ' ghost'}" id="slow">${slowMode ? '🐢 慢速中' : '🐢 慢速'}</button>
         <button class="round" id="next" ${i === ws.length - 1 ? 'disabled' : ''}>➡️</button>
       </div>
       <button class="btn ghost big" id="auto">▶️ 从这张卡连播</button>`;
@@ -304,9 +420,19 @@
       const pool = store.get('wrong', []).map(w => ({ en: w.en, zh: w.zh, emoji: w.emoji }));
       view.qs = buildQuestions(pool, pool.length >= 4 ? pool : dedupeByEn(allReadyWords()));
     } else {
-      const u = book(view.book).units[view.unit];
-      const dp = u.words.length >= 4 ? u.words : dedupeByEn(allReadyWords().concat(u.words));
-      view.qs = buildQuestions(u.words, dp);
+      let pool, dp;
+      if (view.unit === 'all') {
+        const b = book(view.book);
+        pool = [];
+        b.units.forEach(u => { if (u.words) pool = pool.concat(u.words); });
+        pool = dedupeByEn(pool);
+        dp = pool.length >= 4 ? pool : dedupeByEn(allReadyWords().concat(pool));
+      } else {
+        const u = book(view.book).units[view.unit];
+        pool = u.words;
+        dp = u.words.length >= 4 ? u.words : dedupeByEn(allReadyWords().concat(u.words));
+      }
+      view.qs = buildQuestions(pool, dp);
     }
     view.qi = 0; view.ok = 0; view.wr = [];
     renderQuizQ();
@@ -337,6 +463,7 @@
       <div class="card qcard">${body}</div>`;
     $('#bk').addEventListener('click', () => {
       if (isWrong) go('wrong');
+      else if (view.unit === 'all') go('units', { book: view.book });
       else go('unit', { book: view.book, unit: view.unit, tab: 'words', wi: 0 });
     });
     if (q.type === 'listen') {
@@ -367,10 +494,12 @@
     const total = view.qs.length, ok = view.ok;
     const pct = total ? Math.round(ok / total * 100) : 0;
     const stars = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
-    if (view.book !== 'wrong') {
-      const key = `stars_${view.book}_${view.unit}`;
+    if (view.book !== 'wrong' && view.unit !== 'all') {
+      const key = 'stars_' + view.book + '_' + view.unit;
       if (stars > store.get(key, 0)) store.set(key, stars);
     }
+    logActivity('quiz');
+    if (view.book !== 'wrong' && view.unit !== 'all') autoMarkHomework(view.book, view.unit, 'quiz');
     const wrs = view.wr || [];
     app.innerHTML = `
       <div class="card result">
@@ -388,6 +517,7 @@
     $('#again').addEventListener('click', renderQuiz);
     $('#back').addEventListener('click', () => {
       if (view.book === 'wrong') go('wrong');
+      else if (view.unit === 'all') go('units', { book: view.book });
       else go('unit', { book: view.book, unit: view.unit, tab: 'words', wi: 0 });
     });
     $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
@@ -425,6 +555,324 @@
     $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
     const wq = $('#wquiz'); if (wq) wq.addEventListener('click', () => go('quiz', { book: 'wrong' }));
   }
+
+  /* ---------------- 作业本 ---------------- */
+  function doHomeworkTask(id) {
+    const t = homeworkList().find(x => x.id === id); if (!t) return;
+    markHomeworkDone(id);
+    if (t.action === 'quiz') go('quiz', { book: t.book, unit: t.unit });
+    else if (t.action === 'dictation') go('dictation', { book: t.book, unit: t.unit });
+    else if (t.action === 'spell') go('spell', { book: t.book, unit: t.unit });
+    else if (t.action === 'trace') go('trace', { book: t.book, unit: t.unit });
+    else go('unit', { book: t.book, unit: t.unit, tab: t.action === 'sent' ? 'sent' : 'words', wi: 0 });
+  }
+  function renderHomework() {
+    const list = getHomework();
+    const empty = !list.length;
+    const bk = id => BOOKS.find(x => x.id === id) || {};
+    const unitTitle = (id, i) => { const b = bk(id); return b.units && b.units[i] ? b.units[i].title : ''; };
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📋 作业本</div><div></div></div>
+      ${empty ? `
+        <div class="card empty">还没有配置每日作业。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>编辑 <b>HOMEWORK</b> 数组就能添加 🙂</div>
+      ` : `
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:15px;font-weight:700;color:#555;margin-bottom:8px;">${dayKey(0)} · 今日任务</div>
+          <div class="hwlist2">${list.map((t, idx) => `
+            <div class="hitem${t.done ? ' done' : ''}" data-id="${esc(t.id)}">
+              <div class="hnum">${t.done ? '✓' : idx + 1}</div>
+              <div class="htxt">
+                <div>${esc(t.title)}</div>
+                <div style="font-size:12px;color:#999;font-weight:400;">${esc(bk(t.book).name || '')} · ${esc(unitTitle(t.book, t.unit))}</div>
+              </div>
+              <button class="hbtn" data-act="${esc(t.id)}">${t.done ? '已完成' : '去完成'}</button>
+            </div>
+          `).join('')}</div>
+        </div>
+        <div class="tip">作业内容在 <b>data.js</b> 里配置，每天自动重置。<br>测验 / 听写完成后会自动打勾。<br>点整行可手动切换完成状态。</div>
+      `}`;
+    $('#bk').addEventListener('click', () => go('home'));
+    if (!empty) {
+      $all('.hitem').forEach(el => el.addEventListener('click', e => {
+        if (e.target.closest('.hbtn')) return;
+        toggleHomework(el.dataset.id); renderHomework();
+      }));
+      $all('.hbtn').forEach(btn => btn.addEventListener('click', () => doHomeworkTask(btn.dataset.act)));
+    }
+  }
+
+  /* ---------------- 学习报告（家长页） ---------------- */
+  function renderReport() {
+    const s = reportStats();
+    const week = weekActivity();
+    const max = Math.max(1, ...week.map(d => d.total));
+    const wrong = store.get('wrong', []);
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📊 学习报告</div><div></div></div>
+      <div class="statgrid">
+        <div class="stat"><div class="snum">${s.streak}</div><div class="slab">连续打卡</div></div>
+        <div class="stat"><div class="snum">${s.tested}/${s.totalUnits}</div><div class="slab">已测单元</div></div>
+        <div class="stat"><div class="snum">${s.mastered}</div><div class="slab">完全掌握</div></div>
+        <div class="stat"><div class="snum">${s.wrong}</div><div class="slab">错题本</div></div>
+      </div>
+      <div class="card" style="padding:16px;">
+        <div style="font-size:14px;font-weight:700;color:#555;margin-bottom:10px;">最近 7 天学习活跃度</div>
+        <div class="weekbar">${week.map(d => `
+          <div class="weekday">
+            <div class="wcol" style="height:${Math.round(d.total / max * 44)}px;${d.total ? 'background:#ff9f1c;' : ''}"></div>
+            <div class="wday">${esc(d.date.split('-').slice(1).join('/'))}</div>
+          </div>
+        `).join('')}</div>
+      </div>
+      ${wrong.length ? `
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:14px;font-weight:700;color:#555;margin-bottom:8px;">最近错题 (${wrong.length})</div>
+          <div class="wlist">${wrong.slice(0, 8).map(w => `
+            <button class="mini" data-en="${esc(w.en)}">${esc(w.en)} · ${esc(w.zh)}</button>
+          `).join('')}</div>
+        </div>
+      ` : ''}
+      <div class="tip">数据存在本设备浏览器中，清除缓存会丢失。</div>`;
+    $('#bk').addEventListener('click', () => go('home'));
+    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
+  }
+
+  /* ---------------- 听写模式 ---------------- */
+  function renderDictation() {
+    const b = book(view.book); const u = b.units[view.unit];
+    const hasSents = !!(u.sentences && u.sentences.length);
+    if (view.dtype !== 'sent') view.dtype = 'word';
+    const useSents = view.dtype === 'sent' && hasSents;
+    const src = useSents ? u.sentences : (u.words || []);
+    if (!src.length) return go('units', { book: view.book });
+    if (view.di == null) { view.di = 0; view.dok = 0; view.dwr = []; view.danswered = false; view.dmsg = ''; }
+    if (view.di >= src.length) return renderDictResult();
+    const cur = src[view.di];
+    const answered = view.danswered;
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button>
+        <div class="title">✍️ 听写 ${view.di + 1}/${src.length}</div><div class="streak">✅${view.dok}</div></div>
+      <div class="card qcard darea">
+        <div class="dzh">${esc(cur.zh)}</div>
+        ${answered ? `<div class="den">${esc(cur.en)}</div>` : ''}
+        <div style="margin:14px 0 6px;">
+          <button class="round" id="say" style="font-size:22px;width:56px;height:56px;">🔊</button>
+        </div>
+        ${hasSents ? `<div class="row" style="margin-bottom:10px;"><button class="mini" id="typeToggle">切换：${useSents ? '单词' : '句子'}</button></div>` : ''}
+        <input type="text" class="dinput" id="ans" value="" placeholder="${useSents ? '写出整句英文' : '拼出英文单词'}" autocomplete="off" autocorrect="off" spellcheck="false" ${answered ? 'disabled' : ''}>
+        <div class="dresult ${view.dright ? 'ok' : 'bad'}" id="dres">${esc(view.dmsg || '')}</div>
+        ${answered ? `
+          <div class="row">
+            <button class="btn" id="next">➡️ 下一题</button>
+            <button class="btn ghost" id="again">🔁 再来一次</button>
+          </div>
+        ` : `
+          <div class="row">
+            <button class="btn" id="submit">✅ 提交</button>
+            <button class="btn ghost small" id="hint">👀 显示答案</button>
+          </div>
+        `}
+      </div>
+      <div class="tip">${useSents ? '听到句子或看到中文后，写出完整英文。' : '点 🔊 听发音，根据中文拼出英文单词。'}</div>`;
+    $('#bk').addEventListener('click', () => go('units', { book: view.book }));
+    const speakNow = () => speak(cur.en, playRate());
+    $('#say').addEventListener('click', speakNow);
+    const typeToggle = $('#typeToggle');
+    if (typeToggle) typeToggle.addEventListener('click', () => { view.dtype = useSents ? 'word' : 'sent'; view.di = 0; view.dok = 0; view.dwr = []; view.danswered = false; view.dmsg = ''; renderDictation(); });
+    if (!answered) {
+      const ans = $('#ans');
+      try { ans.focus(); } catch (e) {}
+      setTimeout(speakNow, 350);
+      $('#submit').addEventListener('click', () => checkDict(ans.value));
+      $('#hint').addEventListener('click', () => showDictAnswer());
+      ans.addEventListener('keydown', e => { if (e.key === 'Enter') checkDict(ans.value); });
+    } else {
+      $('#next').addEventListener('click', () => { view.di++; view.danswered = false; view.dmsg = ''; renderDictation(); });
+      $('#again').addEventListener('click', () => { view.di = 0; view.dok = 0; view.dwr = []; view.danswered = false; view.dmsg = ''; renderDictation(); });
+    }
+  }
+  function checkDict(val) {
+    const u = book(view.book).units[view.unit];
+    const useSents = view.dtype === 'sent';
+    const src = useSents ? u.sentences : u.words;
+    const cur = src[view.di];
+    if (!String(val || '').trim()) { view.danswered = true; view.dright = false; view.dmsg = '先写答案哦'; renderDictation(); return; }
+    const ok = normalizeAns(val) === normalizeAns(cur.en);
+    view.danswered = true;
+    if (ok) {
+      view.dok++; view.dright = true; view.dmsg = '拼对啦！';
+      try { speak('Great job!', 1); } catch (e) {}
+    } else {
+      view.dright = false; view.dmsg = '正确：' + cur.en;
+      view.dwr.push(cur);
+      addWrong(cur);
+      speak(cur.en, playRate());
+    }
+    renderDictation();
+  }
+  function showDictAnswer() {
+    const u = book(view.book).units[view.unit];
+    const useSents = view.dtype === 'sent';
+    const cur = (useSents ? u.sentences : u.words)[view.di];
+    view.danswered = true; view.dright = false; view.dmsg = '正确：' + cur.en;
+    renderDictation();
+  }
+  function renderDictResult() {
+    const total = view.di; const ok = view.dok;
+    const pct = total ? Math.round(ok / total * 100) : 0;
+    logActivity('dictation');
+    autoMarkHomework(view.book, view.unit, 'dictation');
+    const wrs = view.dwr || [];
+    app.innerHTML = `
+      <div class="card result">
+        <div class="remoji">${pct >= 90 ? '🏆' : pct >= 60 ? '💪' : '🌱'}</div>
+        <div class="rscore">${pct} 分</div>
+        <div class="tip">听写正确 ${ok} / ${total}</div>
+        ${wrs.length ? `<div class="wlist">${wrs.map(w => `<button class="mini" data-en="${esc(w.en)}">${esc(w.en)} · ${esc(w.zh)}</button>`).join('')}</div>` : ''}
+        <div class="row">
+          <button class="btn" id="again">🔁 再来一次</button>
+          <button class="btn ghost" id="back">返回</button>
+        </div>
+      </div>`;
+    $('#again').addEventListener('click', () => { view.di = 0; view.dok = 0; view.dwr = []; view.danswered = false; view.dmsg = ''; renderDictation(); });
+    $('#back').addEventListener('click', () => go('unit', { book: view.book, unit: view.unit }));
+    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
+  }
+
+  /* ---------------- 拼词游戏 ---------------- */
+  function renderSpellGame() {
+    const u = book(view.book).units[view.unit];
+    const ws = u.words || []; if (!ws.length) return go('unit', { book: view.book, unit: view.unit });
+    if (view.si == null) { view.si = 0; view.sok = 0; view.swr = []; view.sslots = []; view.smsg = ''; }
+    if (view.si >= ws.length) return renderSpellResult();
+    const w = ws[view.si];
+    const letters = w.en.replace(/[^a-zA-Z]/g, '').split('').map((c, i) => ({ c: c.toLowerCase(), id: i }));
+    const tiles = shuffle(letters);
+    const slots = view.sslots || [];
+    const showCheck = slots.length === letters.length;
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button>
+        <div class="title">🎮 拼词游戏 ${view.si + 1}/${ws.length}</div><div class="streak">✅${view.sok}</div></div>
+      <div class="card qcard">
+        <div class="qemoji">${esc(w.emoji || '🔤')}</div>
+        <div class="dzh">${esc(w.zh)}</div>
+        <div class="slots">${slots.map((s, i) => `<button class="slot filled" data-idx="${i}">${esc(s.c)}</button>`).join('')}</div>
+        <div class="tiles">${tiles.map(t => { const used = slots.some(s => s.id === t.id); return `<button class="tile" data-id="${t.id}" ${used ? 'disabled' : ''}>${esc(t.c)}</button>`; }).join('')}</div>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn${showCheck ? '' : ' ghost'}" id="check" ${showCheck ? '' : 'disabled'}>✅ 提交</button>
+          <button class="btn ghost small" id="say">🔊 再听</button>
+          <button class="btn ghost small" id="reset">↺ 重排</button>
+        </div>
+        <div class="dresult" id="sres">${esc(view.smsg || '')}</div>
+      </div>
+      <div class="tip">按正确顺序点击字母，拼出单词。</div>`;
+    $('#bk').addEventListener('click', () => go('units', { book: view.book }));
+    $('#say').addEventListener('click', () => speak(w.en, playRate()));
+    $('#reset').addEventListener('click', () => { view.sslots = []; view.smsg = ''; renderSpellGame(); });
+    $all('.tile').forEach(btn => btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      view.sslots = (view.sslots || []).concat({ c: btn.textContent, id: +btn.dataset.id });
+      view.smsg = ''; renderSpellGame();
+    }));
+    $all('.slot').forEach(btn => btn.addEventListener('click', () => {
+      const idx = +btn.dataset.idx;
+      view.sslots.splice(idx, 1);
+      view.smsg = ''; renderSpellGame();
+    }));
+    const check = $('#check'); if (check) check.addEventListener('click', () => checkSpell(w, letters));
+  }
+  function checkSpell(w, letters) {
+    const slots = view.sslots || [];
+    const ans = slots.map(s => s.c).join('');
+    const target = w.en.replace(/[^a-zA-Z]/g, '').toLowerCase();
+    if (ans === target) {
+      view.sok++; view.smsg = '拼对啦！';
+      try { speak('Great job!', 1); } catch (e) {}
+      setTimeout(() => { view.si++; view.sslots = []; view.smsg = ''; renderSpellGame(); }, 900);
+    } else {
+      view.smsg = '再试试～'; speak(w.en, playRate());
+    }
+    renderSpellGame();
+  }
+  function renderSpellResult() {
+    const total = view.si; const ok = view.sok;
+    const pct = total ? Math.round(ok / total * 100) : 0;
+    logActivity('spell');
+    autoMarkHomework(view.book, view.unit, 'spell');
+    app.innerHTML = `
+      <div class="card result">
+        <div class="remoji">${pct >= 90 ? '🏆' : pct >= 60 ? '💪' : '🌱'}</div>
+        <div class="rscore">${pct} 分</div>
+        <div class="tip">拼对 ${ok} / ${total}</div>
+        <div class="row">
+          <button class="btn" id="again">🔁 再来一次</button>
+          <button class="btn ghost" id="back">返回</button>
+        </div>
+      </div>`;
+    $('#again').addEventListener('click', () => { view.si = 0; view.sok = 0; view.swr = []; view.sslots = []; view.smsg = ''; renderSpellGame(); });
+    $('#back').addEventListener('click', () => go('unit', { book: view.book, unit: view.unit }));
+  }
+
+  /* ---------------- 书写练习 ---------------- */
+  const ALPHABET = 'Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz'.split(' ');
+  function drawTraceGuide(ctx, c) {
+    ctx.strokeStyle = '#f1f3f5'; ctx.lineWidth = 1;
+    for (const y of [75, 150, 225]) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(c.width, y); ctx.stroke(); }
+  }
+  function renderTrace() {
+    let targets;
+    if (view.unit != null && book(view.book)) {
+      const ws = book(view.book).units[view.unit].words || [];
+      targets = ws.map(w => w.en).filter(Boolean);
+    }
+    if (!targets || !targets.length) targets = ALPHABET;
+    if (view.ti == null) view.ti = 0;
+    const target = targets[view.ti];
+    view.traceLogged = false;
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">✏️ 书写练习</div><div></div></div>
+      <div class="card twrap">
+        <div class="target-row">
+          <button class="round" id="prev" ${view.ti === 0 ? 'disabled' : ''}>⬅️</button>
+          <div class="target">${esc(target)}</div>
+          <button class="round" id="next" ${view.ti === targets.length - 1 ? 'disabled' : ''}>➡️</button>
+        </div>
+        <div class="tpos">
+          <canvas class="tcanvas" id="tcanvas" width="600" height="300"></canvas>
+          <div class="tguide">${esc(target.length <= 3 ? target : target[0])}</div>
+        </div>
+        <div class="row">
+          <button class="btn ghost small" id="clear">🗑 清除</button>
+          <button class="btn small" id="say">🔊 听</button>
+        </div>
+      </div>
+      <div class="tip">在灰色字迹上描摹，用手指或笔随写。</div>`;
+    $('#bk').addEventListener('click', () => go('units', { book: view.book }));
+    $('#prev').addEventListener('click', () => { view.ti--; renderTrace(); });
+    $('#next').addEventListener('click', () => { view.ti++; renderTrace(); });
+    $('#clear').addEventListener('click', clearTrace);
+    $('#say').addEventListener('click', () => speak(target, playRate()));
+    initTrace();
+  }
+  function initTrace() {
+    const c = $('#tcanvas'); if (!c) return;
+    const ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height); drawTraceGuide(ctx, c);
+    let drawing = false;
+    const pos = e => { const r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * (c.width / r.width), y: (e.clientY - r.top) * (c.height / r.height) }; };
+    const down = e => {
+      drawing = true;
+      if (!view.traceLogged) { logActivity('trace'); view.traceLogged = true; }
+      const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      ctx.strokeStyle = '#ff9f1c'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    };
+    const move = e => { if (!drawing) return; e.preventDefault(); const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+    const up = () => drawing = false;
+    c.addEventListener('pointerdown', down);
+    c.addEventListener('pointermove', move);
+    c.addEventListener('pointerup', up);
+    c.addEventListener('pointerleave', up);
+  }
+  function clearTrace() { const c = $('#tcanvas'); if (c) { const ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height); drawTraceGuide(ctx, c); } }
 
   /* ---------------- 启动 ---------------- */
   /* 部署到 HTTPS 后自动启用离线缓存（本地局域网 http 下跳过，不影响现状） */
