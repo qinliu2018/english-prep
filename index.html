@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#ff9f1c">
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png" type="image/png">
 <title>英语预习小助手</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
@@ -100,6 +102,78 @@
   .empty { text-align: center; color: #999; line-height: 1.9; }
   .warn { background: #fff3bf; color: #d9480f; padding: 10px 14px; border-radius: 12px; font-size: 14px; margin-bottom: 12px; font-weight: 600; }
   .tip { font-size: 13px; color: #b0b0b0; text-align: center; line-height: 1.7; margin-top: 14px; }
+
+  /* ---------------- 新增功能 ---------------- */
+  .section-title { font-size: 16px; font-weight: 800; color: #555; margin: 18px 0 10px; }
+  .tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .tool { border: none; border-radius: 18px; background: #fff; padding: 14px 6px; font-size: 14px; font-weight: 700; color: #555; box-shadow: 0 3px 10px rgba(0,0,0,.08); cursor: pointer; text-align: center; }
+  .tool:active { transform: scale(.96); }
+  .tool .ticon { font-size: 28px; display: block; margin-bottom: 4px; }
+  .tool.primary { color: #ff9f1c; }
+  .tool.alt { color: #2ec4b6; }
+  .tool.danger { color: #e8590c; }
+
+  .hwcard { display: flex; align-items: center; gap: 12px; padding: 16px 18px; cursor: pointer; }
+  .hwcard .hwinfo { flex: 1; }
+  .hwcard .hwtit { font-weight: 800; font-size: 16px; }
+  .hwcard .hwsub { font-size: 13px; color: #888; margin-top: 2px; }
+  .hwcard .hwprog { font-size: 13px; font-weight: 700; color: #2ec4b6; min-width: 48px; text-align: right; }
+  .hwcard.done { opacity: .7; }
+  .hwcheck { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; flex: none; }
+  .hwcard.done .hwcheck { background: #2ec4b6; border-color: #2ec4b6; }
+  .hwempty { text-align: center; color: #999; padding: 22px; }
+
+  .hwlist2 { display: flex; flex-direction: column; gap: 8px; }
+  .hitem { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 14px; padding: 12px 14px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .hitem .hnum { width: 26px; height: 26px; border-radius: 50%; background: #f1f3f5; color: #666; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; }
+  .hitem .htxt { flex: 1; font-size: 15px; font-weight: 700; }
+  .hitem .hbtn { flex: none; border: none; border-radius: 999px; background: #ff9f1c; color: #fff; font-size: 13px; font-weight: 700; padding: 7px 14px; cursor: pointer; }
+  .hitem.done .htxt { text-decoration: line-through; color: #aaa; }
+  .hitem.done .hbtn { background: #2ec4b6; }
+
+  .statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat { background: #fff; border-radius: 16px; padding: 14px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,.06); }
+  .stat .snum { font-size: 28px; font-weight: 800; color: #ff9f1c; }
+  .stat .slab { font-size: 13px; color: #888; margin-top: 2px; }
+  .progress { background: #f1f3f5; border-radius: 999px; height: 10px; overflow: hidden; }
+  .progress .bar { height: 100%; background: #2ec4b6; width: 0; border-radius: 999px; transition: width .4s ease; }
+  .reportrow { display: flex; justify-content: space-between; align-items: center; margin: 6px 0; font-size: 14px; }
+  .weekbar { display: flex; align-items: flex-end; gap: 4px; height: 60px; justify-content: center; }
+  .weekday { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .weekday .wcol { width: 24px; background: #ffecd2; border-radius: 4px; }
+  .weekday .wday { font-size: 11px; color: #999; }
+
+  .darea { text-align: center; }
+  .dzh { font-size: 22px; color: #555; margin-bottom: 8px; }
+  .den { font-size: 28px; font-weight: 800; margin: 4px 0; }
+  .dinput { width: 100%; font-size: 22px; padding: 12px 16px; border: 2px solid #ddd; border-radius: 14px; outline: none; text-align: center; }
+  .dinput:focus { border-color: #ff9f1c; }
+  .dresult { margin-top: 10px; font-size: 18px; font-weight: 700; min-height: 28px; }
+  .dresult.ok { color: #2ec4b6; }
+  .dresult.bad { color: #e8590c; }
+
+  .tiles { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+  .tile { width: 44px; height: 44px; border: none; border-radius: 10px; background: #ff9f1c; color: #fff; font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,.15); }
+  .tile:disabled { opacity: .45; transform: none; }
+  .tile:active { transform: scale(.92); }
+  .slots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 46px; margin-bottom: 8px; }
+  .slot { width: 40px; height: 44px; border: 2px dashed #ccc; border-radius: 10px; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; color: #333; background: #fff; }
+  .slot.filled { border-style: solid; border-color: #ff9f1c; }
+
+  .twrap { background: #fff; border-radius: 18px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.08); text-align: center; }
+  .tcanvas { width: 100%; height: 300px; border-radius: 12px; background: #fffdf5; touch-action: none; cursor: crosshair; }
+  .tguide { font-size: 120px; font-weight: 800; color: rgba(0,0,0,.08); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+  .tpos { position: relative; display: inline-block; width: 100%; }
+  .target-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+  .target { font-size: 24px; font-weight: 800; color: #ff9f1c; background: #fff5db; padding: 8px 18px; border-radius: 999px; }
+
+  .selmode { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #666; }
+  .ucheck { width: 20px; height: 20px; border: 2px solid #ff9f1c; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; flex: none; }
+  .unit.sel .ucheck { background: #ff9f1c; }
+  .actbar { display: flex; gap: 10px; margin-bottom: 14px; }
+  .actbar .btn { flex: 1; }
+
+  .checkbox { display: inline-flex; align-items: center; gap: 6px; background: #fff; border-radius: 999px; padding: 8px 12px; font-size: 14px; font-weight: 700; color: #666; box-shadow: 0 2px 6px rgba(0,0,0,.08); cursor: pointer; }
 </style>
 </head>
 <body>
