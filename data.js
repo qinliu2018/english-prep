@@ -26,7 +26,7 @@ const BOOKS = [
   {
     id: '3a',
     name: '三年级上册',
-    edition: '新教材（2024秋）',
+    edition: '译林版 · 新教材（2024秋）',
     ready: true,
     units: [
       {
@@ -35,7 +35,7 @@ const BOOKS = [
           { en: 'hello', zh: '你好', emoji: '👋', ex: "Hello, I'm Mike." },
           { en: 'hi', zh: '嗨；你好', emoji: '👋', ex: 'Hi, Miss Li.' },
           { en: 'Good morning.', zh: '早上好', emoji: '🌅', ex: 'Good morning, class.' },
-          { en: 'I', zh: '我', emoji: '🙋' },
+          { en: 'I', zh: '我', emoji: '🙋', ex: 'I am Sam.' },
           { en: 'am', zh: '是（跟在 I 后面）', emoji: '📝', ex: "I am Sam. (I'm Sam.)" },
           { en: 'ah', zh: '啊', emoji: '😮', ex: 'Ah! A cat!' },
           { en: 'a', zh: '一（个）', emoji: '📝', ex: 'I have a cat.' },
@@ -47,12 +47,27 @@ const BOOKS = [
           { en: 'bye', zh: '再见（口语）', emoji: '👋', ex: 'Bye-bye!' }
         ],
         sentences: [
-          { en: 'Hello, Miss Li.', zh: '你好，李老师。' },
-          { en: 'Good morning, class.', zh: '同学们，早上好。' },
-          { en: "Hi, I'm Mike.", zh: '你好，我是迈克。' },
-          { en: 'Good afternoon, Miss Li.', zh: '李老师，下午好。' },
-          { en: 'Goodbye, Mum.', zh: '妈妈，再见。' },
-          { en: 'Ah! A cat!', zh: '啊！一只猫！' }
+          { en: "Bobby: Good morning.", zh: "博比：早上好。" },
+          { en: "Bobby's friends: Good morning, Bobby.", zh: "博比的朋友们：早上好，博比。" },
+          { en: "Sam's friend: Hi, Sam.", zh: "萨姆的朋友：嗨，萨姆。" },
+          { en: "Sam: Hello!", zh: "萨姆：你好！" },
+          { en: "Bobby: Hi, I'm Bobby.", zh: "博比：嗨，我是博比。" },
+          { en: "Sam: Hi, I'm Sam.", zh: "萨姆：嗨，我是萨姆。" },
+          { en: "Bobby's friends: Ah! A cat!", zh: "博比的朋友们：啊！一只猫！" },
+          { en: "Liu Tao: Good morning, Miss Li.", zh: "刘涛：早上好，李老师。" },
+          { en: "Miss Li: Good morning, Liu Tao.", zh: "李老师：早上好，刘涛。" },
+          { en: "Liu Tao: Hi, Yang Ling.", zh: "刘涛：嗨，杨玲。" },
+          { en: "Yang Ling: Hello, Liu Tao.", zh: "杨玲：你好，刘涛。" },
+          { en: "Miss Li: Good afternoon, class.", zh: "李老师：下午好，同学们。" },
+          { en: "Class: Good afternoon, Miss Li.", zh: "同学们：下午好，李老师。" },
+          { en: "Class: Goodbye, Miss Li.", zh: "同学们：再见，李老师。" },
+          { en: "Miss Li: Bye!", zh: "李老师：再见！" },
+          { en: "my teacher", zh: "我的老师" },
+          { en: "my friend", zh: "我的朋友" },
+          { en: "a cat", zh: "一只猫" },
+          { en: "greet each other", zh: "互相打招呼" },
+          { en: "your English teacher", zh: "你的英语老师" },
+          { en: "greet others", zh: "和其他人打招呼" }
         ]
       },
       {
@@ -71,12 +86,30 @@ const BOOKS = [
           { en: 'Mr', zh: '先生', emoji: '👨', ex: 'Hello, Mr Green.' }
         ],
         sentences: [
-          { en: "Hello! What's your name?", zh: '你好！你叫什么名字？' },
-          { en: 'My name is Su Hai.', zh: '我叫苏海。' },
-          { en: "I'm Liu Tao. I'm a boy.", zh: '我是刘涛。我是男孩。' },
-          { en: 'This is Helen. She is a girl.', zh: '这是海伦。她是女孩。' },
+          { en: 'Bobby: Good afternoon, Sam!', zh: '博比：下午好，萨姆！' },
+          { en: 'Sam: Good afternoon, Bobby!', zh: '萨姆：下午好，博比！' },
+          { en: 'Beibei: Hello!', zh: '贝贝：你好！' },
+          { en: "Sam: Hello, I'm Sam. What's your name?", zh: '萨姆：你好，我是萨姆。你叫什么名字？' },
+          { en: 'Beibei: My name is Beibei.', zh: '贝贝：我的名字是贝贝。' },
+          { en: "Bobby: Hello, Beibei. I'm Bobby.", zh: '博比：你好，贝贝。我是博比。' },
+          { en: 'Beibei: Nice to meet you!', zh: '贝贝：很高兴认识你！' },
+          { en: "Bobby & Sam: Nice to meet you too.", zh: '博比和萨姆：（我们）也很高兴认识你。' },
+          { en: "Mike: Hello, I'm Mike Brown.", zh: '迈克：你好，我是迈克·布朗。' },
+          { en: "Yang Ling: Hi, Mike. I'm Yang Ling.", zh: '杨玲：嗨，迈克。我是杨玲。' },
+          { en: 'Mike: Nice to meet you, Yang Ling.', zh: '迈克：很高兴认识你，杨玲。' },
+          { en: 'Yang Ling: Nice to meet you too.', zh: '杨玲：（我）也很高兴认识你。' },
+          { en: "Mike: Hello. What's your name?", zh: '迈克：你好。你叫什么名字？' },
+          { en: 'Liu Tao: My name is Liu Tao.', zh: '刘涛：我的名字是刘涛。' },
+          { en: "Wang Bing: I'm Wang Bing. Nice to meet you.", zh: '王兵：我是王兵。很高兴认识你。' },
+          { en: 'Mike: (Wang Bing? Yang Ling? Liu Tao?) Hi!', zh: '迈克：（王兵？杨玲？刘涛？）嗨！' },
+          { en: 'Mr Green: Good morning, boys and girls.', zh: '格林老师：早上好，男孩们和女孩们。' },
+          { en: 'Class: Good morning, Mr Green.', zh: '同学们：早上好，格林老师。' },
+          { en: 'your name', zh: '你的名字' },
+          { en: 'introduce myself', zh: '自我介绍' },
+          { en: 'a new classmate', zh: '一位新同学' },
           { en: 'Nice to meet you!', zh: '很高兴认识你！' },
-          { en: 'Nice to meet you, too!', zh: '我也很高兴认识你！' }
+          { en: 'boys and girls', zh: '男孩们和女孩们' },
+          { en: 'make new friends', zh: '交新朋友' }
         ]
       },
       {
@@ -101,12 +134,33 @@ const BOOKS = [
           { en: 'right', zh: '对的；正确的', emoji: '👍', ex: 'You are right!' }
         ],
         sentences: [
-          { en: 'Are you Su Hai?', zh: '你是苏海吗？' },
-          { en: 'Yes, I am.', zh: '是的，我是。' },
-          { en: "No, I'm not. I'm Su Yang.", zh: '不，我不是。我是苏杨。' },
-          { en: 'We are twins.', zh: '我们是双胞胎。' },
-          { en: 'Excuse me, are you Mike?', zh: '打扰一下，你是迈克吗？' },
-          { en: 'You are right!', zh: '你说对了！' }
+          { en: "Bobby's friends: Hi, Bobby!", zh: '博比的朋友们：嗨，博比！' },
+          { en: 'Bobby: Are you Jake?', zh: '博比：你是杰克吗？' },
+          { en: "John: No, I'm not. I'm John.", zh: '约翰：不，我不是。我是约翰。' },
+          { en: 'Bobby: Are you Jake?', zh: '博比：你是杰克吗？' },
+          { en: "Bobby's friends: Yes!", zh: '博比的朋友们：是！' },
+          { en: "Bobby's friends: Ha ha!", zh: '博比的朋友们：哈哈！' },
+          { en: "Jake: Ha ha! Here I am!", zh: '杰克：哈哈！我在这里！' },
+          { en: 'Mike: Good morning, Su Hai.', zh: '迈克：早上好，苏海。' },
+          { en: "Su Yang: Good morning. But I'm not Su Hai. I'm Su Yang.", zh: '苏洋：早上好。但我不是苏海。我是苏洋。' },
+          { en: "Mike: Oh, I'm sorry. Nice to meet you, Su Yang.", zh: '迈克：哦，对不起。很高兴认识你，苏洋。' },
+          { en: 'Su Yang: Nice to meet you too.', zh: '苏洋：（我）也很高兴认识你。' },
+          { en: 'Su Hai: Hi, Mike.', zh: '苏海：嗨，迈克。' },
+          { en: "Mike: Ah! You're twins!", zh: '迈克：啊！你们是双胞胎！' },
+          { en: 'Su Hai & Su Yang: Yes, we are!', zh: '苏海和苏洋：是的，我们是！' },
+          { en: 'Mike: Excuse me, are you Su Hai?', zh: '迈克：打扰一下，你是苏海吗？' },
+          { en: "Su Yang: No, I'm not. I'm Su Yang.", zh: '苏洋：不，我不是。我是苏洋。' },
+          { en: 'Mike: What class are you in?', zh: '迈克：你在哪个班级？' },
+          { en: "Su Yang: I'm in Class 2.", zh: '苏洋：我在二班。' },
+          { en: 'Mike: Are you Su Hai?', zh: '迈克：你是苏海吗？' },
+          { en: "Su Hai: Yes, I am! I'm in Class 1 with you.", zh: '苏海：是的，我是！我和你在一班。' },
+          { en: 'Mike: Right!', zh: '迈克：对！' },
+          { en: 'Here I am!', zh: '我在这里！' },
+          { en: 'excuse me', zh: '对不起；打扰一下' },
+          { en: 'what class', zh: '什么班级' },
+          { en: "Jake's turn", zh: '轮到杰克' },
+          { en: 'look the same', zh: '看起来一样' },
+          { en: 'know new people', zh: '认识新的人' }
         ]
       },
       {
@@ -123,11 +177,29 @@ const BOOKS = [
           { en: 'many', zh: '许多', emoji: '👥', ex: 'We have many friends.' }
         ],
         sentences: [
-          { en: 'This is my friend, Helen.', zh: '这是我的朋友海伦。' },
-          { en: "She's my friend. She's a good girl.", zh: '她是我的朋友。她是个好女孩。' },
-          { en: "He's my friend too.", zh: '他也是我的朋友。' },
-          { en: 'I have many friends.', zh: '我有许多朋友。' },
-          { en: 'This is for you. — Thank you!', zh: '这是给你的。——谢谢你！' }
+          { en: 'Bobby & Sam: Goodbye, Max and Willy!', zh: '博比和萨姆：再见，马克斯和威利！' },
+          { en: 'Max & Willy: Goodbye!', zh: '马克斯和威利：再见！' },
+          { en: 'Tina: Hello, Bobby!', zh: '蒂娜：你好，博比！' },
+          { en: 'Bobby: Hi, Tina!', zh: '博比：嗨，蒂娜！' },
+          { en: "Bobby: This is Sam. He's my friend.", zh: '博比：这是萨姆。他是我的朋友。' },
+          { en: 'Sam: Hi. Nice to meet you.', zh: '萨姆：嗨。很高兴认识你。' },
+          { en: 'Liu Tao: Hello, Wang Bing.', zh: '刘涛：你好，王兵。' },
+          { en: 'Wang Bing: Hi, Liu Tao. This is my friend, Zhang Hua.', zh: '王兵：嗨，刘涛。这是我的朋友，张华。' },
+          { en: "Wang Bing: Zhang Hua, this is Liu Tao. He's my friend.", zh: '王兵：张华，这是刘涛。他是我的朋友。' },
+          { en: 'Liu Tao: Hello, Zhang Hua.', zh: '刘涛：你好，张华。' },
+          { en: 'Zhang Hua: Nice to meet you.', zh: '张华：很高兴认识你。' },
+          { en: 'Liu Tao: Nice to meet you too.', zh: '刘涛：（我）也很高兴认识你。' },
+          { en: "Zhang Hua: It's good!", zh: '张华：它很好！' },
+          { en: 'Liu Tao: Thank you.', zh: '刘涛：谢谢你。' },
+          { en: "Liu Tao: This is Su Hai. She's my friend. I have many friends in my class.", zh: '刘涛：这是苏海。她是我的朋友。我在我的班级里有许多朋友。' },
+          { en: "Zhang Hua: Hi, I'm Zhang Hua.", zh: '张华：嗨，我是张华。' },
+          { en: 'Su Hai: Nice to meet you.', zh: '苏海：很高兴认识你。' },
+          { en: 'my friend', zh: '我的朋友' },
+          { en: 'make a card', zh: '做一张卡片' },
+          { en: 'Thank you.', zh: '谢谢你。' },
+          { en: 'have many friends', zh: '有许多朋友' },
+          { en: 'in my class', zh: '在我的班级里' },
+          { en: 'introduce a friend', zh: '介绍一位朋友' }
         ]
       },
       {
@@ -153,12 +225,37 @@ const BOOKS = [
           { en: 'say', zh: '说', emoji: '💬', ex: 'Say it again, please.' }
         ],
         sentences: [
-          { en: "This is my mother. She's my mother.", zh: '这是我的妈妈。她是我的妈妈。' },
-          { en: "He's my father.", zh: '他是我的爸爸。' },
-          { en: 'Look at the pond! Who is that?', zh: '看那个池塘！那是谁？' },
-          { en: "Who's that baby?", zh: '那个宝宝是谁？' },
-          { en: 'Good evening, Dad!', zh: '爸爸，晚上好！' },
-          { en: 'I love my family.', zh: '我爱我家。' }
+          { en: 'Bobby: Hi, Sam.', zh: '博比：嗨，萨姆。' },
+          { en: 'Sam: Hi, Bobby.', zh: '萨姆：嗨，博比。' },
+          { en: "Bobby: This is my mum.", zh: '博比：这是我的妈妈。' },
+          { en: 'Sam: Good evening.', zh: '萨姆：晚上好。' },
+          { en: "Sam: This is my dad.", zh: '萨姆：这是我的爸爸。' },
+          { en: "Bobby & Bobby's mum: Good evening.", zh: '博比和博比的妈妈：晚上好。' },
+          { en: "Sam's dad: Good evening.", zh: '萨姆的爸爸：晚上好。' },
+          { en: 'Sam: Quick! Look in the pond.', zh: '萨姆：快点！看池塘里面。' },
+          { en: "Bobby: Hello, I'm Bobby. He's Sam.", zh: '博比：你好，我是博比。他是萨姆。' },
+          { en: "Tad: Hi, I'm Tad.", zh: '塔德：嗨，我是塔德。' },
+          { en: "Tad's mum: Hi.", zh: '塔德的妈妈：嗨。' },
+          { en: "Sam: (Who's she?)", zh: '萨姆：（她是谁？）' },
+          { en: "Tad: She's my mum. She's great.", zh: '塔德：她是我的妈妈。她很棒。' },
+          { en: 'Su Hai: Hi, Liu Tao.', zh: '苏海：嗨，刘涛。' },
+          { en: "Liu Tao: Hello, Su Hai. Come and meet my family.", zh: '刘涛：你好，苏海。来见见我的家人。' },
+          { en: "Liu Tao: This is my mother. This is my father.", zh: '刘涛：这是我的妈妈。这是我的爸爸。' },
+          { en: "Su Hai: Hi, I'm Su Hai.", zh: '苏海：嗨，我是苏海。' },
+          { en: "Liu Tao's parents: Hello, Su Hai.", zh: '刘涛的父母：你好，苏海。' },
+          { en: "Su Hai: Who's he?", zh: '苏海：他是谁？' },
+          { en: "Liu Tao: He's my brother. Say hello, Liu Hao.", zh: '刘涛：他是我的弟弟。打招呼，刘浩。' },
+          { en: 'Liu Hao: Hello!', zh: '刘浩：你好！' },
+          { en: "Liu Hao: Who's she?", zh: '刘浩：她是谁？' },
+          { en: "Su Hai: She's my sister, Su Yang.", zh: '苏海：她是我的妹妹，苏洋。' },
+          { en: 'Liu Tao: Nice to meet you, Su Yang.', zh: '刘涛：很高兴认识你，苏洋。' },
+          { en: 'Su Yang: Hi! Nice to meet you too.', zh: '苏洋：嗨！（我）也很高兴认识你。' },
+          { en: 'my dad/mum', zh: '我的爸爸/妈妈' },
+          { en: 'family members', zh: '家庭成员' },
+          { en: 'in the pond', zh: '在池塘里' },
+          { en: 'my happy family', zh: '我的快乐一家' },
+          { en: 'Good evening.', zh: '晚上好。' },
+          { en: 'say hello', zh: '打招呼' }
         ]
       },
       {
@@ -178,12 +275,34 @@ const BOOKS = [
           { en: 'love', zh: '爱', emoji: '❤️', ex: 'I love my grandpa.' }
         ],
         sentences: [
-          { en: 'Is he your grandpa?', zh: '他是你爷爷吗？' },
-          { en: 'Yes, he is. / No, he is not.', zh: '是的。／不是。' },
-          { en: 'This is my uncle.', zh: '这是我的叔叔。' },
-          { en: 'My cousin is cool!', zh: '我的表哥真酷！' },
-          { en: 'Wow, it is big!', zh: '哇，它真大！' },
-          { en: 'I love my family.', zh: '我爱我的家人。' }
+          { en: "Bobby: Who's he?", zh: '博比：他是谁？' },
+          { en: "Sam: He's my grandfather John.", zh: '萨姆：他是我的爷爷约翰。' },
+          { en: 'Bobby: Is he your father?', zh: '博比：他是你的爸爸吗？' },
+          { en: "Sam: Yes, he is. He's John too.", zh: '萨姆：是的，他是。他也叫约翰。' },
+          { en: "Bobby: Who's this boy?", zh: '博比：这个男孩是谁？' },
+          { en: "Sam: He's my cousin John.", zh: '萨姆：他是我的堂兄约翰。' },
+          { en: 'Bobby: Cool!', zh: '博比：酷！' },
+          { en: 'Sam: Look, Bobby. This is ...', zh: '萨姆：看，博比。这是……' },
+          { en: 'Bobby: John!', zh: '博比：约翰！' },
+          { en: "Sam: No. This is me! My name is Sam.", zh: '萨姆：不。这是我！我的名字是萨姆。' },
+          { en: "Liu Tao: Look! This is my family.", zh: '刘涛：看！这是我的家庭。' },
+          { en: "Yang Ling: Wow! You have a big family.", zh: '杨玲：哇！你有一个大家庭。' },
+          { en: "Liu Tao: Yes. My grandpa, grandma, father, mother, uncle, aunt ...", zh: '刘涛：是的。我的爷爷、奶奶、爸爸、妈妈、伯父、伯母……' },
+          { en: 'Su Hai: Is he your father?', zh: '苏海：他是你的爸爸吗？' },
+          { en: "Liu Tao: No, he isn't.", zh: '刘涛：不，他不是。' },
+          { en: "Wang Bing: Who's he?", zh: '王兵：他是谁？' },
+          { en: "Liu Tao: He's my grandpa.", zh: '刘涛：他是我的爷爷。' },
+          { en: 'Yang Ling: Is she your mother?', zh: '杨玲：她是你的妈妈吗？' },
+          { en: "Liu Tao: No, she isn't. She's my aunt.", zh: '刘涛：不，她不是。她是我的伯母。' },
+          { en: "Wang Bing: Who's the baby? Is it your cousin?", zh: '王兵：这个婴儿是谁？它是你的堂（表）亲吗？' },
+          { en: "Liu Tao: No, it isn't. It's me!", zh: '刘涛：不，不是。是我！' },
+          { en: 'Wang Bing: You have a happy family!', zh: '王兵：你有一个幸福的家庭！' },
+          { en: "Liu Tao: Yes. I love my family.", zh: '刘涛：是的。我爱我的家。' },
+          { en: 'love each other', zh: '相亲相爱' },
+          { en: 'family tree', zh: '家谱；家谱图' },
+          { en: 'have a big family', zh: '有一个大家庭' },
+          { en: 'a happy family', zh: '一个幸福的家庭' },
+          { en: 'talk about ...', zh: '谈论关于……' }
         ]
       },
       {
@@ -222,12 +341,45 @@ const BOOKS = [
           { en: 'thanks', zh: '谢谢', emoji: '🙏', ex: 'Thanks, Mum!' }
         ],
         sentences: [
-          { en: 'Happy Birthday, Bobby!', zh: '波比，生日快乐！' },
-          { en: 'How old are you?', zh: '你几岁了？' },
-          { en: "I'm nine.", zh: '我九岁。' },
-          { en: 'I want a toy car.', zh: '我想要一辆玩具小汽车。' },
-          { en: 'Can I help you? — Yes, please.', zh: '您要买什么？——好的，谢谢。' },
-          { en: 'Here you are. — Thank you! — You are welcome.', zh: '给你。——谢谢！——不客气。' }
+          { en: "Bobby's mother: Happy Birthday, Bobby!", zh: '博比的妈妈：生日快乐，博比！' },
+          { en: "Bobby: Thank you! I love you.", zh: '博比：谢谢！我爱你（们）。' },
+          { en: "Bobby: I'm two now.", zh: '博比：我现在两岁了。' },
+          { en: 'Tina: Right.', zh: '蒂娜：是的。' },
+          { en: 'Tina: One, two.', zh: '蒂娜：一个，两个。' },
+          { en: 'Bobby: (I want a car.)', zh: '博比：（我想要一辆小汽车。）' },
+          { en: 'Bobby: (I want a book. I want a ball. ...)', zh: '博比：（我想要一本书。我想要一个球。……）' },
+          { en: 'Tina: Bobby! We want the cake!', zh: '蒂娜：博比！我们想要（吃）蛋糕！' },
+          { en: 'Liu Tao: Look! How lovely!', zh: '刘涛：看！真可爱！' },
+          { en: 'Liu Hao: One, two, three, four, five!', zh: '刘浩：一、二、三、四、五！' },
+          { en: 'Salesgirl: Hello! Can I help you?', zh: '女店员：你好！要帮忙吗？' },
+          { en: "Liu Tao's father: Yes, please. I want some toys for my boys.", zh: '刘涛的爸爸：好的，谢谢。我想要给我的男孩子们买些玩具。' },
+          { en: "Salesgirl: OK! How old are you?", zh: '女店员：好的！你多大了？' },
+          { en: "Liu Tao: I'm nine.", zh: '刘涛：我九岁了。' },
+          { en: 'Salesgirl: Please come here.', zh: '女店员：请来这里。' },
+          { en: "Liu Tao: Cool! I love this.", zh: '刘涛：酷！我喜欢这个。' },
+          { en: 'Salesgirl: How old are you?', zh: '女店员：你多大了？' },
+          { en: "Liu Hao: Three. I want this, please.", zh: '刘浩：我三岁了。我想要这个。' },
+          { en: 'Salesgirl: OK!', zh: '女店员：好的！' },
+          { en: 'Salesgirl: Here you are.', zh: '女店员：给你。' },
+          { en: "Liu Hao: Thank you!", zh: '刘浩：谢谢你！' },
+          { en: "Salesgirl: You're welcome.", zh: '女店员：不用谢。' },
+          { en: 'Liu Hao: Hi! How old are you?', zh: '刘浩：嗨！你多大了？' },
+          { en: "Liu Tao's father: Happy Birthday, Taotao.", zh: '刘涛的爸爸：生日快乐，涛涛。' },
+          { en: "Liu Tao & Liu Hao: Thanks, Dad! We love you.", zh: '刘涛和刘浩：谢谢，爸爸！我们爱你。' },
+          { en: 'come to my party', zh: '来我的派对' },
+          { en: "It's time to ...", zh: '是……的时候了。' },
+          { en: 'Happy Birthday!', zh: '生日快乐！' },
+          { en: 'How lovely!', zh: '真可爱！' },
+          { en: 'Can I help you?', zh: '要帮忙吗？' },
+          { en: 'Yes, please.', zh: '好的，谢谢。' },
+          { en: 'some toys', zh: '一些玩具' },
+          { en: 'come here', zh: '来这里' },
+          { en: 'get ... from ...', zh: '从……得到……' },
+          { en: 'Here you are.', zh: '给你。' },
+          { en: "You're welcome.", zh: '别客气。不用谢。' },
+          { en: 'birthday gift', zh: '生日礼物' },
+          { en: 'say thanks and show love', zh: '说谢谢并表达爱' },
+          { en: 'How old are you?', zh: '你多大了？' }
         ]
       },
       {
@@ -251,12 +403,41 @@ const BOOKS = [
           { en: 'thing', zh: '事情', emoji: '📦', ex: 'I can do many things.' }
         ],
         sentences: [
-          { en: 'I can draw.', zh: '我会画画。' },
-          { en: 'I can sing and dance.', zh: '我会唱歌和跳舞。' },
-          { en: 'I can clean the table.', zh: '我会擦桌子。' },
-          { en: "Let's take pictures!", zh: '我们来拍照吧！' },
+          { en: "Bobby: I can dance for you, Grandpa.", zh: '博比：我能为你跳舞，爷爷。' },
+          { en: "Bobby's grandpa: Are you OK, Bobby?", zh: '博比的爷爷：你没事吧，博比？' },
+          { en: "Bobby: Oh, I'm dizzy ...", zh: '博比：啊，我好晕……' },
+          { en: "Bobby: Grandpa, I can draw a picture for you.", zh: '博比：爷爷，我能给你画一幅图画。' },
+          { en: "Bobby's grandpa: Er, is this a fox?", zh: '博比的爷爷：嗯，这是只狐狸吗？' },
+          { en: "Bobby: No, it's you!", zh: '博比：不，是你！' },
+          { en: "Bobby's grandpa: Ha ha!", zh: '博比的爷爷：哈哈！' },
+          { en: "Bobby's grandpa: Thank you, Bobby. I love you.", zh: '博比的爷爷：谢谢你，博比。我爱你。' },
+          { en: "Bobby: I love you too, Grandpa.", zh: '博比：我也爱你，爷爷。' },
+          { en: 'The family get together on New Year\'s Day. The children want to do things for the family.', zh: '元旦全家团聚。孩子们想为家人做事。' },
+          { en: 'Cousin 1: I can sing.', zh: '表妹1：我能唱歌。' },
+          { en: 'Liu Hao: I can sing too.', zh: '刘浩：我也能唱歌。' },
+          { en: "Liu Tao's father: I can take pictures.", zh: '刘涛的爸爸：我能拍照。' },
+          { en: "Liu Tao's grandma: Great!", zh: '刘涛的奶奶：好棒！' },
+          { en: 'Cousin 2: I can dance.', zh: '表妹2：我能跳舞。' },
+          { en: 'Liu Hao: I can dance too.', zh: '刘浩：我也能跳舞。' },
+          { en: "Liu Tao's grandma: How lovely!", zh: '刘涛的奶奶：真可爱！' },
+          { en: 'Liu Tao: I can draw.', zh: '刘涛：我能画画。' },
+          { en: 'Liu Hao: I can draw too.', zh: '刘浩：我也能画画。' },
+          { en: 'Liu Tao & Liu Hao: Look! This is my picture.', zh: '刘涛和刘浩：看！这是我的画。' },
+          { en: 'Liu Tao & Cousin 2: We can clean the table.', zh: '刘涛和表妹2：我们能收拾桌子。' },
+          { en: 'Liu Hao & Cousin 1: We can clean the table too.', zh: '刘浩和表妹1：我们也能收拾桌子。' },
+          { en: "Liu Tao's mother: Great! Thank you.", zh: '刘涛的妈妈：好棒！谢谢你们。' },
+          { en: 'sing a song', zh: '唱一首歌' },
+          { en: 'look at me', zh: '看我' },
+          { en: 'draw a picture', zh: '画一幅图画' },
+          { en: 'a family get-together', zh: '一次家庭聚会' },
           { en: 'Are you OK?', zh: '你没事吧？' },
-          { en: 'I can do this for you.', zh: '这个我可以帮你做。' }
+          { en: 'take pictures', zh: '拍照' },
+          { en: 'get together', zh: '聚集，相聚' },
+          { en: "on New Year's Day", zh: '在元旦' },
+          { en: 'want to do ...', zh: '想要做……' },
+          { en: 'put on a show', zh: '举行一场表演' },
+          { en: 'talk about things you can do', zh: '谈论你能做的事情' },
+          { en: 'can do things for my family', zh: '能为我的家人做事' }
         ]
       }
     ]
@@ -265,7 +446,7 @@ const BOOKS = [
   {
     id: '3b',
     name: '三年级下册',
-    edition: '新教材（2025春）',
+    edition: '译林版 · 新教材（2025春）',
     ready: true,
     units: [
       {
@@ -287,10 +468,31 @@ const BOOKS = [
           { en: 'Good idea!', zh: '好主意！', emoji: '💡' }
         ],
         sentences: [
-          { en: "What's this? It's a pencil.", zh: '这是什么？是铅笔。' },
-          { en: 'Is that your schoolbag?', zh: '那是你的书包吗？' },
-          { en: 'Put your ruler in the pencil case.', zh: '把你的直尺放进铅笔盒。' },
-          { en: 'Guess! What is in my schoolbag?', zh: '猜猜！我书包里有什么？' }
+          // Cartoon time: Bobby's school things
+          { en: "What's this?", zh: '这是什么？' },
+          { en: "It's my pencil case.", zh: '它是我的铅笔盒。' },
+          { en: "What's that?", zh: '那是什么？' },
+          { en: "It's my rubber.", zh: '它是我的橡皮。' },
+          { en: 'Bobby! Put your school things in your schoolbag!', zh: '波比！把你的学习用品放进书包里！' },
+          { en: 'Yes, Dad!', zh: '好的，爸爸！' },
+          // Story time: What's that?
+          { en: "What's that? Is it a ruler?", zh: '那是什么？它是一把尺子吗？' },
+          { en: "No, it isn't.", zh: '不，它不是。' },
+          { en: 'Is it a pencil?', zh: '它是一支铅笔吗？' },
+          { en: "No, it isn't. It's a pen!", zh: '不，它不是。它是一支钢笔！' },
+          { en: "Yes. You're right!", zh: '是的。你说对了！' },
+          { en: "What's this?", zh: '这是什么？' },
+          { en: "It's a rubber.", zh: '它是一块橡皮。' },
+          { en: 'No. Guess again.', zh: '不对。再猜一次。' },
+          { en: 'Is it a pencil case?', zh: '它是一个铅笔盒吗？' },
+          { en: 'Yes, it is!', zh: '是的，它是！' },
+          { en: "Look, Mike. What's that?", zh: '看，迈克。那是什么？' },
+          { en: "It's for your pencil. Now your pencil is long.", zh: '它是给你的铅笔用的。现在你的铅笔变长了。' },
+          { en: 'Good idea! Thank you, Su Hai.', zh: '好主意！谢谢你，苏海。' },
+          // 重点短语
+          { en: 'Put your school things in your schoolbag.', zh: '把你的学习用品放进书包里。' },
+          { en: "You're right.", zh: '你是对的。' },
+          { en: 'Good idea!', zh: '好主意！' }
         ]
       },
       {
@@ -315,10 +517,33 @@ const BOOKS = [
           { en: 'keep', zh: '保持', emoji: '🔄', ex: 'Keep our classroom clean.' }
         ],
         sentences: [
-          { en: "Let's clean our classroom.", zh: '我们来打扫教室吧。' },
-          { en: 'Close the window, please.', zh: '请关上窗户。' },
+          // Cartoon time: A dirty desk
+          { en: "Let's clean our classroom!", zh: '我们来打扫教室吧！' },
+          { en: 'Good idea!', zh: '好主意！' },
+          { en: 'Sam, sweep the floor, please.', zh: '山姆，请扫地。' },
+          { en: 'OK.', zh: '好的。' },
+          { en: 'Please clean your desk and chair, Max.', zh: '马克斯，请擦你的课桌和椅子。' },
+          { en: 'Look! That desk is dirty!', zh: '看！那张课桌很脏！' },
+          { en: "Oh, it's my desk ...", zh: '哦，那是我的课桌……' },
+          // Story time: Let's clean our classroom
+          { en: 'Our classroom is dirty.', zh: '我们的教室很脏。' },
+          { en: "Let's clean it.", zh: '我们来打扫它。' },
+          { en: 'OK!', zh: '好的！' },
+          { en: 'I can clean the blackboard.', zh: '我会擦黑板。' },
+          { en: 'Me too!', zh: '我也是！' },
           { en: "Let's sweep the floor.", zh: '我们来扫地吧。' },
-          { en: 'Keep our classroom clean.', zh: '保持教室干净。' }
+          { en: "Let's put away the books, Yang Ling.", zh: '杨玲，我们把书收起来吧。' },
+          { en: 'All right.', zh: '好的。' },
+          { en: 'Please close the window, Mike.', zh: '迈克，请关上窗户。' },
+          { en: 'Thanks, Mike.', zh: '谢谢你，迈克。' },
+          { en: 'Our classroom is clean now.', zh: '我们的教室现在干净了。' },
+          { en: "Yes. Let's keep it clean.", zh: '是的。让我们保持干净。' },
+          // 重点短语
+          { en: 'clean the blackboard', zh: '擦黑板' },
+          { en: 'sweep the floor', zh: '扫地' },
+          { en: 'put away the books', zh: '把书收起来' },
+          { en: 'close the window', zh: '关窗户' },
+          { en: 'keep it clean', zh: '保持干净' }
         ]
       },
       {
@@ -345,10 +570,42 @@ const BOOKS = [
           { en: "That's all right.", zh: '不要紧。', emoji: '😊' }
         ],
         sentences: [
-          { en: "Don't shout in the library.", zh: '不要在图书馆里喊叫。' },
-          { en: 'Please be quiet.', zh: '请安静。' },
-          { en: 'Follow the school rules.', zh: '遵守学校规则。' },
-          { en: 'Would you like a sweet? — Yes, please.', zh: '你想要颗糖吗？——好的，谢谢。' }
+          // Library rules
+          { en: "Don't shout.", zh: '不要喊叫。' },
+          { en: "Don't talk.", zh: '不要讲话。' },
+          { en: "Don't eat.", zh: '不要吃东西。' },
+          { en: "Don't run.", zh: '不要跑。' },
+          { en: 'This is our library. Reading is fun.', zh: '这是我们的图书馆。阅读很有趣。' },
+          { en: 'Boys, girls, please follow the rules.', zh: '同学们，请遵守规则。' },
+          // Cartoon time: You can draw here
+          { en: 'Good morning, Mrs Fox.', zh: '早上好，狐狸夫人。' },
+          { en: 'Good morning. Sit down, please.', zh: '早上好。请坐。' },
+          { en: "You're late, Bobby.", zh: '你迟到了，波比。' },
+          { en: "I'm sorry, Mrs Fox.", zh: '对不起，狐狸夫人。' },
+          { en: "Don't be late again.", zh: '不要再迟到了。' },
+          { en: "Don't look out of the window, Bobby.", zh: '不要朝窗外看，波比。' },
+          { en: "Bobby, don't draw on your desk.", zh: '波比，不要在课桌上画画。' },
+          { en: 'You can draw here, Bobby.', zh: '你可以在这里画，波比。' },
+          // Story time: In the library
+          { en: 'Hello, Yang Ling!', zh: '你好，杨玲！' },
+          { en: "Shh! Don't shout, Liu Tao.", zh: '嘘！不要喊叫，刘涛。' },
+          { en: 'This book is fun.', zh: '这本书很有趣。' },
+          { en: 'Yes, it is. But keep quiet, please.', zh: '是的。但是请保持安静。' },
+          { en: "I'm sorry.", zh: '对不起。' },
+          { en: "Look! Let's follow the rules.", zh: '看！让我们遵守规则。' },
+          { en: 'OK.', zh: '好的。' },
+          { en: 'Hi!', zh: '嗨！' },
+          { en: "Don't run, Mike.", zh: '不要跑，迈克。' },
+          { en: "Don't shout, Mike.", zh: '不要喊叫，迈克。' },
+          { en: 'Would you like a sweet?', zh: '你想要颗糖吗？' },
+          { en: "No, thank you. We can't eat here.", zh: '不，谢谢。我们不能在这里吃东西。' },
+          { en: 'Look at the rules here.', zh: '看这里的规则。' },
+          { en: "Oh, I'm sorry.", zh: '哦，对不起。' },
+          { en: "That's all right.", zh: '没关系。' },
+          // 重点短语
+          { en: 'keep quiet', zh: '保持安静' },
+          { en: 'follow the rules', zh: '遵守规则' },
+          { en: "That's all right.", zh: '不要紧。' }
         ]
       },
       {
@@ -383,10 +640,39 @@ const BOOKS = [
           { en: 'duck', zh: '鸭子', emoji: '🦆', ex: 'The duck can swim.' }
         ],
         sentences: [
-          { en: "It's break time. Let's play outside.", zh: '课间休息了，我们去外面玩吧。' },
-          { en: 'Where is the butterfly?', zh: '蝴蝶在哪里？' },
-          { en: 'The garden is beautiful.', zh: '花园真美。' },
-          { en: 'Class is over. Have fun!', zh: '下课了，玩得开心！' }
+          // Lead-in rhyme
+          { en: "Let's play hide-and-seek.", zh: '我们来玩捉迷藏吧。' },
+          { en: "Run and hide. Don't speak.", zh: '跑起来躲起来，不要说话。' },
+          { en: "Who's behind the tree?", zh: '谁在树后面？' },
+          { en: 'Can you see? Can you see?', zh: '你看见了吗？你看见了吗？' },
+          // Cartoon time: Where's my paper plane?
+          { en: "Class is over. Let's play!", zh: '下课了，我们去玩吧！' },
+          { en: 'The planes go very far.', zh: '飞机飞得很远。' },
+          { en: 'One, two, three, go!', zh: '一、二、三，飞！' },
+          { en: 'Yes. My plane is on the table.', zh: '是的。我的飞机在桌子上。' },
+          { en: 'My plane is in the flowers!', zh: '我的飞机在花丛里！' },
+          { en: "It's in the tree!", zh: '它在树上！' },
+          { en: "Where's my plane? I can't find it.", zh: '我的飞机在哪里？我找不到它了。' },
+          { en: 'Oh no!', zh: '哦，不！' },
+          // Story time: Drawing in the school garden
+          { en: 'Class is over. The students are in the school garden.', zh: '下课了。学生们在学校花园里。' },
+          { en: "Let's draw pictures here.", zh: '我们在这里画画吧。' },
+          { en: 'Great! I want to draw the flowers.', zh: '太好了！我想画花。' },
+          { en: "Where's the butterfly?", zh: '蝴蝶在哪里？' },
+          { en: "I can't find it.", zh: '我找不到它。' },
+          { en: 'Look! A butterfly is by the tree!', zh: '看！一只蝴蝶在树旁边！' },
+          { en: 'How beautiful!', zh: '真漂亮！' },
+          { en: "Ha ha! It's behind you.", zh: '哈哈！它在你后面。' },
+          { en: "Hi, Wang Bing! Look at the butterfly. It's on the duck.", zh: '嗨，王兵！看那只蝴蝶。它在鸭子身上。' },
+          { en: 'How lovely!', zh: '真可爱！' },
+          { en: "What's that, Wang Bing?", zh: '那是什么，王兵？' },
+          { en: 'A picture of you and the butterfly!', zh: '一张你和蝴蝶的图画！' },
+          // 重点短语
+          { en: 'Class is over.', zh: '下课了。' },
+          { en: 'have fun', zh: '玩得高兴' },
+          { en: 'by the tree', zh: '在树旁' },
+          { en: 'behind you', zh: '在你后面' },
+          { en: 'on the duck', zh: '在鸭子身上' }
         ]
       },
       {
@@ -410,10 +696,40 @@ const BOOKS = [
           { en: 'good', zh: '好的；有好处', emoji: '👍', ex: 'Fruit is good for you.' }
         ],
         sentences: [
-          { en: 'I like mangoes. They are sweet.', zh: '我喜欢芒果，它们很甜。' },
-          { en: "Let's make a fruit salad together.", zh: '我们一起做水果沙拉吧。' },
-          { en: 'I like apples. What about you?', zh: '我喜欢苹果，你呢？' },
-          { en: 'Fruit is good for you.', zh: '水果对你有好处。' }
+          // Lead-in rhyme
+          { en: 'I like apples, red and sweet.', zh: '我喜欢苹果，又红又甜。' },
+          { en: 'I like bananas, a tasty treat.', zh: '我喜欢香蕉，美味的食物。' },
+          { en: 'Oranges are yummy. Grapes are great!', zh: '橙子很好吃。葡萄很棒！' },
+          { en: 'I want lots of fruit on my plate.', zh: '我想盘子里有很多水果。' },
+          // Cartoon time: A magic trick
+          { en: 'Do you have a mango, Bobby?', zh: '你有芒果吗，波比？' },
+          { en: "No, I don't.", zh: '不，我没有。' },
+          { en: 'One, two, three, look! I have a mango!', zh: '一、二、三，看！我有一个芒果！' },
+          { en: 'Cool!', zh: '酷！' },
+          { en: 'One, two, three! I have two mangoes.', zh: '一、二、三！我有两个芒果。' },
+          { en: 'Great!', zh: '太棒了！' },
+          { en: "Ha ha! Let's share the mangoes!", zh: '哈哈！让我们分享芒果吧！' },
+          { en: "Thank you! I like mangoes. They're sweet.", zh: '谢谢你！我喜欢芒果。它们很甜。' },
+          // Story time: Let's make a fruit salad
+          { en: "Let's make a fruit salad together.", zh: '让我们一起做水果沙拉吧。' },
+          { en: 'Great!', zh: '太好了！' },
+          { en: 'What fruit do you have?', zh: '你们有什么水果？' },
+          { en: 'I have an orange. What about you?', zh: '我有一个橙子。你呢？' },
+          { en: 'I have two apples.', zh: '我有两个苹果。' },
+          { en: 'I have a mango. Do you have a banana, Yang Ling?', zh: '我有一个芒果。你有香蕉吗，杨玲？' },
+          { en: "No, I don't. I have some grapes.", zh: '不，我没有。我有一些葡萄。' },
+          { en: 'Wang Bing, do you have a banana?', zh: '王兵，你有香蕉吗？' },
+          { en: 'Yes, I do.', zh: '是的，我有。' },
+          { en: 'Here you are.', zh: '给你。' },
+          { en: 'Thanks.', zh: '谢谢。' },
+          { en: "Let's share the fruit salad!", zh: '让我们分享水果沙拉吧！' },
+          { en: 'How nice!', zh: '真好！' },
+          { en: 'Fruit is good for us!', zh: '水果对我们有益！' },
+          // 重点短语
+          { en: 'make a fruit salad', zh: '做水果沙拉' },
+          { en: 'What about you?', zh: '你呢？' },
+          { en: 'Here you are.', zh: '给你。' },
+          { en: 'Fruit is good for us.', zh: '水果对我们有益。' }
         ]
       },
       {
@@ -435,10 +751,41 @@ const BOOKS = [
           { en: 'move', zh: '移动', emoji: '🚶', ex: 'Move the chair, please.' }
         ],
         sentences: [
-          { en: 'Welcome to the farm!', zh: '欢迎来到农场！' },
-          { en: 'These are cows. Those are sheep.', zh: '这些是奶牛，那些是绵羊。' },
-          { en: 'The rabbits are cute.', zh: '兔子真可爱。' },
-          { en: 'Rabbits like carrots.', zh: '兔子喜欢胡萝卜。' }
+          // Lead-in chant
+          { en: 'Pigs on the farm go "oink, oink".', zh: '农场上的猪发出“哼哼”声。' },
+          { en: 'The pigs go "oink, oink, oink".', zh: '猪们发出“哼哼哼”声。' },
+          // Cartoon time: A "big" carrot
+          { en: 'Hello, Sam. Hello, Bobby.', zh: '你们好，山姆、波比。' },
+          { en: 'Hello, Ruby!', zh: '你好，鲁比！' },
+          { en: 'Welcome to my home!', zh: '欢迎来到我家！' },
+          { en: 'What are these?', zh: '这些是什么？' },
+          { en: "They're carrots.", zh: '它们是胡萝卜。' },
+          { en: 'Are those carrots too?', zh: '那些也是胡萝卜吗？' },
+          { en: 'Yes, they are.', zh: '是的，它们是。' },
+          { en: 'Help me, please!', zh: '请帮帮我！' },
+          { en: 'Oh!', zh: '哦！' },
+          // Story time: On Grandpa's farm
+          { en: 'Hello, Grandpa!', zh: '你好，爷爷！' },
+          { en: 'Hello, boys! Welcome to my farm.', zh: '你们好，孩子们！欢迎来到我的农场。' },
+          { en: 'What are these, Grandpa?', zh: '爷爷，这些是什么？' },
+          { en: "They're pigs.", zh: '它们是猪。' },
+          { en: 'Is this a home for pigs?', zh: '这是给猪住的家吗？' },
+          { en: 'Yes, it is.', zh: '是的，它是。' },
+          { en: 'What are those under the tree? Are they sheep?', zh: '树下的那些是什么？它们是绵羊吗？' },
+          { en: "No, they aren't. They're cows.", zh: '不，它们不是。它们是奶牛。' },
+          { en: 'These rabbits are very cute.', zh: '这些兔子非常可爱。' },
+          { en: 'Yes, they are.', zh: '是的，它们是。' },
+          { en: 'What do they like?', zh: '它们喜欢什么？' },
+          { en: 'They like carrots.', zh: '它们喜欢胡萝卜。' },
+          { en: 'Are those chickens?', zh: '那些是鸡吗？' },
+          { en: "No, they aren't. They're ducks.", zh: '不，它们不是。它们是鸭子。' },
+          { en: "One, two, three, four ... Don't move, ducks!", zh: '一、二、三、四……不要动，鸭子们！' },
+          { en: 'Grandpa, your farm is fun.', zh: '爷爷，你的农场真有趣。' },
+          // 重点短语
+          { en: 'Welcome to my farm.', zh: '欢迎来到我的农场。' },
+          { en: 'What are these/those?', zh: '这些/那些是什么？' },
+          { en: "They're ...", zh: '它们是……' },
+          { en: 'Yes, they are. / No, they are not.', zh: '是的，它们是。/ 不，它们不是。' }
         ]
       },
       {
@@ -460,10 +807,40 @@ const BOOKS = [
           { en: 'see', zh: '看见', emoji: '👀', ex: 'I can see a tiger.' }
         ],
         sentences: [
-          { en: "Let's go to the zoo.", zh: '我们去动物园吧。' },
-          { en: 'I can see a tiger and a lion.', zh: '我能看见老虎和狮子。' },
-          { en: "Don't feed the animals!", zh: '不要喂动物！' },
-          { en: 'High five!', zh: '击个掌！' }
+          // Lead-in rhyme
+          { en: "Let's see the pandas at the zoo.", zh: '我们去动物园看熊猫吧。' },
+          { en: 'They love to eat fresh bamboo.', zh: '它们喜欢吃新鲜的竹子。' },
+          { en: 'They love to sleep and play.', zh: '它们喜欢睡觉和玩耍。' },
+          { en: 'I can watch them all day.', zh: '我可以整天看它们。' },
+          // Cartoon time: High five!
+          { en: "It's lunchtime.", zh: '午餐时间到了。' },
+          { en: 'Do you like cakes?', zh: '你喜欢蛋糕吗？' },
+          { en: "No, I don't.", zh: '不，我不喜欢。' },
+          { en: 'Do you like bananas?', zh: '你喜欢香蕉吗？' },
+          { en: 'Do you like fish?', zh: '你喜欢鱼吗？' },
+          { en: 'Yes, I do!', zh: '是的，我喜欢！' },
+          { en: 'Me too!', zh: '我也是！' },
+          { en: 'High five!', zh: '击个掌！' },
+          { en: 'Five?', zh: '五？' },
+          // Story time: At the zoo
+          { en: 'Look at the tigers!', zh: '看那些老虎！' },
+          { en: 'I like tigers. They are cool.', zh: '我喜欢老虎。它们很酷。' },
+          { en: 'I like tigers too.', zh: '我也喜欢老虎。' },
+          { en: 'Do you like bears, Mum?', zh: '妈妈，你喜欢熊吗？' },
+          { en: "Yes, I do. They're big.", zh: '是的，我喜欢。它们很大。' },
+          { en: 'Do you like lions, Haohao?', zh: '浩浩，你喜欢狮子吗？' },
+          { en: "No, I don't! I like pandas!", zh: '不，我不喜欢！我喜欢熊猫！' },
+          { en: 'Haohao, look at the monkeys. They are cute.', zh: '浩浩，看那些猴子。它们很可爱。' },
+          { en: 'I like monkeys! Hi, Monkey! Would you like a banana?', zh: '我喜欢猴子！嗨，猴子！你想要一根香蕉吗？' },
+          { en: "Don't feed animals in the zoo!", zh: '不要在动物园里喂动物！' },
+          { en: "Oh, I'm sorry!", zh: '哦，对不起！' },
+          { en: "That's all right.", zh: '没关系。' },
+          { en: "Let's go to see the pandas.", zh: '我们去看熊猫吧。' },
+          // 重点短语
+          { en: 'Do you like ...?', zh: '你喜欢……吗？' },
+          { en: 'Yes, I do. / No, I do not.', zh: '是的，我喜欢。/ 不，我不喜欢。' },
+          { en: "Don't feed animals in the zoo.", zh: '不要在动物园里喂动物。' },
+          { en: "Let's go to see the pandas.", zh: '我们去看熊猫吧。' }
         ]
       },
       {
@@ -488,10 +865,34 @@ const BOOKS = [
           { en: 'How come?', zh: '怎么回事？', emoji: '🤔' }
         ],
         sentences: [
-          { en: 'What colour is it? — It is yellow.', zh: '它是什么颜色？——是黄色。' },
-          { en: 'I want to buy a red balloon.', zh: '我想买一个红气球。' },
-          { en: 'The chameleon can change colours.', zh: '变色龙会变色。' },
-          { en: 'The sky is blue and the tree is green.', zh: '天空是蓝色的，树是绿色的。' }
+          // Cartoon time: Colourful balloons
+          { en: 'Can I buy a balloon, Mum?', zh: '妈妈，我能买一个气球吗？' },
+          { en: 'Sure.', zh: '当然。' },
+          { en: 'Here you are.', zh: '给你。' },
+          { en: 'What about you, Bobby?', zh: '你呢，波比？' },
+          { en: 'Hello! I want a balloon.', zh: '你好！我想要一个气球。' },
+          { en: 'OK. What colour?', zh: '好的。什么颜色？' },
+          { en: 'Pink, please.', zh: '请给我粉色。' },
+          { en: 'I want a green balloon, a red balloon, an orange balloon ...', zh: '我想要一个绿色的气球、一个红色的气球、一个橙色的气球……' },
+          { en: 'Bobby! That balloon is for you.', zh: '波比！那个气球是给你的。' },
+          // Story time: A little friend
+          { en: 'Look, this is a chameleon. It is my little friend.', zh: '看，这是一只变色龙。它是我的小朋友。' },
+          { en: 'What colour is it?', zh: '它是什么颜色？' },
+          { en: "It's green.", zh: '它是绿色的。' },
+          { en: 'What colour is it now? Can you see it?', zh: '它现在是什么颜色？你能看见它吗？' },
+          { en: "Yes, it's here. It's brown.", zh: '是的，它在这里。它是棕色的。' },
+          { en: "It's yellow and red now.", zh: '它现在是黄色和红色的。' },
+          { en: "It's cool!", zh: '它真酷！' },
+          { en: 'Yes, my little friend is very cool.', zh: '是的，我的小朋友很酷。' },
+          { en: 'What colour is it now?', zh: '它现在是什么颜色？' },
+          { en: "It's green again!", zh: '它又变成绿色了！' },
+          { en: 'How come?', zh: '怎么回事？' },
+          { en: 'Wow!', zh: '哇！' },
+          // 重点短语
+          { en: 'Can I buy a balloon?', zh: '我能买一个气球吗？' },
+          { en: 'What colour is it?', zh: '它是什么颜色？' },
+          { en: "It's green / brown / yellow and red.", zh: '它是绿色/棕色/黄色和红色的。' },
+          { en: 'How come?', zh: '怎么回事？' }
         ]
       }
     ]
@@ -500,432 +901,565 @@ const BOOKS = [
   {
     id: '4a',
     name: '四年级上册',
-    edition: '旧版（新版教材已出，网上暂无新版单词表文本，待替换）',
-    ready: true,
-    units: [
-      {
-        title: 'Unit 1 I like dogs',
-        words: [
-          { en: 'like', zh: '喜欢', emoji: '❤️', ex: 'I like dogs.' },
-          { en: 'dog', zh: '狗', emoji: '🐶', ex: 'The dog is cute.' },
-          { en: 'animal', zh: '动物', emoji: '🐾', ex: 'I like animals.' },
-          { en: 'cat', zh: '猫', emoji: '🐱', ex: 'The cat is fat.' },
-          { en: 'cute', zh: '可爱的', emoji: '🥰', ex: 'The panda is cute.' },
-          { en: 'panda', zh: '大熊猫', emoji: '🐼', ex: 'Pandas are cute.' },
-          { en: 'fat', zh: '胖的', emoji: '🐷', ex: 'This cat is fat.' },
-          { en: 'elephant', zh: '大象', emoji: '🐘', ex: 'The elephant is big.' },
-          { en: 'horse', zh: '马', emoji: '🐴', ex: 'The horse can run.' },
-          { en: 'lion', zh: '狮子', emoji: '🦁', ex: 'The lion is strong.' },
-          { en: 'monkey', zh: '猴子', emoji: '🐵', ex: 'The monkey is funny.' },
-          { en: 'tiger', zh: '老虎', emoji: '🐯', ex: 'The tiger can jump.' },
-          { en: 'have', zh: '有', emoji: '🙌', ex: 'I have a cat.' }
-        ],
-        sentences: [
-          { en: 'I like dogs. They are cute.', zh: '我喜欢狗，它们很可爱。' },
-          { en: 'Do you like pandas? — Yes, I do.', zh: '你喜欢熊猫吗？——喜欢。' },
-          { en: 'Do you like tigers? — No, I don\'t.', zh: '你喜欢老虎吗？——不喜欢。' },
-          { en: 'Look at this cat! It is fat!', zh: '看这只猫！它真胖！' }
-        ]
-      },
-      {
-        title: 'Unit 2 Let\'s make a fruit salad',
-        words: [
-          { en: "Let's ...", zh: '咱们……', emoji: '➡️' },
-          { en: 'make', zh: '制作', emoji: '🔨', ex: "Let's make a salad." },
-          { en: 'fruit', zh: '水果', emoji: '🍇', ex: 'I like fruit.' },
-          { en: 'salad', zh: '沙拉', emoji: '🥗', ex: 'The salad is nice.' },
-          { en: 'pineapple', zh: '菠萝', emoji: '🍍', ex: 'I have a pineapple.' },
-          { en: 'mango', zh: '芒果', emoji: '🥭', ex: 'Do you like mangoes?' },
-          { en: 'any', zh: '一些（疑问/否定）', emoji: '❓', ex: 'Do you have any grapes?' },
-          { en: 'banana', zh: '香蕉', emoji: '🍌', ex: 'I have some bananas.' },
-          { en: 'some', zh: '一些', emoji: '🔢', ex: 'I have some grapes.' },
-          { en: 'grape', zh: '葡萄', emoji: '🍇', ex: 'These grapes are sweet.' },
-          { en: 'Thanks.', zh: '谢谢。', emoji: '🙏' },
-          { en: 'our', zh: '我们的', emoji: '🙋', ex: 'This is our salad.' },
-          { en: 'cool', zh: '酷的；棒的', emoji: '😎', ex: 'Cool!' },
-          { en: 'wonderful', zh: '精彩的', emoji: '🎉', ex: 'Wonderful!' },
-          { en: 'how many', zh: '多少', emoji: '❓', ex: 'How many mangoes?' }
-        ],
-        sentences: [
-          { en: "Let's make a fruit salad.", zh: '我们来做水果沙拉吧。' },
-          { en: 'I have a pineapple and some grapes.', zh: '我有一个菠萝和一些葡萄。' },
-          { en: 'Do you have any bananas?', zh: '你有一些香蕉吗？' },
-          { en: 'Look at our fruit salad! Wonderful!', zh: '看我们的水果沙拉！真棒！' }
-        ]
-      },
-      {
-        title: 'Unit 3 How many?',
-        words: [
-          { en: 'thirteen', zh: '十三', emoji: '🔢', ex: 'I have thirteen stickers.' },
-          { en: 'sticker', zh: '贴纸', emoji: '🌟', ex: 'I like stickers.' },
-          { en: 'can', zh: '可以；能够', emoji: '💪', ex: 'Can I have a look?' },
-          { en: 'have a look', zh: '看一看', emoji: '👀', ex: 'Can I have a look?' },
-          { en: 'very', zh: '很', emoji: '❗', ex: 'They are very nice.' },
-          { en: 'fifteen', zh: '十五', emoji: '🔢', ex: 'I have fifteen.' },
-          { en: 'sure', zh: '当然', emoji: '👌' },
-          { en: 'fourteen', zh: '十四', emoji: '🔢' },
-          { en: 'sixteen', zh: '十六', emoji: '🔢' },
-          { en: 'seventeen', zh: '十七', emoji: '🔢' },
-          { en: 'eighteen', zh: '十八', emoji: '🔢' },
-          { en: 'nineteen', zh: '十九', emoji: '🔢' },
-          { en: 'play', zh: '玩；打（球）', emoji: '⚽', ex: 'I play table tennis.' },
-          { en: 'many', zh: '许多', emoji: '👥', ex: 'How many boxes?' },
-          { en: 'box', zh: '盒子', emoji: '📦', ex: 'The box is big.' },
-          { en: 'table tennis', zh: '乒乓球', emoji: '🏓', ex: 'I can play table tennis.' },
-          { en: 'but', zh: '但是', emoji: '➕', ex: 'I like it but I can not play.' },
-          { en: 'do', zh: '做', emoji: '🛠️', ex: 'What do you like?' }
-        ],
-        sentences: [
-          { en: 'How many stickers do you have?', zh: '你有多少张贴纸？' },
-          { en: 'I have fifteen. They are very nice.', zh: '我有十五张，它们很漂亮。' },
-          { en: 'Can I have a look? — Sure.', zh: '我能看看吗？——当然。' },
-          { en: 'I can play table tennis.', zh: '我会打乒乓球。' }
-        ]
-      },
-      {
-        title: 'Unit 4 I can play basketball',
-        words: [
-          { en: 'basketball', zh: '篮球', emoji: '🏀', ex: 'I can play basketball.' },
-          { en: 'well', zh: '好地', emoji: '👍', ex: 'He can play well.' },
-          { en: "can't", zh: '不能', emoji: '🙅', ex: "I can't swim." },
-          { en: 'have a try', zh: '试一试', emoji: '💪' },
-          { en: 'yeah', zh: '是的；太好了', emoji: '🎉' },
-          { en: 'football', zh: '足球', emoji: '⚽', ex: 'Let us play football.' },
-          { en: 'jump', zh: '跳', emoji: '🦘', ex: 'I can jump high.' },
-          { en: 'skate', zh: '滑冰', emoji: '⛸️', ex: 'I can skate.' },
-          { en: 'swim', zh: '游泳', emoji: '🏊', ex: 'Fish can swim.' },
-          { en: 'quack', zh: '（鸭子）嘎嘎声', emoji: '🦆' },
-          { en: 'tweet', zh: '（鸟）啾啾声', emoji: '🐦' },
-          { en: 'fly', zh: '飞', emoji: '🕊️', ex: 'Birds can fly.' },
-          { en: 'ouch', zh: '哎呦', emoji: '😵' },
-          { en: 'sad', zh: '难过的', emoji: '😢', ex: 'Do not be sad.' },
-          { en: 'either', zh: '也（否定句）', emoji: '➕', ex: "I can't skate either." }
-        ],
-        sentences: [
-          { en: 'Can you play basketball? — Yes, I can.', zh: '你会打篮球吗？——会。' },
-          { en: "Can you swim? — No, I can't.", zh: '你会游泳吗？——不会。' },
-          { en: 'Have a try!', zh: '试一试！' },
-          { en: "Don't be sad. Have a try!", zh: '别难过，试一试！' }
-        ]
-      },
-      {
-        title: 'Unit 5 Our new home',
-        words: [
-          { en: 'home', zh: '家', emoji: '🏠', ex: 'Welcome to our new home.' },
-          { en: 'bedroom', zh: '卧室', emoji: '🛏️', ex: 'This is my bedroom.' },
-          { en: 'living room', zh: '客厅', emoji: '🛋️', ex: 'The living room is big.' },
-          { en: 'sofa', zh: '沙发', emoji: '🛋️', ex: 'The sofa is soft.' },
-          { en: 'come', zh: '来', emoji: '🏃', ex: 'Come in, please.' },
-          { en: 'kitchen', zh: '厨房', emoji: '🍳', ex: 'Mum is in the kitchen.' },
-          { en: 'clock', zh: '时钟', emoji: '🕰️', ex: 'The clock is on the wall.' },
-          { en: 'fridge', zh: '冰箱', emoji: '🧊', ex: 'The milk is in the fridge.' },
-          { en: 'table', zh: '桌子', emoji: '🪑', ex: 'The table is clean.' },
-          { en: 'bathroom', zh: '浴室', emoji: '🛁', ex: 'Where is the bathroom?' },
-          { en: 'How are you?', zh: '你好吗？', emoji: '👋' },
-          { en: 'hungry', zh: '饥饿的', emoji: '😋', ex: 'I am hungry.' },
-          { en: 'What would you like?', zh: '你想要什么？', emoji: '❓' },
-          { en: "I'd like ...", zh: '我想要……', emoji: '💭' }
-        ],
-        sentences: [
-          { en: 'This is our new home.', zh: '这是我们的新家。' },
-          { en: 'The living room is big and nice.', zh: '客厅又大又漂亮。' },
-          { en: 'Where is the clock? — It is in the kitchen.', zh: '时钟在哪里？——在厨房。' },
-          { en: 'I am hungry. I would like some rice.', zh: '我饿了，想吃点米饭。' }
-        ]
-      },
-      {
-        title: 'Unit 6 At the snack bar',
-        words: [
-          { en: 'at', zh: '在（某处）', emoji: '📍', ex: 'I am at the snack bar.' },
-          { en: 'snack bar', zh: '快餐店；小吃店', emoji: '🍟', ex: 'Let us go to the snack bar.' },
-          { en: 'hamburger', zh: '汉堡包', emoji: '🍔', ex: 'I would like a hamburger.' },
-          { en: 'a glass of', zh: '一杯', emoji: '🥛', ex: 'A glass of milk, please.' },
-          { en: 'noodles', zh: '面条', emoji: '🍜', ex: 'I like noodles.' },
-          { en: 'dad', zh: '爸爸', emoji: '👨', ex: 'Dad is hungry.' },
-          { en: 'sandwich', zh: '三明治', emoji: '🥪', ex: 'A sandwich, please.' },
-          { en: 'a cup of', zh: '一杯', emoji: '☕', ex: 'A cup of coffee, please.' },
-          { en: 'coffee', zh: '咖啡', emoji: '☕', ex: 'Dad likes coffee.' },
-          { en: 'Anything else?', zh: '还要别的吗？', emoji: '❓' },
-          { en: 'tea', zh: '茶', emoji: '🍵', ex: 'A cup of tea, please.' },
-          { en: 'juice', zh: '果汁', emoji: '🧃', ex: 'I like orange juice.' },
-          { en: 'rice', zh: '米饭', emoji: '🍚', ex: 'A big bowl of rice.' },
-          { en: 'Me too.', zh: '我也是。', emoji: '🙋' },
-          { en: 'fish', zh: '鱼', emoji: '🐟', ex: 'I like fish.' },
-          { en: 'Can I help you?', zh: '您要点什么？', emoji: '🤝' },
-          { en: 'big', zh: '大的', emoji: '🐘', ex: 'What a big fish!' }
-        ],
-        sentences: [
-          { en: 'What would you like? — I would like a hamburger.', zh: '您要点什么？——我想要一个汉堡。' },
-          { en: 'A glass of juice, please.', zh: '请给我一杯果汁。' },
-          { en: 'Anything else? — No, thank you.', zh: '还要别的吗？——不了，谢谢。' },
-          { en: 'I like noodles. — Me too.', zh: '我喜欢面条。——我也是。' }
-        ]
-      },
-      {
-        title: 'Unit 7 How much?',
-        words: [
-          { en: 'how much', zh: '多少钱', emoji: '💰', ex: 'How much is it?' },
-          { en: 'shoe', zh: '鞋子', emoji: '👟', ex: 'These shoes are nice.' },
-          { en: 'yuan', zh: '元', emoji: '💵', ex: 'It is twenty yuan.' },
-          { en: 'sock', zh: '袜子', emoji: '🧦', ex: 'My socks are new.' },
-          { en: 'umbrella', zh: '雨伞', emoji: '☂️', ex: 'It is a nice umbrella.' },
-          { en: 'only', zh: '只有', emoji: '☝️', ex: 'It is only five yuan.' },
-          { en: 'twenty-eight', zh: '二十八', emoji: '🔢' },
-          { en: 'Well done.', zh: '干得好。', emoji: '👏' },
-          { en: 'fan', zh: '扇子', emoji: '🪭' },
-          { en: 'twenty', zh: '二十', emoji: '2️⃣0️⃣' },
-          { en: 'thirty', zh: '三十', emoji: '3️⃣0️⃣' },
-          { en: 'forty', zh: '四十', emoji: '4️⃣0️⃣' },
-          { en: 'fifty', zh: '五十', emoji: '5️⃣0️⃣' },
-          { en: 'forty-five', zh: '四十五', emoji: '🔢' },
-          { en: 'her', zh: '她的', emoji: '👧', ex: 'Her fan is new.' },
-          { en: 'tail', zh: '尾巴', emoji: '🦊', ex: 'The tail is long.' },
-          { en: 'long', zh: '长的', emoji: '📏', ex: 'The tail is long.' }
-        ],
-        sentences: [
-          { en: 'How much is it? — It is twenty yuan.', zh: '这个多少钱？——二十元。' },
-          { en: 'How much are these shoes?', zh: '这双鞋多少钱？' },
-          { en: 'These socks are very pretty.', zh: '这些袜子真漂亮。' },
-          { en: 'Well done!', zh: '干得好！' }
-        ]
-      },
-      {
-        title: 'Unit 8 Dolls',
-        words: [
-          { en: 'hair', zh: '头发', emoji: '💇', ex: 'Her hair is long.' },
-          { en: 'eye', zh: '眼睛', emoji: '👁️', ex: 'His eyes are big.' },
-          { en: 'nose', zh: '鼻子', emoji: '👃', ex: 'The nose is small.' },
-          { en: 'mouth', zh: '嘴', emoji: '👄', ex: 'The mouth is small.' },
-          { en: 'small', zh: '小的', emoji: '🐣', ex: 'The ears are small.' },
-          { en: 'his', zh: '他的', emoji: '👦', ex: 'His nose is big.' },
-          { en: 'short', zh: '矮的；短的', emoji: '📏', ex: 'He is short.' },
-          { en: 'ear', zh: '耳朵', emoji: '👂', ex: 'The ears are big.' },
-          { en: 'king', zh: '国王', emoji: '🤴', ex: 'The king is tall.' },
-          { en: 'thin', zh: '瘦的', emoji: '🪶', ex: 'He is thin.' },
-          { en: 'tall', zh: '高的', emoji: '🦒', ex: 'She is tall.' },
-          { en: 'snowman', zh: '雪人', emoji: '⛄', ex: 'The snowman is cute.' }
-        ],
-        sentences: [
-          { en: 'Her hair is long. Her eyes are big.', zh: '她的头发长，眼睛大。' },
-          { en: 'His nose and mouth are small.', zh: '他的鼻子和嘴巴小小的。' },
-          { en: 'The king is tall and thin.', zh: '国王又高又瘦。' },
-          { en: 'Look at the snowman! It is cute.', zh: '看这个雪人！真可爱。' }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: '4b',
-    name: '四年级下册',
-    edition: '旧版（新版教材已出，网上暂无新版单词表文本，待替换）',
+    edition: '译林版 · 新教材（2025秋）',
     ready: true,
     units: [
       {
         title: 'Unit 1 Our school subjects',
         words: [
-          { en: 'school', zh: '学校', emoji: '🏫', ex: 'Welcome back to school.' },
-          { en: 'subject', zh: '学科；科目', emoji: '📘', ex: 'What subjects do you like?' },
-          { en: 'Welcome back to ...', zh: '欢迎回到……', emoji: '👋' },
-          { en: 'see', zh: '看见；见到', emoji: '👀', ex: 'Nice to see you.' },
-          { en: 'timetable', zh: '课程表', emoji: '🗓️', ex: 'This is our timetable.' },
-          { en: 'Chinese', zh: '语文（课）', emoji: '🇨🇳', ex: 'We have Chinese and Maths.' },
+          { en: 'subject', zh: '科目；学科', emoji: '📚', ex: 'What subject do you like?' },
+          { en: 'Chinese', zh: '语文（课）', emoji: '🇨🇳', ex: 'We have Chinese.' },
+          { en: 'English', zh: '英语（课）', emoji: '🔤', ex: 'I like English.' },
           { en: 'Maths', zh: '数学（课）', emoji: '➗', ex: 'I like Maths.' },
+          { en: 'PE', zh: '体育（课）', emoji: '🏃', ex: "It's time for PE." },
           { en: 'Art', zh: '美术（课）', emoji: '🎨', ex: 'I like Art.' },
-          { en: 'PE', zh: '体育（课）', emoji: '⚽', ex: 'We have PE today.' },
-          { en: 'Music', zh: '音乐（课）', emoji: '🎵', ex: 'I like Music.' },
-          { en: 'Science', zh: '科学（课）', emoji: '🔬', ex: 'Science is fun.' },
-          { en: 'fun', zh: '有趣的', emoji: '🎉', ex: 'It is fun.' },
-          { en: 'go to', zh: '去……', emoji: '🚶', ex: 'Let us go to the playground.' },
-          { en: 'playground', zh: '操场', emoji: '🏃', ex: 'We play on the playground.' },
-          { en: 'lesson', zh: '课', emoji: '📖', ex: 'It is time for Maths.' },
-          { en: 'Monday', zh: '星期一', emoji: '📅', ex: 'It is Monday today.' },
-          { en: 'afternoon', zh: '下午', emoji: '🌤️', ex: 'Good afternoon.' }
+          { en: 'Science', zh: '科学（课）', emoji: '🔬', ex: 'We have Science.' },
+          { en: 'Music', zh: '音乐（课）', emoji: '🎵', ex: 'I like Music best.' },
+          { en: 'timetable', zh: '课程表', emoji: '🗓️', ex: 'This is our timetable.' },
+          { en: 'welcome', zh: '欢迎', emoji: '👋', ex: 'Welcome back to school.' },
+          { en: 'fun', zh: '乐趣；有趣的', emoji: '😄', ex: 'School is fun.' },
+          { en: 'playground', zh: '操场', emoji: '🛝', ex: "Let's go to the playground." },
+          { en: 'lesson', zh: '课', emoji: '📖', ex: 'We have a Music lesson.' }
         ],
         sentences: [
-          { en: 'Welcome back to school!', zh: '欢迎回到学校！' },
-          { en: 'What subjects do you like?', zh: '你喜欢什么科目？' },
-          { en: 'I like PE and Music.', zh: '我喜欢体育和音乐。' },
-          { en: 'It is time for Maths.', zh: '该上数学课了。' }
+          // === Story time: My favourite subject ===
+          { en: 'Welcome back to school, class.', zh: '欢迎回到学校，同学们。' },
+          { en: 'We have Chinese, Maths, English and Science.', zh: '我们有语文、数学、英语和科学课。' },
+          { en: 'What subjects do you like?', zh: '你们喜欢什么科目？' },
+          { en: "I like Maths. I'm good at it.", zh: '我喜欢数学，我很擅长。' },
+          { en: "It's time for PE.", zh: '该上体育课了。' },
+          { en: 'We all like PE!', zh: '我们都喜欢体育课！' },
+          // === Cartoon time: Where's the mouse? ===
+          { en: 'What subject do you like best, Bobby?', zh: '鲍比，你最喜欢什么科目？' },
+          { en: 'I like Music best.', zh: '我最喜欢音乐。' },
+          { en: "Where's the mouse?", zh: '老鼠在哪儿？' }
         ]
       },
       {
-        title: 'Unit 2 After school',
+        title: 'Unit 2 My day',
         words: [
-          { en: 'after school', zh: '放学后', emoji: '🎒', ex: 'We play after school.' },
-          { en: 'go', zh: '去', emoji: '🚶', ex: 'Let us go and play.' },
-          { en: 'What day is it today?', zh: '今天星期几？', emoji: '📅' },
-          { en: 'Wednesday', zh: '星期三', emoji: '📅' },
-          { en: 'match', zh: '比赛', emoji: '🏆', ex: 'We have a match today.' },
-          { en: 'today', zh: '今天', emoji: '📆', ex: 'What day is it today?' },
-          { en: 'What a pity!', zh: '真遗憾！', emoji: '😢' },
-          { en: 'Saturday', zh: '星期六', emoji: '📅' },
-          { en: 'All right.', zh: '好的。', emoji: '👌' },
-          { en: 'Sunday', zh: '星期日', emoji: '📅' },
-          { en: 'Tuesday', zh: '星期二', emoji: '📅' },
-          { en: 'Thursday', zh: '星期四', emoji: '📅' },
-          { en: 'Friday', zh: '星期五', emoji: '📅' },
-          { en: 'get up', zh: '起床', emoji: '⏰', ex: 'I get up at seven.' },
-          { en: 'when', zh: '什么时候', emoji: '❓', ex: 'When do you get up?' },
-          { en: 'every', zh: '每一个', emoji: '🔁', ex: 'Every day.' },
-          { en: 'day', zh: '一天', emoji: '☀️', ex: 'Have a nice day!' }
+          { en: 'day', zh: '一天；白天', emoji: '☀️', ex: 'This is my day.' },
+          { en: 'get up', zh: '起床', emoji: '🛏️', ex: 'I get up at seven.' },
+          { en: 'wash', zh: '洗', emoji: '🚿', ex: 'Wash your face.' },
+          { en: 'face', zh: '脸', emoji: '😊', ex: 'Wash your face first.' },
+          { en: 'breakfast', zh: '早餐', emoji: '🍳', ex: "It's time for breakfast." },
+          { en: 'lunch', zh: '午餐', emoji: '🍱', ex: "It's time for lunch." },
+          { en: 'dinner', zh: '晚餐', emoji: '🍲', ex: 'Dinner is ready.' },
+          { en: 'go to bed', zh: '去睡觉', emoji: '🌙', ex: "It's time to go to bed." },
+          { en: "o'clock", zh: '……点钟', emoji: '🕐', ex: "It's seven o'clock." },
+          { en: 'thirty', zh: '三十', emoji: '🔟', ex: "It's seven thirty." },
+          { en: 'hurry up', zh: '快点', emoji: '⏩', ex: 'Bobby, hurry up!' },
+          { en: 'time', zh: '时间', emoji: '⏰', ex: 'What time is it?' }
         ],
         sentences: [
-          { en: 'What day is it today?', zh: '今天星期几？' },
-          { en: 'It is Wednesday. We have a football match today.', zh: '星期三，我们今天有足球赛。' },
-          { en: 'When do you get up?', zh: '你什么时候起床？' },
-          { en: 'Let us play table tennis after school.', zh: '放学后我们打乒乓球吧。' }
+          // === Story time: Wang Bing's day ===
+          { en: 'Good morning, Mum.', zh: '早上好，妈妈。' },
+          { en: "It's seven twenty.", zh: '七点二十了。' },
+          { en: "It's eleven thirty.", zh: '十一点半了。' },
+          { en: "It's four thirty. It's time for sport.", zh: '四点半了，该运动了。' },
+          { en: "It's six fifteen.", zh: '六点十五了。' },
+          { en: "It's nine o'clock. Good night!", zh: '九点了，晚安！' },
+          // === Cartoon time ===
+          { en: "It's seven o'clock. Get up, Bobby!", zh: '七点了，鲍比，起床！' },
+          { en: 'Wash your face first.', zh: '先洗脸。' },
+          { en: "It's time for breakfast.", zh: '该吃早饭了。' },
+          { en: "What time is it now? — It's eight!", zh: '现在几点了？——八点了！' }
         ]
       },
       {
-        title: 'Unit 3 My day',
+        title: 'Unit 3 My week',
         words: [
-          { en: 'usually', zh: '通常', emoji: '🔁', ex: 'I usually get up at seven.' },
-          { en: 'go to school', zh: '去上学', emoji: '🎒', ex: 'I go to school at seven thirty.' },
-          { en: 'in the morning', zh: '在上午', emoji: '🌅' },
-          { en: 'have lunch', zh: '吃午饭', emoji: '🍱', ex: 'I have lunch at twelve.' },
-          { en: 'in the afternoon', zh: '在下午', emoji: '🌤️' },
-          { en: 'play football', zh: '踢足球', emoji: '⚽', ex: 'I play football after school.' },
-          { en: 'go home', zh: '回家', emoji: '🏠', ex: 'I go home at five.' },
-          { en: 'homework', zh: '家庭作业', emoji: '📝', ex: 'I do my homework.' },
-          { en: 'have dinner', zh: '吃晚饭', emoji: '🍽️', ex: 'I have dinner at six.' },
-          { en: 'watch TV', zh: '看电视', emoji: '📺', ex: 'I watch TV in the evening.' },
-          { en: 'go to bed', zh: '上床睡觉', emoji: '🛏️', ex: 'I go to bed at nine.' },
-          { en: 'in the evening', zh: '在晚上', emoji: '🌆' },
-          { en: 'at night', zh: '在夜晚', emoji: '🌙' }
+          { en: 'week', zh: '周；星期', emoji: '📅', ex: 'This is my week.' },
+          { en: 'Monday', zh: '星期一', emoji: '1️⃣' },
+          { en: 'Tuesday', zh: '星期二', emoji: '2️⃣' },
+          { en: 'Wednesday', zh: '星期三', emoji: '3️⃣' },
+          { en: 'Thursday', zh: '星期四', emoji: '4️⃣' },
+          { en: 'Friday', zh: '星期五', emoji: '5️⃣' },
+          { en: 'Saturday', zh: '星期六', emoji: '6️⃣' },
+          { en: 'Sunday', zh: '星期日', emoji: '7️⃣' },
+          { en: 'cinema', zh: '电影院', emoji: '🎬', ex: "Let's go to the cinema." },
+          { en: 'dancing', zh: '跳舞', emoji: '💃', ex: 'I have dancing lessons.' },
+          { en: 'lesson', zh: '课；功课', emoji: '📖', ex: 'dancing lesson' },
+          { en: 'walk', zh: '散步；走', emoji: '🚶', ex: 'I walk my dog.' },
+          { en: 'dog', zh: '狗', emoji: '🐶', ex: 'Walk my dog.' },
+          { en: 'tomorrow', zh: '明天', emoji: '🌅', ex: 'See you tomorrow.' },
+          { en: 'free', zh: '空闲的', emoji: '🆓', ex: "I'm free on Saturday." }
         ],
         sentences: [
-          { en: 'I usually go to school at seven thirty.', zh: '我通常七点半上学。' },
-          { en: 'I have lunch at twelve every day.', zh: '我每天十二点吃午饭。' },
-          { en: 'I do my homework in the evening.', zh: '我晚上做作业。' },
-          { en: 'I go to bed at nine.', zh: '我九点睡觉。' }
+          // === Story time: After school ===
+          { en: "It's Friday today.", zh: '今天是星期五。' },
+          { en: "Let's go to the cinema after school.", zh: '放学后我们去看电影吧。' },
+          { en: 'I have two dancing lessons every week.', zh: '我每周有两节舞蹈课。' },
+          { en: 'Sorry, I walk my dog on Tuesday and Friday.', zh: '抱歉，我周二和周五遛狗。' },
+          { en: "OK, I'm free on Saturday.", zh: '好的，我周六有空。' },
+          { en: 'See you tomorrow!', zh: '明天见！' },
+          // === Cartoon time ===
+          { en: "Oh, it's Saturday!", zh: '哦，今天是星期六！' },
+          { en: 'I get up at five!', zh: '我五点起床！' },
+          { en: 'I get up at six thirty.', zh: '我六点半起床。' },
+          { en: 'What day is it today?', zh: '今天星期几？' }
         ]
       },
       {
-        title: 'Unit 4 Drawing in the park',
+        title: 'Unit 4 I like sport',
         words: [
-          { en: 'drawing', zh: '画画', emoji: '🖼️', ex: 'I like drawing.' },
-          { en: 'park', zh: '公园', emoji: '🌳', ex: 'The park is beautiful.' },
-          { en: 'draw', zh: '画', emoji: '🎨', ex: 'I can draw a boat.' },
-          { en: 'Good idea!', zh: '好主意！', emoji: '💡' },
-          { en: 'flower', zh: '花', emoji: '🌸', ex: 'The flowers are beautiful.' },
-          { en: 'them', zh: '他（她、它）们', emoji: '👥', ex: 'I can draw them.' },
-          { en: 'easy', zh: '容易的', emoji: '😊', ex: 'It is easy.' },
-          { en: 'boat', zh: '小船', emoji: '🚣', ex: 'The boat is on the river.' },
-          { en: 'river', zh: '河', emoji: '🏞️', ex: 'The river is long.' },
-          { en: 'difficult', zh: '困难的', emoji: '😖', ex: 'It is difficult, but I can try.' },
-          { en: 'try', zh: '尝试', emoji: '💪', ex: 'Have a try!' },
-          { en: 'hill', zh: '小山', emoji: '⛰️', ex: 'The hill is green.' },
-          { en: 'lake', zh: '湖', emoji: '🏞️', ex: 'The lake is big.' },
-          { en: 'again', zh: '再一次', emoji: '🔁', ex: 'Try again.' }
+          { en: 'sport', zh: '运动', emoji: '🏅', ex: 'I like sport.' },
+          { en: 'play', zh: '玩；打（球）', emoji: '⚽', ex: "Let's play." },
+          { en: 'football', zh: '足球', emoji: '⚽', ex: 'I like playing football.' },
+          { en: 'basketball', zh: '篮球', emoji: '🏀', ex: 'I like playing basketball.' },
+          { en: 'ping-pong', zh: '乒乓球', emoji: '🏓', ex: 'Ping-pong is fun.' },
+          { en: 'well', zh: '好地', emoji: '👍', ex: 'You can play so well.' },
+          { en: 'again', zh: '再；又', emoji: '🔁', ex: 'Can we play again?' },
+          { en: 'have a go', zh: '试一试', emoji: '💪', ex: 'Have a go!' },
+          { en: 'well played', zh: '打得好；干得好', emoji: '👏', ex: 'Well played!' },
+          { en: 'good for', zh: '对……有益', emoji: '💪', ex: 'Sport is good for us.' },
+          { en: 'try', zh: '尝试', emoji: '💪', ex: 'Try again.' }
         ],
         sentences: [
-          { en: "Let's draw in the park. — Good idea!", zh: '我们去公园画画吧。——好主意！' },
-          { en: 'What can you see? — I can see a boat.', zh: '你能看见什么？——一只小船。' },
-          { en: 'It is easy for me.', zh: '这对我来说很容易。' },
-          { en: 'It is difficult, but I can try.', zh: '有点难，但我可以试试。' }
+          // === Story time: Ping-pong is fun ===
+          { en: "I like sport. It's good for us.", zh: '我喜欢运动，它对我们有好处。' },
+          { en: 'I like playing basketball and ping-pong.', zh: '我喜欢打篮球和乒乓球。' },
+          { en: 'Cool! You can play so well.', zh: '酷！你打得真好。' },
+          { en: 'Do you like playing ping-pong? — Yes, I do.', zh: '你喜欢打乒乓球吗？——喜欢。' },
+          { en: "Ping-pong is fun but I can't play well.", zh: '乒乓球很有趣，但我打不好。' },
+          { en: 'Have a go! Try again. Well played!', zh: '试一试！再试试。打得好！' },
+          // === Cartoon time: Come and play with us ===
+          { en: 'I like playing basketball.', zh: '我喜欢打篮球。' },
+          { en: 'Do you like playing basketball? — Yes, I do.', zh: '你喜欢打篮球吗？——喜欢。' },
+          { en: 'Let’s play together.', zh: '我们一起玩吧。' },
+          { en: 'This is great fun!', zh: '这真有趣！' },
+          { en: 'Can we play again tomorrow? — Sure!', zh: '我们明天还能再玩吗？——当然！' }
         ]
       },
       {
-        title: 'Unit 5 Seasons',
+        title: 'Unit 5 Different toys, same fun',
         words: [
-          { en: 'season', zh: '季节', emoji: '🍂', ex: 'There are four seasons.' },
-          { en: 'spring', zh: '春天', emoji: '🌷', ex: 'It is warm in spring.' },
-          { en: 'warm', zh: '温暖的', emoji: '🌞', ex: 'Spring is warm.' },
-          { en: 'fly', zh: '放飞（风筝）', emoji: '🪁', ex: 'We fly kites in spring.' },
-          { en: 'kite', zh: '风筝', emoji: '🪁', ex: 'I have a new kite.' },
-          { en: 'go boating', zh: '去划船', emoji: '🚣', ex: 'We go boating in spring.' },
-          { en: 'summer', zh: '夏天', emoji: '☀️', ex: 'It is hot in summer.' },
-          { en: 'hot', zh: '热的', emoji: '🥵', ex: 'Summer is hot.' },
-          { en: 'go swimming', zh: '去游泳', emoji: '🏊', ex: 'We go swimming in summer.' },
-          { en: 'autumn', zh: '秋天', emoji: '🍁', ex: 'Autumn is cool.' },
-          { en: 'cool', zh: '凉爽的', emoji: '🍃', ex: 'It is cool in autumn.' },
-          { en: 'picnic', zh: '野餐', emoji: '🧺', ex: 'We have picnics in autumn.' },
-          { en: 'go climbing', zh: '去爬山', emoji: '🧗', ex: 'We go climbing in autumn.' },
-          { en: 'winter', zh: '冬天', emoji: '❄️', ex: 'It is cold in winter.' },
-          { en: 'cold', zh: '冷的；感冒', emoji: '🥶', ex: 'Winter is cold.' },
-          { en: 'go skating', zh: '去滑冰', emoji: '⛸️', ex: 'We go skating in winter.' },
-          { en: 'fine', zh: '晴朗的', emoji: '🌤️', ex: 'It is a fine day.' },
-          { en: 'hey', zh: '嘿', emoji: '👋' },
-          { en: 'whose', zh: '谁的', emoji: '❓', ex: 'Whose kite is it?' }
+          { en: 'different', zh: '不同的', emoji: '🔀', ex: 'Different toys, same fun.' },
+          { en: 'same', zh: '相同的', emoji: '➡️', ex: 'same fun' },
+          { en: 'toy', zh: '玩具', emoji: '🧸', ex: 'I like toys.' },
+          { en: 'hair', zh: '头发', emoji: '💇', ex: 'Her hair is long.' },
+          { en: 'eye', zh: '眼睛', emoji: '👁️', ex: 'His eyes are big.' },
+          { en: 'ear', zh: '耳朵', emoji: '👂', ex: 'The ears are big.' },
+          { en: 'nose', zh: '鼻子', emoji: '👃', ex: 'The nose is small.' },
+          { en: 'mouth', zh: '嘴', emoji: '👄', ex: 'The mouth is small.' },
+          { en: 'arm', zh: '手臂', emoji: '💪', ex: 'The arms are long.' },
+          { en: 'leg', zh: '腿', emoji: '🦵', ex: 'The legs are short.' },
+          { en: 'robot', zh: '机器人', emoji: '🤖', ex: 'Look at this robot.' },
+          { en: 'doll', zh: '娃娃', emoji: '🪆', ex: 'Our dolls are cute.' },
+          { en: 'cute', zh: '可爱的', emoji: '🥰', ex: 'The face is cute.' },
+          { en: 'dance', zh: '跳舞', emoji: '💃', ex: 'Can you dance?' },
+          { en: 'puppet', zh: '木偶', emoji: '🎎', ex: "Let's have a puppet show." }
         ],
         sentences: [
-          { en: 'It is spring. It is warm.', zh: '春天到了，天气暖和。' },
-          { en: 'We fly kites and go boating in spring.', zh: '我们春天放风筝、划船。' },
-          { en: 'It is hot in summer. We go swimming.', zh: '夏天很热，我们去游泳。' },
-          { en: 'We can go skating in winter.', zh: '冬天我们可以去滑冰。' }
+          // === Story time: Our dolls ===
+          { en: 'Mum, do you like our dolls?', zh: '妈妈，你喜欢我们的娃娃吗？' },
+          { en: 'Yes, they’re cute.', zh: '是的，它们很可爱。' },
+          { en: 'My doll is a girl. Her hair is long.', zh: '我的娃娃是个女孩，她的头发很长。' },
+          { en: 'My doll is a boy. His eyes are big.', zh: '我的娃娃是个男孩，他的眼睛很大。' },
+          { en: 'They bring you lots of fun.', zh: '它们给你带来很多乐趣。' },
+          { en: "Let's have a puppet show!", zh: '我们来办一场木偶戏吧！' },
+          // === Cartoon time: Look at this robot ===
+          { en: 'Look at this robot. His face is cute.', zh: '看这个机器人，它的脸很可爱。' },
+          { en: "What's your name? — I'm Bobby.", zh: '你叫什么名字？——我是鲍比。' },
+          { en: 'Can you dance? — I can dance too.', zh: '你会跳舞吗？——我也会跳舞。' },
+          { en: "Now I'm not so tall. Ha ha! It's great fun.", zh: '现在我没那么高了，哈哈！真好玩。' },
+          { en: "Let's dance together.", zh: '我们一起跳舞吧。' }
         ]
       },
       {
-        title: "Unit 6 Whose dress is this?",
+        title: 'Unit 6 Weather',
         words: [
-          { en: 'dress', zh: '连衣裙', emoji: '👗', ex: 'Whose dress is this?' },
-          { en: 'too', zh: '太；过于', emoji: '❗', ex: 'It is too long.' },
-          { en: 'trousers', zh: '裤子', emoji: '👖', ex: 'These trousers are too short.' },
-          { en: 'party', zh: '聚会', emoji: '🎉', ex: 'Let us go to the party.' },
-          { en: 'glove', zh: '手套', emoji: '🧤', ex: 'Whose gloves are these?' },
-          { en: 'so', zh: '如此；这么', emoji: '❗', ex: 'It is so pretty.' },
-          { en: 'coat', zh: '外套', emoji: '🧥', ex: 'Put on your coat.' },
-          { en: 'shirt', zh: '衬衫', emoji: '👔', ex: 'The shirt is white.' },
-          { en: 'sweater', zh: '毛衣', emoji: '🧶', ex: 'My sweater is warm.' },
-          { en: 'jeans', zh: '牛仔裤', emoji: '👖', ex: 'I like my jeans.' },
-          { en: 'shorts', zh: '短裤', emoji: '🩳', ex: 'The shorts are cool.' },
-          { en: 'wrong', zh: '错的', emoji: '❌', ex: 'You are wrong.' },
-          { en: 'move', zh: '移动', emoji: '🚶', ex: 'I can not move.' },
-          { en: 'I think so.', zh: '我想是。', emoji: '💭' },
-          { en: "What's the matter?", zh: '怎么了？', emoji: '❓' },
-          { en: 'hand', zh: '手', emoji: '✋', ex: 'My hand hurts.' },
-          { en: 'hurt', zh: '疼', emoji: '🤕', ex: 'My hand hurts.' }
+          { en: 'weather', zh: '天气', emoji: '☁️', ex: "What's the weather like?" },
+          { en: 'cloudy', zh: '多云的', emoji: '☁️', ex: "It's cloudy." },
+          { en: 'sunny', zh: '晴朗的', emoji: '☀️', ex: "It's sunny and hot." },
+          { en: 'rainy', zh: '下雨的', emoji: '🌧️', ex: 'Today is a rainy day.' },
+          { en: 'windy', zh: '有风的', emoji: '💨', ex: 'It is windy and cloudy.' },
+          { en: 'warm', zh: '温暖的', emoji: '🌡️', ex: "It's warm." },
+          { en: 'hot', zh: '热的', emoji: '🔥', ex: "It's hot." },
+          { en: 'cool', zh: '凉爽的', emoji: '🍃', ex: 'It is cool and nice.' },
+          { en: 'cold', zh: '冷的', emoji: '❄️', ex: "It's cold." },
+          { en: 'umbrella', zh: '雨伞', emoji: '☂️', ex: 'I have an umbrella.' },
+          { en: 'rain', zh: '雨；下雨', emoji: '🌧️', ex: 'Save for a rainy day.' },
+          { en: 'kite', zh: '风筝', emoji: '🪁', ex: 'We can fly a kite.' },
+          { en: 'park', zh: '公园', emoji: '🌳', ex: "Let's go to the park." }
         ],
         sentences: [
-          { en: 'Whose dress is this? — It is my sister\'s.', zh: '这是谁的连衣裙？——是我姐姐的。' },
-          { en: 'These trousers are too long.', zh: '这条裤子太长了。' },
-          { en: 'Look at my new sweater!', zh: '看我的新毛衣！' },
-          { en: 'Try this dress on. — All right.', zh: '试试这条连衣裙。——好的。' }
+          // === Story time: In the park ===
+          { en: 'Hi Su Hai! Let’s go to the park today.', zh: '嗨苏海！今天我们去公园吧。' },
+          { en: 'It is sunny and warm.', zh: '天气晴朗又温暖。' },
+          { en: 'It is windy and cloudy now. We can fly a kite.', zh: '现在起风又多云了，我们可以放风筝。' },
+          { en: 'It is cool and nice. Let’s have lunch.', zh: '天气凉爽宜人，我们吃午饭吧。' },
+          { en: 'Oh no! It is rainy.', zh: '哦不！下雨了。' },
+          { en: 'Don’t worry. I have an umbrella. We can share.', zh: '别担心，我有伞，我们可以一起用。' },
+          // === Cartoon time: A rainy day ===
+          { en: 'Save your money for a rainy day.', zh: '未雨绸缪（存钱以备不时之需）。' },
+          { en: 'I want a red toy car.', zh: '我想要一辆红色玩具车。' },
+          { en: "What's the weather like today?", zh: '今天天气怎么样？' },
+          { en: 'Oh, it is sunny and hot. / Oh, it is cloudy.', zh: '哦，晴朗又热。/ 哦，多云。' },
+          { en: "Today is a rainy day! It's time to buy the toy car.", zh: '今天下雨了！是时候买玩具车了。' }
         ]
       },
       {
-        title: "Unit 7 What's the matter?",
+        title: 'Unit 7 Seasons',
         words: [
-          { en: 'thirsty', zh: '渴的', emoji: '🥤', ex: 'I am thirsty.' },
-          { en: 'water', zh: '水', emoji: '💧', ex: 'Have some water.' },
-          { en: 'ill', zh: '生病的', emoji: '🤒', ex: 'He is ill.' },
-          { en: 'tired', zh: '累的', emoji: '😴', ex: 'I am tired.' },
-          { en: 'Good night.', zh: '晚安。', emoji: '🌙' },
-          { en: 'dear', zh: '亲爱的', emoji: '💕', ex: 'Good night, dear.' },
-          { en: 'happy', zh: '开心的', emoji: '😀', ex: 'I am so happy.' },
-          { en: 'Mrs', zh: '夫人；太太', emoji: '👩', ex: 'Mrs Green is a teacher.' },
-          { en: 'speak', zh: '说话', emoji: '💬', ex: 'Can you speak English?' }
+          { en: 'season', zh: '季节', emoji: '🍂', ex: 'Four seasons' },
+          { en: 'spring', zh: '春天', emoji: '🌸', ex: 'It is spring.' },
+          { en: 'summer', zh: '夏天', emoji: '☀️', ex: 'It is summer.' },
+          { en: 'autumn', zh: '秋天', emoji: '🍁', ex: 'It is autumn.' },
+          { en: 'winter', zh: '冬天', emoji: '❄️', ex: 'It is winter.' },
+          { en: 'warm', zh: '温暖的', emoji: '🌡️', ex: 'In spring it is warm.' },
+          { en: 'hot', zh: '热的', emoji: '🔥', ex: 'In summer it is hot.' },
+          { en: 'cool', zh: '凉爽的', emoji: '🍃', ex: 'In autumn it is cool.' },
+          { en: 'cold', zh: '冷的', emoji: '❄️', ex: 'In winter it is cold.' },
+          { en: 'plant', zh: '种植', emoji: '🌱', ex: 'We plant trees.' },
+          { en: 'tree', zh: '树', emoji: '🌳', ex: 'We plant trees.' },
+          { en: 'boat', zh: '小船', emoji: '⛵', ex: 'We go boating.' },
+          { en: 'ice cream', zh: '冰淇淋', emoji: '🍦', ex: 'We eat ice cream.' },
+          { en: 'pick', zh: '采摘', emoji: '🍎', ex: 'We pick fruit.' },
+          { en: 'fruit', zh: '水果', emoji: '🍎', ex: 'We pick fruit.' },
+          { en: 'climb', zh: '爬', emoji: '🧗', ex: 'We go climbing.' },
+          { en: 'snow', zh: '雪', emoji: '❄️', ex: 'We play in the snow.' },
+          { en: 'skate', zh: '滑冰', emoji: '⛸️', ex: 'We go skating.' },
+          { en: 'year', zh: '年', emoji: '📅', ex: 'in a year' }
         ],
         sentences: [
-          { en: "What's the matter? — I'm thirsty.", zh: '怎么了？——我渴了。' },
-          { en: 'Have some water, dear.', zh: '亲爱的，喝点水。' },
-          { en: 'I am tired. I want to go to bed.', zh: '我累了，想睡觉。' },
-          { en: 'Good night, Mum.', zh: '妈妈，晚安。' }
+          // === Story time: Four seasons ===
+          { en: 'We have four seasons in a year.', zh: '一年有四季。' },
+          { en: 'In spring it is warm. We plant trees. We go boating.', zh: '春天温暖，我们种树、去划船。' },
+          { en: 'In summer it is hot. We eat ice cream. We go swimming.', zh: '夏天炎热，我们吃冰淇淋、去游泳。' },
+          { en: 'In autumn it is cool. We pick fruit. We go climbing.', zh: '秋天凉爽，我们摘水果、去爬山。' },
+          { en: 'In winter it is cold. We play in the snow. We go skating.', zh: '冬天寒冷，我们在雪里玩、去滑冰。' },
+          // === Cartoon time: Nice to see you again ===
+          { en: 'It is spring. It is warm.', zh: '春天来了，天气暖和。' },
+          { en: 'It is summer. It is hot.', zh: '夏天来了，天气炎热。' },
+          { en: 'Wow, you have babies! And I have new friends.', zh: '哇，你有宝宝了！我也有了新朋友。' },
+          { en: 'It is autumn. It is cool.', zh: '秋天来了，天气凉爽。' },
+          { en: 'It is winter. It is cold.', zh: '冬天来了，天气寒冷。' },
+          { en: 'Where are my friends? Where can they be?', zh: '我的朋友们在哪儿？他们会在哪儿呢？' },
+          { en: 'It is spring again. The birds are back.', zh: '春天又来了，鸟儿回来了。' }
         ]
       },
       {
-        title: 'Unit 8 How are you?',
+        title: 'Unit 8 What we wear',
         words: [
-          { en: 'may', zh: '可以', emoji: '❓', ex: 'May I come in?' },
-          { en: 'come to school', zh: '来学校', emoji: '🏫', ex: 'I come to school at eight.' },
-          { en: 'cold', zh: '感冒', emoji: '🤧', ex: 'I have a cold.' },
-          { en: 'fever', zh: '发烧', emoji: '🌡️', ex: 'I have a fever.' },
-          { en: 'hear', zh: '听见', emoji: '👂', ex: 'I can not hear you.' },
-          { en: 'take care', zh: '保重', emoji: '💗' },
-          { en: "I'm fine, thank you.", zh: '我很好，谢谢。', emoji: '👍' },
-          { en: 'See you tomorrow.', zh: '明天见。', emoji: '👋' },
-          { en: 'See you.', zh: '再见。', emoji: '👋' },
-          { en: 'cough', zh: '咳嗽', emoji: '😷', ex: 'I have a cough.' },
-          { en: 'headache', zh: '头疼', emoji: '🤕', ex: 'I have a headache.' },
-          { en: 'Not so good.', zh: '不太好。', emoji: '😖' },
-          { en: 'at school', zh: '在学校；在上课', emoji: '🏫' }
+          { en: 'wear', zh: '穿', emoji: '👕', ex: 'What do you wear?' },
+          { en: 'clothes', zh: '衣服', emoji: '👚', ex: 'nice clothes' },
+          { en: 'cap', zh: '帽子', emoji: '🧢', ex: 'You look cool in the cap.' },
+          { en: 'coat', zh: '外套', emoji: '🧥', ex: "This is my mother's coat." },
+          { en: 'skirt', zh: '短裙', emoji: '👗', ex: 'Whose skirt is this?' },
+          { en: 'trousers', zh: '裤子', emoji: '👖', ex: 'Your trousers are so big.' },
+          { en: 'dress', zh: '连衣裙', emoji: '👗', ex: 'Your red dress is beautiful.' },
+          { en: 'shirt', zh: '衬衫', emoji: '👔', ex: "my father's new shirt" },
+          { en: 'whose', zh: '谁的', emoji: '❓', ex: 'Whose cap is it?' },
+          { en: 'holiday', zh: '假日', emoji: '🎉', ex: 'Happy holiday!' },
+          { en: 'because', zh: '因为', emoji: '💡', ex: 'Because my students are bright.' },
+          { en: 'bright', zh: '明亮的；聪明的', emoji: '💡', ex: 'my students are very bright' },
+          { en: 'sunglasses', zh: '太阳镜', emoji: '🕶️', ex: 'I like your sunglasses.' },
+          { en: 'fancy', zh: '别致的；化装', emoji: '🎭', ex: 'A fancy dress party' },
+          { en: 'New Year', zh: '新年', emoji: '🎊', ex: 'Happy Chinese New Year' }
         ],
         sentences: [
-          { en: 'How are you? — I am fine, thank you.', zh: '你好吗？——我很好，谢谢。' },
-          { en: 'How are you? — Not so good. I have a cold.', zh: '你好吗？——不太好，我感冒了。' },
-          { en: 'I have a fever and a headache.', zh: '我发烧还头疼。' },
-          { en: 'Take care. See you tomorrow.', zh: '保重，明天见。' }
+          // === Story time: Happy Chinese New Year ===
+          { en: 'Hi Su Hai! Happy Chinese New Year!', zh: '嗨苏海！春节快乐！' },
+          { en: 'Your red dress is beautiful.', zh: '你的红连衣裙真漂亮。' },
+          { en: "This is my father's new shirt. And this is my mother's coat.", zh: '这是我爸爸的新衬衫，这是我妈妈的外套。' },
+          { en: 'Whose skirt is this? Is it Su Yang’s? — Yes, you’re right.', zh: '这是谁的短裙？是苏阳的吗？——对，你说得对。' },
+          { en: 'Whose caps are those? — They’re Kitty’s!', zh: '那些是谁的帽子？——是凯蒂的！' },
+          // === Cartoon time: A fancy dress party ===
+          { en: 'You look cool in the cap.', zh: '你戴这顶帽子真酷。' },
+          { en: 'Your trousers are so big.', zh: '你的裤子好大。' },
+          { en: 'Whose cap is it? — It’s my father’s.', zh: '这是谁的帽子？——是我爸爸的。' },
+          { en: 'Whose trousers are these? — They’re my mother’s.', zh: '这是谁的裤子？——是我妈妈的。' },
+          { en: 'Happy New Year, Mrs Fox. I like your sunglasses!', zh: '新年快乐，福克斯老师！我喜欢你的太阳镜！' },
+          { en: 'Why do I wear sunglasses today? Because my students are very bright!', zh: '我今天为什么戴太阳镜？因为我的学生们太“亮”了！' }
+        ]
+      }
+    ]
+  },
+
+      {
+    id: '4b',
+    name: '四年级下册',
+    edition: '译林版 · 新教材（2026春）',
+    ready: true,
+    units: [
+      {
+        title: "Unit 1 We're friends",
+        words: [
+          { en: "weak", zh: "弱的", emoji: "😔", ex: "The lion is not weak." },
+          { en: "strong", zh: "强壮的", emoji: "💪", ex: "The lion is strong." },
+          { en: "there are", zh: "有（复数）", emoji: "📦", ex: "There are many animals." },
+          { en: "them", zh: "他（她、它）们（宾格）", emoji: "👥", ex: "I want to share them." },
+          { en: "from", zh: "来自", emoji: "🌍", ex: "I am from China." },
+          { en: "party", zh: "聚会", emoji: "🎉", ex: "Let's have a party." },
+          { en: "like", zh: "喜欢", emoji: "❤️", ex: "I like my friends." },
+          { en: "friendship", zh: "友谊", emoji: "🤝", ex: "Friendship is important." },
+          { en: "forest", zh: "森林", emoji: "🌲", ex: "The forest is big." },
+          { en: "thin", zh: "瘦的", emoji: "🐭", ex: "The mouse is thin." },
+          { en: "back", zh: "背部；回来", emoji: "🔙", ex: "Go back home." },
+          { en: "angry", zh: "生气的", emoji: "😠", ex: "The lion is angry." },
+          { en: "one day", zh: "有一天", emoji: "📆", ex: "One day, a mouse meets a lion." },
+          { en: "Please!", zh: "请！", emoji: "🙏" },
+          { en: "Go away!", zh: "走开！", emoji: "🚶" },
+          { en: "net", zh: "网", emoji: "🕸️", ex: "The lion is in a net." },
+          { en: "sad", zh: "伤心的", emoji: "😢", ex: "The mouse is sad." },
+          { en: "Help!", zh: "救命！", emoji: "🆘" },
+          { en: "there is", zh: "有（单数）", emoji: "📦", ex: "There is a lion." },
+          { en: "hole", zh: "洞", emoji: "🕳️", ex: "There is a hole." },
+          { en: "kind", zh: "善良的", emoji: "🌟", ex: "The mouse is kind." },
+          { en: "become", zh: "变成", emoji: "🔄", ex: "They become friends." }
+        ],
+        sentences: [
+          // === Story time: The lion and the mouse ===
+          { en: "There are many animals in the forest.", zh: "森林里有许多动物。" },
+          { en: "The lion is big and strong.", zh: "狮子又大又强壮。" },
+          { en: "The mouse is small and thin.", zh: "老鼠又小又瘦。" },
+          { en: "The lion is angry with the mouse.", zh: "狮子对老鼠很生气。" },
+          { en: "Please! Don't eat me. I can help you one day.", zh: "请！别吃我。有一天我能帮到你。" },
+          { en: "One day, the lion is in a net. He is sad.", zh: "有一天，狮子被困在网里。他很伤心。" },
+          { en: "The mouse comes and bites the net.", zh: "老鼠来了，咬破了网。" },
+          { en: "The lion and the mouse become good friends.", zh: "狮子和老鼠成了好朋友。" },
+          // === Cartoon time: Thank you for the carrots ===
+          { en: "There are so many carrots.", zh: "有这么多胡萝卜。" },
+          { en: "I want to share them with my friends.", zh: "我想和朋友们分享它们。" },
+          { en: "Thank you for the carrots.", zh: "谢谢你的胡萝卜。" }
+        ]
+      },
+      {
+        title: "Unit 2 Helping others at school",
+        words: [
+          { en: "other", zh: "其他的", emoji: "👥", ex: "Help other people." },
+          { en: "room", zh: "房间；室", emoji: "🚪", ex: "This is our reading room." },
+          { en: "computer", zh: "电脑", emoji: "💻", ex: "I use a computer." },
+          { en: "swing", zh: "秋千", emoji: "🪀", ex: "There is a swing." },
+          { en: "playground", zh: "操场", emoji: "🛝", ex: "We play on the playground." },
+          { en: "have a look", zh: "看一看", emoji: "👀", ex: "Let me have a look." },
+          { en: "careful", zh: "小心的", emoji: "⚠️", ex: "Be careful!" },
+          { en: "feel", zh: "感觉", emoji: "😌", ex: "I feel happy." },
+          { en: "take", zh: "拿；带", emoji: "👜", ex: "Take your book." },
+          { en: "first", zh: "第一；首先", emoji: "1️⃣", ex: "First, open the book." },
+          { en: "floor", zh: "楼层；地板", emoji: "🧱", ex: "We are on the second floor." },
+          { en: "show … around", zh: "带领……参观", emoji: "🗺️", ex: "Show me around." },
+          { en: "any", zh: "任何的", emoji: "🔍", ex: "Is there any water?" },
+          { en: "third", zh: "第三", emoji: "3️⃣", ex: "We are on the third floor." },
+          { en: "later", zh: "后来；稍后", emoji: "⏭️", ex: "See you later." },
+          { en: "piano", zh: "钢琴", emoji: "🎹", ex: "I can play the piano." },
+          { en: "second", zh: "第二", emoji: "2️⃣", ex: "We are on the second floor." }
+        ],
+        sentences: [
+          // === Story time: Let me show you around ===
+          { en: "Here's your book.", zh: "这是你的书。" },
+          { en: "I want to take these books to the library.", zh: "我想把这些书带到图书馆。" },
+          { en: "Our classrooms are here on the second floor.", zh: "我们的教室在二楼这里。" },
+          { en: "Thank you for showing me around.", zh: "谢谢你带我参观。" },
+          { en: "You're welcome.", zh: "不客气。" },
+          // === Cartoon time: Are you OK? ===
+          { en: "Sam, is there a swing in our new playground?", zh: "萨姆，我们新操场有秋千吗？" },
+          { en: "Yes, there is.", zh: "是的，有。" },
+          { en: "Be careful, Bobby. Are you OK?", zh: "小心，波比。你还好吗？" },
+          { en: "Yes, but I feel dizzy.", zh: "还好，但我感到头晕。" }
+        ]
+      },
+      {
+        title: "Unit 3 Road safety",
+        words: [
+          { en: "road", zh: "马路；道路", emoji: "🛣️", ex: "Look at the road." },
+          { en: "safety", zh: "安全", emoji: "🛡️", ex: "Road safety is important." },
+          { en: "bus", zh: "公共汽车", emoji: "🚌", ex: "We take a bus." },
+          { en: "traffic light", zh: "红绿灯", emoji: "🚦", ex: "The traffic light is red." },
+          { en: "take", zh: "乘坐；带", emoji: "🚌", ex: "Take a bus." },
+          { en:  "busy", zh: "繁忙的", emoji: "🏃", ex: "The road is busy." },
+          { en: "stay", zh: "停留；待", emoji: "🛑", ex: "Stay close." },
+          { en: "close", zh: "靠近", emoji: "🤝", ex: "Stay close to me." },
+          { en: "cross", zh: "穿过", emoji: "⚠️", ex: "Cross the road." },
+          { en: "stop", zh: "停止", emoji: "🛑", ex: "Stop! The light is red." },
+          { en: "wait", zh: "等待", emoji: "⏳", ex: "Wait for the green light." },
+          { en: "left", zh: "左边", emoji: "👈", ex: "Look left." },
+          { en: "right", zh: "右边", emoji: "👉", ex: "Turn right." },
+          { en: "safe", zh: "安全的", emoji: "✅", ex: "It is safe now." }
+        ],
+        sentences: [
+          // === Story time: Crossing the road ===
+          { en: "Mum, let's cross the road.", zh: "妈妈，我们过马路吧。" },
+          { en: "Stop, Haohao! The traffic lights are red.", zh: "停，浩浩！红绿灯是红的。" },
+          { en: "Wait. Look left and right first.", zh: "等等。先看左看右。" },
+          { en: "It's safe now.", zh: "现在安全了。" },
+          { en: "Haohao, don't run on the road! It's not safe.", zh: "浩浩，别在马路上跑！这不安全。" },
+          // === Cartoon time: On the road ===
+          { en: "Let's go to Aunt Alice's home.", zh: "我们去爱丽丝阿姨家吧。" },
+          { en: "Great idea! We can take a bus.", zh: "好主意！我们可以坐公交。" },
+          { en: "The traffic lights are red now. We can't go.", zh: "红绿灯现在红了，我们不能走。" },
+          { en: "Stay close! Don't run!", zh: "靠近点！别跑！" },
+          { en: "Good little ducks.", zh: "乖小鸭子。" }
+        ]
+      },
+      {
+        title: "Unit 4 Caring about others",
+        words: [
+          { en: "care about", zh: "关心", emoji: "💗", ex: "We care about our friends." },
+          { en: "hungry", zh: "饿的", emoji: "🍽️", ex: "I am hungry." },
+          { en: "thirsty", zh: "渴的", emoji: "🥤", ex: "I am thirsty." },
+          { en: "ill", zh: "生病的", emoji: "🤒", ex: "My mum is ill." },
+          { en: "tired", zh: "累的", emoji: "😴", ex: "I am tired." },
+          { en: "hot", zh: "热的", emoji: "🥵", ex: "I am hot." },
+          { en: "water", zh: "水", emoji: "💧", ex: "Have some water." },
+          { en: "have a rest", zh: "休息一下", emoji: "😌", ex: "Let's have a rest." },
+          { en: "What's the matter?", zh: "怎么了？", emoji: "❓" },
+          { en: "home", zh: "家", emoji: "🏠", ex: "I am home." },
+          { en: "bag", zh: "包", emoji: "👜", ex: "Take your bag." },
+          { en: "bread", zh: "面包", emoji: "🍞", ex: "I want some bread." },
+          { en: "dear", zh: "亲爱的", emoji: "💕", ex: "Good night, dear." },
+          { en: "set the table", zh: "摆餐具", emoji: "🍴", ex: "Set the table, please." }
+        ],
+        sentences: [
+          // === Story time: What's the matter, Mum? ===
+          { en: "Hi, I'm home! Let me take your coat.", zh: "嗨，我回来了！让我帮你拿外套。" },
+          { en: "I can take your bag, Mum.", zh: "妈妈，我可以帮你拿包。" },
+          { en: "Here's some water. Thank you, dear.", zh: "给你些水。谢谢，亲爱的。" },
+          { en: "It's six thirty. It's time for dinner!", zh: "六点半了。该吃晚饭了！" },
+          { en: "Let's set the table, Su Hai.", zh: "苏海，我们把餐具摆好吧。" },
+          // === Cartoon time: I'm hot and thirsty, Bobby ===
+          { en: "Here's some water for you, Tom.", zh: "汤姆，这是给你的水。" },
+          { en: "Have a cake, Tom.", zh: "汤姆，吃块蛋糕。" },
+          { en: "Let's have a rest.", zh: "我们休息一下吧。" },
+          { en: "No, I want to play! I'm tired.", zh: "不，我想玩！我累了。" }
+        ]
+      },
+      {
+        title: "Unit 5 Eating out",
+        words: [
+          { en: "eat out", zh: "外出就餐", emoji: "🍴", ex: "Let's eat out." },
+          { en: "fried rice", zh: "炒饭", emoji: "🍚", ex: "I like fried rice." },
+          { en: "spring roll", zh: "春卷", emoji: "🥟", ex: "Spring rolls are nice." },
+          { en: "noodle", zh: "面条", emoji: "🍜", ex: "I'd like noodles." },
+          { en: "tea", zh: "茶", emoji: "🍵", ex: "A cup of tea." },
+          { en: "juice", zh: "果汁", emoji: "🧃", ex: "Orange juice, please." },
+          { en: "menu", zh: "菜单", emoji: "📋", ex: "Here is the menu." },
+          { en: "What would you like?", zh: "你想要什么？", emoji: "❓" },
+          { en: "fish and chips", zh: "炸鱼薯条", emoji: "🐟", ex: "I'd like fish and chips." },
+          { en: "sandwich", zh: "三明治", emoji: "🥪", ex: "A sandwich, please." },
+          { en: "hot dog", zh: "热狗", emoji: "🌭", ex: "A hot dog, please." },
+          { en: "delicious", zh: "美味的", emoji: "😋", ex: "It is delicious." },
+          { en: "Anything else?", zh: "还要别的吗？", emoji: "❓" },
+          { en: "a glass of", zh: "一杯……", emoji: "🥛", ex: "A glass of juice." },
+          { en: "a cup of", zh: "一杯……", emoji: "☕", ex: "A cup of tea." },
+          { en: "food", zh: "食物", emoji: "🍱", ex: "Chinese food is great." },
+          { en: "next time", zh: "下次", emoji: "⏭️", ex: "Next time, hot pot." },
+          { en: "hot pot", zh: "火锅", emoji: "🍲", ex: "Let's try hot pot." },
+          { en: "takeaway box", zh: "打包盒", emoji: "🥡", ex: "A takeaway box, please." }
+        ],
+        sentences: [
+          // === Story time: In a Chinese restaurant ===
+          { en: "What would you like, boys?", zh: "孩子们，你们想要什么？" },
+          { en: "I'd like some jiaozi and noodles.", zh: "我想要些饺子和面条。" },
+          { en: "We'd like noodles, jiaozi, fried rice and spring rolls, please.", zh: "我们想要面条、饺子、炒饭和春卷。" },
+          { en: "Two glasses of orange juice and a cup of tea.", zh: "两杯橙汁和一杯茶。" },
+          { en: "I love Chinese food!", zh: "我爱中国菜！" },
+          { en: "Next time, let's try hot pot.", zh: "下次，我们尝尝火锅吧。" },
+          // === Cartoon time: A hot dog? ===
+          { en: "I'm hungry. Me too.", zh: "我饿了。我也是。" },
+          { en: "Let's eat there.", zh: "我们在那儿吃吧。" },
+          { en: "Here's our menu. What would you like?", zh: "这是我们的菜单。你想要什么？" },
+          { en: "I'd like some fish and chips, please.", zh: "我想要炸鱼薯条。" },
+          { en: "It's delicious!", zh: "真美味！" }
+        ]
+      },
+      {
+        title: "Unit 6 Jobs",
+        words: [
+          { en: "job", zh: "工作；职业", emoji: "💼", ex: "What is your job?" },
+          { en: "driver", zh: "司机", emoji: "🚗", ex: "My dad is a driver." },
+          { en: "nurse", zh: "护士", emoji: "🩺", ex: "A nurse helps people." },
+          { en: "worker", zh: "工人", emoji: "👷", ex: "He is a worker." },
+          { en: "teacher", zh: "老师", emoji: "👩‍🏫", ex: "My mum is a teacher." },
+          { en: "doctor", zh: "医生", emoji: "🩺", ex: "A doctor helps sick people." },
+          { en: "farmer", zh: "农民", emoji: "👨‍🌾", ex: "A farmer works on a farm." },
+          { en: "cook", zh: "厨师", emoji: "👨‍🍳", ex: "The cook is great." },
+          { en: "police officer", zh: "警察", emoji: "👮", ex: "A police officer keeps us safe." },
+          { en: "hospital", zh: "医院", emoji: "🏥", ex: "My mum works in a hospital." },
+          { en: "parent", zh: "父；母；家长", emoji: "👪", ex: "Our parents work hard." },
+          { en: "work", zh: "工作", emoji: "💼", ex: "They work every day." },
+          { en: "sick", zh: "生病的", emoji: "🤒", ex: "Doctors help sick people." },
+          { en: "people", zh: "人；人们", emoji: "👥", ex: "Help sick people." },
+          { en: "busy", zh: "忙碌的", emoji: "🏃", ex: "My mum is busy." },
+          { en: "taxi", zh: "出租车", emoji: "🚕", ex: "A taxi driver drives a taxi." },
+          { en: "train", zh: "火车", emoji: "🚂", ex: "The train is long." },
+          { en: "place", zh: "地方", emoji: "📍", ex: "This is a nice place." },
+          { en: "way", zh: "路；方式", emoji: "🛣️", ex: "On the way home." }
+        ],
+        sentences: [
+          // === Story time: Happy Labour Day! ===
+          { en: "What are your parents' jobs, Liu Tao?", zh: "刘涛，你父母是做什么工作的？" },
+          { en: "My father is a taxi driver.", zh: "我爸爸是出租车司机。" },
+          { en: "He's a doctor. Doctors help sick people.", zh: "他是医生。医生帮助病人。" },
+          { en: "He's a police officer. Police officers keep us safe.", zh: "他是警察。警察保护我们的安全。" },
+          { en: "She's a teacher. Teachers help children learn new things.", zh: "她是老师。老师帮助孩子们学习新事物。" },
+          { en: "Our parents have great jobs.", zh: "我们的父母都有很棒的工作。" },
+          // === Cartoon time: Our parents' jobs ===
+          { en: "Look at the hospital, Henry! My parents work there.", zh: "亨利，看那家医院！我父母在那儿工作。" },
+          { en: "My dad is a train driver.", zh: "我爸爸是火车司机。" },
+          { en: "Look! Wow! That's cool!", zh: "看！哇！太酷了！" }
+        ]
+      },
+      {
+        title: "Unit 7 Doing chores at home",
+        words: [
+          { en: "chore", zh: "家务", emoji: "🧹", ex: "Do some chores." },
+          { en: "dish", zh: "盘子", emoji: "🍽️", ex: "Wash the dishes." },
+          { en: "water", zh: "浇水", emoji: "💧", ex: "Water the flowers." },
+          { en: "make the bed", zh: "整理床铺", emoji: "🛏️", ex: "Make your bed." },
+          { en: "what", zh: "什么", emoji: "❓", ex: "What are you doing?" },
+          { en: "house", zh: "房子", emoji: "🏠", ex: "Our house is clean." },
+          { en: "Good job!", zh: "干得好！", emoji: "👍" },
+          { en: "part of", zh: "一部分", emoji: "🧩", ex: "We are part of the family." },
+          { en: "so", zh: "如此；这么", emoji: "🌟", ex: "You are so kind." },
+          { en: "half", zh: "一半", emoji: "⏳", ex: "Half past eight." },
+          { en: "past", zh: "晚于；过去", emoji: "⏰", ex: "Half past six." },
+          { en: "weekend", zh: "周末", emoji: "📅", ex: "We are busy on the weekend." }
+        ],
+        sentences: [
+          // === Story time: A busy weekend ===
+          { en: "It's Saturday. Mum and Dad are doing chores.", zh: "星期六。爸爸妈妈在做家务。" },
+          { en: "Su Yang and I are also doing chores.", zh: "苏阳和我也做家务。" },
+          { en: "We're part of the family.", zh: "我们是家里的一份子。" },
+          { en: "Our home is clean and nice now.", zh: "我们的家现在干净又漂亮。" },
+          { en: "We have a busy weekend, but we all feel happy.", zh: "我们过了忙碌的周末，但我们都感到开心。" },
+          // === Cartoon time: Good job! ===
+          { en: "It's Sunday. Let's do some chores.", zh: "星期日。我们做些家务吧。" },
+          { en: "I'm watering the flowers.", zh: "我在浇花。" },
+          { en: "You're watering the floor!", zh: "你在浇地板！" },
+          { en: "What a clean house! Good job!", zh: "多干净的家！干得好！" }
+        ]
+      },
+      {
+        title: "Unit 8 In the kitchen",
+        words: [
+          { en: "kitchen", zh: "厨房", emoji: "🍳", ex: "I am in the kitchen." },
+          { en: "milk", zh: "牛奶", emoji: "🥛", ex: "A glass of milk." },
+          { en: "tomato", zh: "西红柿", emoji: "🍅", ex: "I like tomatoes." },
+          { en: "potato", zh: "土豆", emoji: "🥔", ex: "I cut the potatoes." },
+          { en: "chicken", zh: "鸡肉", emoji: "🍗", ex: "The chicken is delicious." },
+          { en: "egg", zh: "蛋", emoji: "🥚", ex: "An egg, please." },
+          { en: "birthday", zh: "生日", emoji: "🎂", ex: "Happy birthday!" },
+          { en: "soup", zh: "汤", emoji: "🍲", ex: "Fish soup is nice." },
+          { en: "him", zh: "他（宾格）", emoji: "👨", ex: "I cook for him." },
+          { en: "really", zh: "真的", emoji: "🤔", ex: "Really? Great!" },
+          { en: "cut", zh: "切", emoji: "🔪", ex: "Cut the tomatoes." },
+          { en: "meat", zh: "肉", emoji: "🥩", ex: "The meat is good." },
+          { en: "I can't wait!", zh: "我等不及了！", emoji: "⏰" },
+          { en: "get", zh: "得到；拿", emoji: "🤲", ex: "Get some water." }
+        ],
+        sentences: [
+          // === Story time: A happy dinner ===
+          { en: "Are you cooking dinner, Mum? Yes, I am.", zh: "妈妈，你在做晚饭吗？是的。" },
+          { en: "I'm cutting the potatoes.", zh: "我在切土豆。" },
+          { en: "How's the chicken, Taotao? It's delicious, Dad.", zh: "涛涛，鸡肉怎么样？爸爸，很好吃。" },
+          { en: "You're a great cook!", zh: "你做饭真棒！" },
+          { en: "Have some tomato and egg soup.", zh: "喝点西红柿蛋汤。" },
+          // === Cartoon time: Sam's fish soup ===
+          { en: "It's Dad's birthday today. I can cook fish soup for him!", zh: "今天是爸爸的生日。我可以为他做鱼汤！" },
+          { en: "Sam, are you cooking? Oh, my fish soup!", zh: "萨姆，你在做饭吗？哦，我的鱼汤！" },
+          { en: "Happy Birthday, Dad! But be careful next time.", zh: "爸爸，生日快乐！但下次要小心。" }
         ]
       }
     ]
@@ -934,7 +1468,7 @@ const BOOKS = [
   {
     id: '5a',
     name: '五年级上册',
-    edition: '旧版（新教材2026秋启用，届时重新抓取替换）',
+    edition: '译林版 · 旧版（新教材2026秋启用，届时重新抓取替换）',
     ready: true,
     units: [
       {
@@ -1178,7 +1712,7 @@ const BOOKS = [
   {
     id: '5b',
     name: '五年级下册',
-    edition: '旧版（新教材启用后重新抓取替换）',
+    edition: '译林版 · 旧版（新教材启用后重新抓取替换）',
     ready: true,
     units: [
       {
@@ -1427,7 +1961,7 @@ const BOOKS = [
   {
     id: '6a',
     name: '六年级上册',
-    edition: '旧版（新教材启用后重新抓取替换）',
+    edition: '译林版 · 旧版（新教材启用后重新抓取替换）',
     ready: true,
     units: [
       {
@@ -1690,7 +2224,7 @@ const BOOKS = [
   {
     id: '6b',
     name: '六年级下册',
-    edition: '旧版（新教材启用后重新抓取替换）',
+    edition: '译林版 · 旧版（新教材启用后重新抓取替换）',
     ready: true,
     units: [
       {
