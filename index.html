@@ -174,6 +174,28 @@
   .actbar .btn { flex: 1; }
 
   .checkbox { display: inline-flex; align-items: center; gap: 6px; background: #fff; border-radius: 999px; padding: 8px 12px; font-size: 14px; font-weight: 700; color: #666; box-shadow: 0 2px 6px rgba(0,0,0,.08); cursor: pointer; }
+
+  /* 填空练习（Cloze） */
+  .cloze { font-size: 19px; line-height: 2; font-weight: 600; word-break: break-word; margin-bottom: 6px; }
+  .cloze .hole { display: inline-flex; min-width: 58px; padding: 0 8px; height: 34px; border-radius: 8px 8px 0 0; border-bottom: 3px solid #ff9f1c; background: #fff5db; color: #ff9f1c; font-weight: 800; align-items: center; justify-content: center; cursor: pointer; vertical-align: middle; margin: 0 2px; }
+  .cloze .hole.empty { background: #f1f3f5; color: #bbb; border-color: #ddd; }
+  .cloze .hole.ok { background: #d3f9d8; color: #2b8a3e; border-color: #40c057; }
+  .cloze .hole.bad { background: #ffe3e3; color: #c92a2a; border-color: #fa5252; }
+
+  /* 复习反馈闭环 */
+  .tool { position: relative; }
+  .tool .badge { position: absolute; top: 6px; right: 8px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #e8590c; color: #fff; font-size: 11px; line-height: 18px; font-weight: 800; }
+  .ratesec { margin-top: 18px; border-top: 1px dashed #eee; padding-top: 14px; }
+  .ratetit { font-size: 14px; font-weight: 700; color: #e8590c; margin-bottom: 10px; }
+  .rateitem { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 0; border-bottom: 1px solid #f3f3f3; }
+  .rateitem:last-child { border-bottom: none; }
+  .rateitem .ren { font-size: 17px; font-weight: 800; color: #333; flex: 1 1 100%; }
+  .rateitem .rzh { font-size: 13px; color: #999; flex: 1 1 100%; margin-top: -4px; }
+  .ratebtns { display: flex; gap: 8px; flex: 1 1 100%; }
+  .ratebtns button { flex: 1; border: 2px solid #ffe0c2; background: #fff7ef; color: #c8761b; border-radius: 12px; padding: 9px 4px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .ratebtns button:active { transform: scale(.96); }
+  .ratebtns button.on { background: #ff9f1c; color: #fff; border-color: #ff9f1c; }
+  .ratebtns.big button { padding: 14px 4px; font-size: 15px; }
 </style>
 </head>
 <body>
