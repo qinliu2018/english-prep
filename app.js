@@ -97,6 +97,8 @@
     else if (view.name === 'dictation') renderDictation();
     else if (view.name === 'spell') renderSpellGame();
     else if (view.name === 'trace') renderTrace();
+    else if (view.name === 'cloze') renderCloze();
+    else if (view.name === 'review') renderReview();
   }
 
   /* ---------------- 数据 ---------------- */
@@ -112,7 +114,7 @@
   const hwKey = () => 'hw_' + dayKey(0);
   const dailyKey = () => 'daily_' + dayKey(0);
   function logActivity(type) {
-    const d = store.get(dailyKey(), { quiz: 0, dictation: 0, spell: 0, trace: 0 });
+    const d = store.get(dailyKey(), { quiz: 0, dictation: 0, spell: 0, trace: 0, cloze: 0, review: 0 });
     d[type] = (d[type] || 0) + 1;
     store.set(dailyKey(), d);
   }
@@ -161,13 +163,65 @@
   function weekActivity() {
     const arr = [];
     for (let i = 6; i >= 0; i--) {
-      const d = store.get('daily_' + dayKey(i), { quiz: 0, dictation: 0, spell: 0, trace: 0 });
+      const d = store.get('daily_' + dayKey(i), { quiz: 0, dictation: 0, spell: 0, trace: 0, cloze: 0, review: 0 });
       arr.push({ date: dayKey(i), total: (d.quiz || 0) + (d.dictation || 0) + (d.spell || 0) + (d.trace || 0) });
     }
     return arr;
   }
   function normalizeAns(s) {
     return String(s || '').toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9'\-\s]/g, '').trim().replace(/\s+/g, ' ');
+  }
+
+  /* ---------------- 复习反馈闭环（会/不确定/忘记 三档自评 + 间隔复习） ---------------- */
+  // Leitner 式间隔：box 越大间隔越长；忘记(box0)立刻再排，不确定(box1)次日，会则逐级拉长
+  const REVIEW_INTERVALS = [0, 1, 3, 7, 16, 30];
+  function reviewKey(type, en) { return type + ':' + normalizeAns(en); }
+  function rateReview(type, en, zh, rating) {
+    const key = reviewKey(type, en);
+    const m = store.get('review', {});
+    const it = m[key] || { box: 0, reviewed: 0 };
+    it.reviewed = (it.reviewed || 0) + 1;
+    it.en = en; it.zh = zh; it.type = type;
+    if (rating === 'forget') { it.box = 0; it.dueDate = dayKey(0); }
+    else if (rating === 'unsure') { it.box = 1; it.dueDate = dayKey(1); }
+    else { it.box = Math.min((it.box || 0) + 1, 5); it.dueDate = dayKey(REVIEW_INTERVALS[it.box]); }
+    m[key] = it;
+    store.set('review', m);
+  }
+  function reviewDue() {
+    const m = store.get('review', {});
+    const today = dayKey(0);
+    return Object.keys(m).filter(k => m[k].dueDate <= today).map(k => Object.assign({ key: k }, m[k]));
+  }
+  function reviewDueCount() { return reviewDue().length; }
+  function rateSectionHtml(items, type) {
+    if (!items || !items.length) return '';
+    const cur = store.get('review', {});
+    return '<div class="ratesec"><div class="ratetit">🧠 标一下掌握度（决定下次复习时间）</div>' +
+      items.map(it => {
+        const key = reviewKey(type, it.en);
+        const st = cur[key];
+        const sel = st ? (st.box === 0 ? 'forget' : st.box === 1 ? 'unsure' : 'know') : '';
+        const en = esc(it.en); const zh = esc(it.zh || '');
+        const emoji = it.emoji ? ' ' + esc(it.emoji) : '';
+        return '<div class="rateitem">' +
+          '<span class="ren">' + en + emoji + '</span><span class="rzh">' + zh + '</span>' +
+          '<div class="ratebtns" data-type="' + type + '" data-en="' + en + '" data-zh="' + zh + '">' +
+            '<button data-r="know"' + (sel === 'know' ? ' class="on"' : '') + '>会</button>' +
+            '<button data-r="unsure"' + (sel === 'unsure' ? ' class="on"' : '') + '>不确定</button>' +
+            '<button data-r="forget"' + (sel === 'forget' ? ' class="on"' : '') + '>忘记</button>' +
+          '</div></div>';
+      }).join('') + '</div>';
+  }
+  function bindRateSection() {
+    $all('.ratebtns').forEach(div => {
+      div.addEventListener('click', e => {
+        const b = e.target.closest('button[data-r]'); if (!b) return;
+        rateReview(div.dataset.type, div.dataset.en, div.dataset.zh, b.dataset.r);
+        $all('button', div).forEach(x => x.classList.remove('on'));
+        b.classList.add('on');
+      });
+    });
   }
 
   /* ---------------- 首页 ---------------- */
@@ -200,6 +254,8 @@
         <button class="tool" id="toolDict"${firstReady ? '' : ' disabled'}><span class="ticon">✍️</span>听写</button>
         <button class="tool" id="toolSpell"${firstReady ? '' : ' disabled'}><span class="ticon">🎮</span>拼词</button>
         <button class="tool" id="toolTrace"${firstReady ? '' : ' disabled'}><span class="ticon">✏️</span>书写</button>
+        <button class="tool" id="toolCloze"${firstReady ? '' : ' disabled'}><span class="ticon">🧩</span>填空</button>
+        <button class="tool" id="toolReview"><span class="ticon">🔄</span>复习${reviewDueCount() ? '<span class="badge">' + reviewDueCount() + '</span>' : ''}</button>
       </div>
       ${wrong.length ? `<button class="btn wrongbtn" id="wrongBtn">📒 错题本（${wrong.length} 个词）</button>` : ''}
       <div class="tip">点单词卡、课文句子即可发音<br>在微信里打开若没有声音，请点右上角「···」→ 在浏览器打开</div>`;
@@ -212,14 +268,16 @@
       $('#toolDict').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'dictation' }));
       $('#toolSpell').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'spell' }));
       $('#toolTrace').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'trace' }));
+      $('#toolCloze').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'cloze' }));
     }
+    $('#toolReview').addEventListener('click', () => go('review'));
   }
 
   /* ---------------- 单元列表 ---------------- */
   function renderUnits() {
     const b = book(view.book); if (!b) return go('home');
     const mode = view.mode || '';
-    const modeNames = { dictation: '听写', spell: '拼词游戏', trace: '书写练习' };
+    const modeNames = { dictation: '听写', spell: '拼词游戏', trace: '书写练习', cloze: '填空练习' };
     app.innerHTML = `
       <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">${esc(b.name)}</div><div></div></div>
       ${mode ? `<div class="card" style="padding:12px 16px;font-size:14px;color:#666;text-align:center;margin-bottom:12px;">请选择一课开始${esc(modeNames[mode] || mode)}</div>` : ''}
@@ -243,6 +301,7 @@
       if (mode === 'dictation') go('dictation', { book: b.id, unit: i });
       else if (mode === 'spell') go('spell', { book: b.id, unit: i });
       else if (mode === 'trace') go('trace', { book: b.id, unit: i });
+      else if (mode === 'cloze') go('cloze', { book: b.id, unit: i });
       else go('unit', { book: b.id, unit: i, tab: 'words', wi: 0 });
     }));
   }
@@ -271,6 +330,7 @@
             <button class="btn ghost small" id="spellBtn">🎮 拼词</button>
             <button class="btn ghost small" id="traceBtn">✏️ 书写</button>
           </div>` : ''}
+        ${hasSents ? `<button class="btn ghost big" id="clozeBtn" style="margin-top:4px;">🧩 填空练习</button>` : ''}
       ` : `
         <div class="card empty">这一课的内容还没录入。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>照着《三年级上册》的格式添加就行 🙂</div>
       `}`;
@@ -283,6 +343,7 @@
     const dict = $('#dictBtn'); if (dict) dict.addEventListener('click', () => go('dictation', { book: b.id, unit: view.unit }));
     const spell = $('#spellBtn'); if (spell) spell.addEventListener('click', () => go('spell', { book: b.id, unit: view.unit }));
     const trace = $('#traceBtn'); if (trace) trace.addEventListener('click', () => go('trace', { book: b.id, unit: view.unit }));
+    const cloze = $('#clozeBtn'); if (cloze) cloze.addEventListener('click', () => go('cloze', { book: b.id, unit: view.unit }));
     if (hasWords || hasSents) {
       if (tab === 'words' && hasWords) renderWords(); else if (hasSents) renderSents();
     }
@@ -509,6 +570,7 @@
         <div class="tip">答对 ${ok} / ${total} 题${wrs.length ? '，错的词已加入错题本' : ''}</div>
         ${wrs.length ? `<div class="wlist">${wrs.map(w =>
           `<button class="mini" data-en="${esc(w.en)}">🔊 ${esc(w.en)} · ${esc(w.zh)}</button>`).join('')}</div>` : ''}
+        ${rateSectionHtml(view.qs.map(q => q.w), 'word')}
         <div class="row">
           <button class="btn" id="again">🔁 再来一次</button>
           <button class="btn ghost" id="back">返回</button>
@@ -521,6 +583,7 @@
       else go('unit', { book: view.book, unit: view.unit, tab: 'words', wi: 0 });
     });
     $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
+    bindRateSection();
   }
 
   /* ---------------- 错题本 ---------------- */
@@ -723,12 +786,16 @@
     logActivity('dictation');
     autoMarkHomework(view.book, view.unit, 'dictation');
     const wrs = view.dwr || [];
+    const u = book(view.book).units[view.unit];
+    const dsrc = (view.dtype === 'sent' ? u.sentences : u.words) || [];
+    const ditems = dsrc.map(x => ({ en: x.en, zh: x.zh, emoji: x.emoji }));
     app.innerHTML = `
       <div class="card result">
         <div class="remoji">${pct >= 90 ? '🏆' : pct >= 60 ? '💪' : '🌱'}</div>
         <div class="rscore">${pct} 分</div>
         <div class="tip">听写正确 ${ok} / ${total}</div>
         ${wrs.length ? `<div class="wlist">${wrs.map(w => `<button class="mini" data-en="${esc(w.en)}">${esc(w.en)} · ${esc(w.zh)}</button>`).join('')}</div>` : ''}
+        ${rateSectionHtml(ditems, view.dtype === 'sent' ? 'sent' : 'word')}
         <div class="row">
           <button class="btn" id="again">🔁 再来一次</button>
           <button class="btn ghost" id="back">返回</button>
@@ -737,6 +804,7 @@
     $('#again').addEventListener('click', () => { view.di = 0; view.dok = 0; view.dwr = []; view.danswered = false; view.dmsg = ''; renderDictation(); });
     $('#back').addEventListener('click', () => go('unit', { book: view.book, unit: view.unit }));
     $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
+    bindRateSection();
   }
 
   /* ---------------- 拼词游戏 ---------------- */
@@ -873,6 +941,163 @@
     c.addEventListener('pointerleave', up);
   }
   function clearTrace() { const c = $('#tcanvas'); if (c) { const ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height); drawTraceGuide(ctx, c); } }
+
+  /* ---------------- 填空练习（Cloze，对应 Lucia 的"还原原句"任务） ---------------- */
+  function buildClozeQuestions(u) {
+    const ss = (u.sentences || []).filter(function (s) { return s.en && s.en.split(/\s+/).length >= 4; });
+    const STOP = /^(the|a|an|and|or|to|is|are|am|was|were|of|in|on|at|for|with|it|he|she|we|you|they|my|your|our|their|this|that|these|those|i|be|do|does|did|can|will|not|no|me|him|her|us|them|as|so|but|if|from|by)$/i;
+    const basePool = ((u.words || []).map(function (w) { return w.en; }).filter(Boolean).concat(dedupeByEn(allReadyWords()).map(function (w) { return w.en; })))
+      .filter(function (x) { return !/\s/.test(x) && /^[A-Za-z]/i.test(x); });
+    return shuffle(ss).slice(0, Math.min(8, ss.length)).map(function (s) {
+      const tokens = s.en.split(/\s+/);
+      const cands = tokens.map(function (t, i) { return { t: t, i: i }; }).filter(function (o) {
+        const w = o.t.replace(/[^A-Za-z]/g, '');
+        return w.length >= 3 && !STOP.test(w);
+      });
+      const holes = shuffle(cands).slice(0, Math.min(2, cands.length)).map(function (h, k) {
+        const w = h.t.replace(/[^A-Za-z]/g, '').toLowerCase();
+        const distract = shuffle(basePool.filter(function (x) { return x.toLowerCase() !== w; })).slice(0, 3).map(function (x) { return x.toLowerCase(); });
+        return { i: h.i, k: k, word: w, opts: shuffle([w].concat(distract)) };
+      }).sort(function (a, b) { return a.i - b.i; });
+      if (!holes.length) return null;
+      return { en: s.en, zh: s.zh, holes: holes };
+    }).filter(Boolean).filter(function (q) { return q.holes.length; });
+  }
+  function renderCloze() {
+    const b = book(view.book); const u = b.units[view.unit];
+    if (view.cqi == null) {
+      view.cqs = buildClozeQuestions(u);
+      view.cqi = 0; view.cok = 0; view.cwr = []; view.cchecked = false; view.cpicks = null;
+      if (!view.cqs.length) return go('unit', { book: view.book, unit: view.unit, tab: 'sent' });
+    }
+    if (view.cqi >= view.cqs.length) return renderClozeResult();
+    const q = view.cqs[view.cqi];
+    const picks = view.cpicks || (view.cpicks = q.holes.map(function () { return null; }));
+    const checked = view.cchecked;
+    const tokens = q.en.split(/\s+/);
+    let hi = 0;
+    const sentence = tokens.map(function (tk, i) {
+      const h = q.holes.find(function (x) { return x.i === i; });
+      if (!h) return '<span>' + esc(tk) + '</span>';
+      const k = h.k; const p = picks[k]; hi++;
+      let cls = 'hole', content;
+      if (checked) {
+        if ((p || '').toLowerCase() === h.word) { cls += ' ok'; content = esc(h.word); }
+        else { cls += ' bad'; content = esc(h.word); }
+      } else { cls += p ? '' : ' empty'; content = p ? esc(p) : '＿＿＿'; }
+      return '<span class="' + cls + '" data-h="' + k + '">' + content + '</span>';
+    }).join(' ');
+    const allFilled = picks.every(function (p) { return p; });
+    let body = '';
+    body += '<div class="cloze">' + sentence + '</div>';
+    body += '<div class="tip">点挖空处，从下方候选里选词填回原句。</div>';
+    q.holes.forEach(function (h) {
+      body += '<div style="margin-top:12px;">';
+      body += '<div class="selmode" style="justify-content:center;margin-bottom:6px;color:#999;">— 空 ' + (h.k + 1) + ' —</div>';
+      body += '<div class="opts">';
+      h.opts.forEach(function (o) {
+        let c = 'opt';
+        if (checked) { if (o.toLowerCase() === h.word) c += ' right'; else if (picks[h.k] && picks[h.k].toLowerCase() === o.toLowerCase()) c += ' wrong'; }
+        else if (picks[h.k] === o) c += ' right';
+        body += '<button class="' + c + '" data-h="' + h.k + '" data-o="' + esc(o) + '"' + (checked ? ' disabled' : '') + '>' + esc(o) + '</button>';
+      });
+      body += '</div></div>';
+    });
+    const foot = checked
+      ? '<button class="btn" id="next">➡️ 下一题</button><button class="btn ghost small" id="again">🔁 重做</button>'
+      : (allFilled ? '<button class="btn" id="check">✅ 检查</button>' : '<button class="btn ghost" disabled>先选满所有空</button>');
+    app.innerHTML =
+      '<div class="topbar"><button class="back" id="bk">⬅️</button>' +
+        '<div class="title">🧩 填空 ' + (view.cqi + 1) + '/' + view.cqs.length + '</div><div class="streak">✅' + view.cok + '</div></div>' +
+      '<div class="card qcard">' + body +
+        '<div class="row" style="margin-top:16px;">' + foot +
+          '<button class="btn ghost small" id="say">🔊 听句子</button>' +
+        '</div>' +
+      '</div>';
+    $('#bk').addEventListener('click', function () { go('unit', { book: view.book, unit: view.unit, tab: 'sent' }); });
+    $('#say').addEventListener('click', function () { speak(q.en, playRate()); });
+    $all('.opt').forEach(function (el) {
+      el.addEventListener('click', function () {
+        const k = +el.dataset.h;
+        picks[k] = (picks[k] === el.dataset.o) ? null : el.dataset.o;
+        renderCloze();
+      });
+    });
+    $all('.hole').forEach(function (el) {
+      el.addEventListener('click', function () { picks[+el.dataset.h] = null; renderCloze(); });
+    });
+    const chk = $('#check'); if (chk) chk.addEventListener('click', function () { view.cchecked = true; renderCloze(); });
+    const nx = $('#next'); if (nx) nx.addEventListener('click', function () { view.cqi++; view.cchecked = false; view.cpicks = null; renderCloze(); });
+    const ag = $('#again'); if (ag) ag.addEventListener('click', function () { view.cchecked = false; view.cpicks = q.holes.map(function () { return null; }); renderCloze(); });
+  }
+  function renderClozeResult() {
+    const total = view.cqs.length, ok = view.cok;
+    const pct = total ? Math.round(ok / total * 100) : 0;
+    logActivity('cloze');
+    autoMarkHomework(view.book, view.unit, 'cloze');
+    const citems = view.cqs.map(q => ({ en: q.en, zh: q.zh }));
+    app.innerHTML =
+      '<div class="card result">' +
+        '<div class="remoji">' + (pct >= 90 ? '🏆' : pct >= 60 ? '💪' : '🌱') + '</div>' +
+        '<div class="rscore">' + pct + ' 分</div>' +
+        '<div class="tip">填空正确 ' + ok + ' / ' + total + ' 句</div>' +
+        rateSectionHtml(citems, 'sent') +
+        '<div class="row"><button class="btn" id="again">🔁 再来一次</button><button class="btn ghost" id="back">返回</button></div>' +
+      '</div>';
+    $('#again').addEventListener('click', function () { view.cqi = null; renderCloze(); });
+    $('#back').addEventListener('click', function () { go('unit', { book: view.book, unit: view.unit, tab: 'sent' }); });
+    bindRateSection();
+  }
+
+  /* ---------------- 复习中心 ---------------- */
+  function renderReview() {
+    const due = reviewDue();
+    if (!due.length) {
+      app.innerHTML =
+        '<div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">🔄 复习</div><div></div></div>' +
+        '<div class="card empty">🎉 今天没有要复习的内容，去练点新内容吧！</div>';
+      $('#bk').addEventListener('click', () => go('home'));
+      return;
+    }
+    if (view.ri == null) view.ri = 0;
+    if (view.ri >= due.length) return renderReviewDone(due.length);
+    const it = due[view.ri];
+    const isSent = it.type === 'sent';
+    app.innerHTML =
+      '<div class="topbar"><button class="back" id="bk">⬅️</button>' +
+        '<div class="title">🔄 复习 ' + (view.ri + 1) + '/' + due.length + '</div>' +
+        '<div class="streak">📌' + (due.length - view.ri) + '</div></div>' +
+      '<div class="card qcard">' +
+        (isSent
+          ? '<div class="cloze">' + esc(it.en) + '</div><div class="dzh">' + esc(it.zh || '') + '</div>'
+          : '<div class="qword">' + esc(it.en) + '</div><div class="dzh">' + esc(it.zh || '') + '</div>') +
+        '<div class="row" style="margin-top:16px;"><button class="btn" id="say">🔊 听一下</button></div>' +
+        '<div class="ratetit" style="margin-top:16px;">你记住了吗？</div>' +
+        '<div class="ratebtns big" id="rb" data-type="' + it.type + '" data-en="' + esc(it.en) + '" data-zh="' + esc(it.zh || '') + '">' +
+          '<button data-r="know">会 ✅</button>' +
+          '<button data-r="unsure">不确定 🤔</button>' +
+          '<button data-r="forget">忘了 🔁</button>' +
+        '</div>' +
+      '</div>';
+    $('#bk').addEventListener('click', () => go('home'));
+    $('#say').addEventListener('click', () => speak(it.en, playRate()));
+    const rb = $('#rb');
+    $all('button', rb).forEach(b => b.addEventListener('click', () => {
+      rateReview(it.type, it.en, it.zh || '', b.dataset.r);
+      view.ri++; renderReview();
+    }));
+  }
+  function renderReviewDone(n) {
+    logActivity('review');
+    app.innerHTML =
+      '<div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">🔄 复习</div><div></div></div>' +
+      '<div class="card result"><div class="remoji">🎉</div>' +
+        '<div class="rscore">完成</div>' +
+        '<div class="tip">本次复习 ' + n + ' 个内容，已按掌握度排好下次时间。</div>' +
+        '<div class="row"><button class="btn" id="home">🏠 回首页</button></div></div>';
+    $('#bk').addEventListener('click', () => go('home'));
+    $('#home').addEventListener('click', () => go('home'));
+  }
 
   /* ---------------- 启动 ---------------- */
   /* 部署到 HTTPS 后自动启用离线缓存（本地局域网 http 下跳过，不影响现状） */
