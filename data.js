@@ -440,7 +440,91 @@ const BOOKS = [
           { en: 'can do things for my family', zh: '能为我的家人做事' }
         ]
       }
-    ]
+    ,
+  {
+    id: '7a',
+    name: '初一上册',
+    edition: '译林版 · 初中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '7b',
+    name: '初一下册',
+    edition: '译林版 · 初中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '8a',
+    name: '初二上册',
+    edition: '译林版 · 初中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '8b',
+    name: '初二下册',
+    edition: '译林版 · 初中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '9a',
+    name: '初三上册',
+    edition: '译林版 · 初中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '9b',
+    name: '初三下册',
+    edition: '译林版 · 初中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '10a',
+    name: '高一上册',
+    edition: '译林版 · 高中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '10b',
+    name: '高一下册',
+    edition: '译林版 · 高中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '11a',
+    name: '高二上册',
+    edition: '译林版 · 高中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '11b',
+    name: '高二下册',
+    edition: '译林版 · 高中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '12a',
+    name: '高三上册',
+    edition: '译林版 · 高中',
+    ready: false,
+    units: []
+  },
+  {
+    id: '12b',
+    name: '高三下册',
+    edition: '译林版 · 高中',
+    ready: false,
+    units: []
+  }]
   },
 
   {
@@ -1465,7 +1549,7 @@ const BOOKS = [
     ]
   },
 
-  {
+    {
     id: '5a',
     name: '五年级上册',
     edition: '译林版 · 旧版（新教材2026秋启用，届时重新抓取替换）',
@@ -1496,10 +1580,13 @@ const BOOKS = [
           { en: 'their', zh: '他们的', emoji: '👥', ex: 'Their house is nice.' }
         ],
         sentences: [
-          { en: 'There is a house in the forest.', zh: '森林里有一座房子。' },
-          { en: 'This soup is just right.', zh: '这碗汤正合适。' },
-          { en: 'This bed is too soft.', zh: '这张床太软了。' },
-          { en: 'Goldilocks is afraid. Help! Help!', zh: '金发姑娘很害怕。救命！救命！' }
+          { en: 'Goldilocks is in the forest. There is a house.', zh: '金发姑娘在森林里。有一座房子。' },
+          { en: 'Goldilocks is in the house. She is hungry and thirsty.', zh: '金发姑娘在房子里。她又饿又渴。' },
+          { en: 'There is some soup on the table. This soup is just right.', zh: '桌上有一些汤。这碗汤正合适。' },
+          { en: 'Goldilocks is afraid. There are three bears in front of her!', zh: '金发姑娘害怕了。她面前有三只熊！' },
+          { en: 'Help! Help!', zh: '救命！救命！' },
+          { en: 'This bed is too hard. This bed is too soft.', zh: '这张床太硬了。这张床太软了。' },
+          { en: 'This bed is just right.', zh: '这张床正合适。' }
         ]
       },
       {
@@ -1521,10 +1608,14 @@ const BOOKS = [
           { en: 'great', zh: '极好的', emoji: '👍', ex: 'Great! Let us go.' }
         ],
         sentences: [
+          { en: 'This is Nancy Black. She is a new student.', zh: '这是南希·布莱克。她是一名新生。' },
           { en: 'Can you show her around?', zh: '你能带她参观一下吗？' },
-          { en: 'How many classrooms are there?', zh: '有多少间教室？' },
-          { en: 'The computer room is on the third floor.', zh: '电脑教室在三楼。' },
-          { en: 'Push me! It is fun!', zh: '推推我！真好玩！' }
+          { en: 'There are 24 classrooms in our school.', zh: '我们学校有24间教室。' },
+          { en: 'Our classroom is on the second floor.', zh: '我们的教室在二楼。' },
+          { en: 'How many classrooms are there in our school?', zh: '我们学校有多少间教室？' },
+          { en: 'Are there any computer rooms? Yes, there are. There are two computer rooms.', zh: '有电脑室吗？是的，有。有两间电脑室。' },
+          { en: 'Is there a music room? Yes, there is. It is on the first floor.', zh: '有音乐室吗？是的，有。它在一楼。' },
+          { en: 'There is a library too. They are on the third floor.', zh: '还有一间图书馆。它们在三楼。' }
         ]
       },
       {
@@ -1543,10 +1634,10 @@ const BOOKS = [
           { en: 'finger', zh: '手指', emoji: '👆', ex: 'It has ten fingers.' }
         ],
         sentences: [
-          { en: 'I have an animal friend.', zh: '我有一个动物朋友。' },
-          { en: 'It has a big body and four legs.', zh: '它有大大的身体和四条腿。' },
-          { en: 'It has no legs, but it can swim.', zh: '它没有腿，但会游泳。' },
-          { en: 'One is red and the other is white.', zh: '一只是红的，另一只是白的。' }
+          { en: 'I have two animal friends. One is red and the other is black.', zh: '我有两个动物朋友。一只是红色的，另一只是黑色的。' },
+          { en: 'They have big eyes and big bodies. They have no legs or arms, but they have big tails. They can swim.', zh: '它们有大眼睛和大身体。它们没有腿和手臂，但有大的尾巴。它们会游泳。' },
+          { en: 'My animal friend is white. It has four legs and a short tail. It has big ears. It can run and jump.', zh: '我的动物朋友是白色的。它有四条腿和短尾巴。它有大耳朵。它会跑和跳。' },
+          { en: 'My animal friend is yellow and green. It has two legs and two wings. It has a big mouth and a long tail. It can talk and fly.', zh: '我的动物朋友黄绿相间。它有两条腿和两只翅膀。它有一张大嘴和长尾巴。它会说话和飞。' }
         ]
       },
       {
@@ -1573,10 +1664,10 @@ const BOOKS = [
           { en: 'wet', zh: '湿的', emoji: '💧', ex: 'The ice is wet.' }
         ],
         sentences: [
-          { en: 'I like playing the piano.', zh: '我喜欢弹钢琴。' },
-          { en: 'She is good at dancing.', zh: '她擅长跳舞。' },
-          { en: 'We both like watching films.', zh: '我们都喜欢看电影。' },
-          { en: 'Look out! The ice is wet!', zh: '当心！冰是湿的！' }
+          { en: 'I like playing basketball and football. I can play basketball well, but I am not good at football. I like drawing too.', zh: '我喜欢打篮球和踢足球。我篮球打得很好，但足球不行。我也喜欢画画。' },
+          { en: 'This is my friend Liu Tao. He likes playing football too. He is good at it. He also likes playing table tennis.', zh: '这是我的朋友刘涛。他也喜欢踢足球。他很擅长。他也喜欢打乒乓球。' },
+          { en: 'Here are Su Hai and Su Yang. They are twins. Su Hai likes dancing. Su Yang likes watching films. They both like swimming.', zh: '这是苏海和苏阳。她们是双胞胎。苏海喜欢跳舞。苏阳喜欢看电影。她们都喜欢游泳。' },
+          { en: 'This is Yang Ling. She likes reading stories. She has a lot of books. She also likes playing the piano.', zh: '这是杨玲。她喜欢读故事。她有许多书。她也喜欢弹钢琴。' }
         ]
       },
       {
@@ -1601,10 +1692,10 @@ const BOOKS = [
           { en: 'policeman', zh: '警察', emoji: '👮', ex: 'He is a policeman.' }
         ],
         sentences: [
-          { en: 'What does your father do?', zh: '你爸爸是做什么的？' },
-          { en: 'He is a teacher. He teaches Maths.', zh: '他是老师，教数学。' },
-          { en: 'My mother is a doctor.', zh: '我妈妈是医生。' },
-          { en: 'She helps sick people.', zh: '她帮助生病的人。' }
+          { en: 'What does your father do, Mike? My father is a teacher. He teaches English. He has a lot of students.', zh: '你爸爸是做什么的，迈克？我爸爸是老师。他教英语。他有许多学生。' },
+          { en: 'What about your mother? Is she an English teacher too? No, she is not. She is a writer. She writes stories. She works at home.', zh: '你妈妈呢？她也是英语老师吗？不，她不是。她是作家。她写故事。她在家工作。' },
+          { en: 'What does your father do, Su Hai? My father is a doctor. He helps sick people.', zh: '你爸爸是做什么的，苏海？我爸爸是医生。他帮助生病的人。' },
+          { en: 'What does your mother do? My mother is a factory worker. She makes sweets.', zh: '你妈妈是做什么的？我妈妈是工厂工人。她做糖果。' }
         ]
       },
       {
@@ -1626,16 +1717,18 @@ const BOOKS = [
           { en: 'US', zh: '美国', emoji: '🇺🇸' },
           { en: 'go fishing', zh: '去钓鱼', emoji: '🎣', ex: 'We go fishing at weekends.' },
           { en: 'tomorrow', zh: '明天', emoji: '📅', ex: 'I will go tomorrow.' },
-          { en: "Don't worry.", zh: '别担心。', emoji: '😌' },
+          { en: 'Don\'t worry.', zh: '别担心。', emoji: '😌' },
           { en: 'sit', zh: '坐', emoji: '🪑', ex: 'Sit by the river.' },
           { en: 'by', zh: '在……旁边', emoji: '📍', ex: 'Sit by me.' },
           { en: 'wait', zh: '等待', emoji: '⏳', ex: 'Wait for me.' }
         ],
         sentences: [
-          { en: 'I have an e-friend in the UK.', zh: '我有一个英国网友。' },
-          { en: 'He lives in Canada.', zh: '他住在加拿大。' },
-          { en: 'He likes playing football and swimming.', zh: '他喜欢踢足球和游泳。' },
-          { en: "Don't worry. I can help you.", zh: '别担心，我能帮你。' }
+          { en: 'Let us go and play football in the playground. Wait a minute. Let me send this email first. It is to my e-friend.', zh: '我们去操场踢足球吧。等一会儿。让我先发这封邮件。是给我网友的。' },
+          { en: 'Who is your e-friend? He is Peter. He lives in the UK. He is 11 years old.', zh: '你的网友是谁？他是彼得。他住在英国。他11岁。' },
+          { en: 'Can he speak Chinese? Yes, he can.', zh: '他会说中文吗？是的，他会。' },
+          { en: 'Does he have Chinese lessons at school? No, he does not. He studies Chinese after school.', zh: '他在学校有中文课吗？不，他没有。他放学后学中文。' },
+          { en: 'What subjects does he like? He likes Maths and PE.', zh: '他喜欢什么科目？他喜欢数学和体育。' },
+          { en: 'Does he like playing football? Yes, he does. He likes swimming too.', zh: '他喜欢踢足球吗？是的，他喜欢。他也喜欢游泳。' }
         ]
       },
       {
@@ -1658,10 +1751,12 @@ const BOOKS = [
           { en: 'get out', zh: '走开', emoji: '👋', ex: 'Get out!' }
         ],
         sentences: [
-          { en: 'What do you do at weekends?', zh: '你周末做什么？' },
-          { en: 'I often visit my grandparents.', zh: '我经常看望祖父母。' },
-          { en: 'Sometimes I go to the cinema.', zh: '我有时去看电影。' },
-          { en: 'She always chats with her friends.', zh: '她总是和朋友聊天。' }
+          { en: 'What do you do at weekends, Su Hai? I usually visit my grandparents.', zh: '周末你做什么，苏海？我通常看望我的祖父母。' },
+          { en: 'Su Yang and I like playing with their cat Kitty very much. We often have dinner with our grandparents at weekends.', zh: '苏阳和我非常喜欢和他们的猫基蒂玩。我们经常在周末和祖父母一起吃晚饭。' },
+          { en: 'My grandparents live in the UK. I usually chat with them on the Internet at weekends.', zh: '我的祖父母住在英国。周末我通常在网上和他们聊天。' },
+          { en: 'What does Helen do at weekends? She always has dancing lessons. She sometimes goes to the cinema with her friends.', zh: '海伦周末做什么？她总是上舞蹈课。她有时和朋友们去看电影。' },
+          { en: 'What about you, Mike? I usually play football with Liu Tao at weekends. I sometimes go to the park with my family.', zh: '你呢，迈克？周末我通常和刘涛踢足球。我有时和家人去公园。' },
+          { en: 'We usually fly a kite and have a picnic there.', zh: '我们通常在那里放风筝和野餐。' }
         ]
       },
       {
@@ -1692,7 +1787,7 @@ const BOOKS = [
           { en: 'message', zh: '消息', emoji: '✉️', ex: 'Here is a message for you.' },
           { en: 'Merry Christmas!', zh: '圣诞快乐！', emoji: '🎄' },
           { en: 'song', zh: '歌曲', emoji: '🎵', ex: 'We sing Christmas songs.' },
-          { en: "What's wrong with ...?", zh: '……怎么了？', emoji: '❓' },
+          { en: 'What\'s wrong with ...?', zh: '……怎么了？', emoji: '❓' },
           { en: 'him', zh: '他（宾格）', emoji: '👦', ex: 'We wait for him.' },
           { en: 'us', zh: '我们（宾格）', emoji: '👥', ex: 'They help us.' },
           { en: 'letter', zh: '信', emoji: '📬', ex: 'I write a letter.' },
@@ -1700,12 +1795,13 @@ const BOOKS = [
           { en: 'after', zh: '在……之后', emoji: '⏭️', ex: 'After dinner, we sing.' }
         ],
         sentences: [
-          { en: 'Christmas is coming. We are very happy.', zh: '圣诞节要到了，我们很开心。' },
-          { en: 'First, we buy presents.', zh: '首先，我们买礼物。' },
-          { en: 'We put pretty things on the Christmas tree.', zh: '我们把漂亮的饰品挂上圣诞树。' },
-          { en: 'Merry Christmas!', zh: '圣诞快乐！' }
+          { en: 'First, we buy presents for our family and friends. We also buy a Christmas tree. We sometimes go to see Father Christmas.', zh: '首先，我们为家人和朋友买礼物。我们也买一棵圣诞树。我们有时去看圣诞老人。' },
+          { en: 'Next, we put some pretty things on the Christmas tree. We also put our presents under the tree. It looks great!', zh: '接着，我们把漂亮的东西挂在圣诞树上。我们也把礼物放在树下。看起来很棒！' },
+          { en: 'We always have a lot of fun at Christmas.', zh: '我们在圣诞节总是玩得很开心。' },
+          { en: 'Then, Christmas Eve comes. We put a stocking on our beds and wait for presents.', zh: '然后，平安夜到了。我们把长筒袜放在床上，等待礼物。' },
+          { en: 'Finally, it is Christmas Day! We wake up early and open our presents. We have a big lunch. We eat a turkey and Christmas pudding. We all have a good time!', zh: '最后，圣诞节到了！我们早早醒来，打开礼物。我们吃丰盛的午餐。我们吃火鸡和圣诞布丁。我们都过得很愉快！' }
         ]
-      }
+      },
     ]
   },
 
