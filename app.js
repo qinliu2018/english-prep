@@ -35,9 +35,16 @@
   if (TTS_OK) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
   function speak(text, rate) {
     if (!TTS_OK) return;
+    // 单字母英文词（如 I、a）容易被 TTS 当成孤立字母，出现读音偏短/偏字母音
+    // 或不发声（单字符 utterance 会被部分引擎吞掉）。加句点让引擎当作完整
+    // 单词/句尾来发音，更稳定自然。
+    let t = text;
+    if (typeof t === 'string' && /^[\x20]*[A-Za-z][\x20]*$/.test(t)) {
+      t = t.trim() + '.';
+    }
     const doSpeak = () => {
       try {
-        const u = new SpeechSynthesisUtterance(text);
+        const u = new SpeechSynthesisUtterance(t);
         u.lang = 'en-US';
         if (VOICE) u.voice = VOICE;
         u.rate = rate || 0.9;
@@ -103,6 +110,12 @@
 
   /* ---------------- 数据 ---------------- */
   const book = id => BOOKS.find(b => b.id === id);
+  function stageOf(id) {
+    const n = parseInt(id, 10);
+    if (n >= 10) return '高中';
+    if (n >= 7) return '初中';
+    return '小学';
+  }
   function allReadyWords() {
     const r = [];
     BOOKS.forEach(b => { if (b.ready) b.units.forEach(u => (u.words || []).forEach(w => r.push(w))); });
@@ -229,6 +242,7 @@
     const days = streakDays();
     const wrong = store.get('wrong', []);
     const hw = homeworkProgress();
+    const stage = view.stage || '小学';
     const firstReady = BOOKS.find(b => b.ready);
     app.innerHTML = `
       <div class="topbar"><div></div><div class="title">📘 英语预习小助手</div><div class="streak">🔥${days}天</div></div>
@@ -241,7 +255,8 @@
           </div>
           <div class="hwprog">${hw.done}/${hw.total}</div>
         </div>` : ''}
-      <div class="grid">${BOOKS.map(b => `
+      <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
+      <div class="grid">${BOOKS.filter(b => stageOf(b.id) === stage).map(b => `
         <button class="book${b.ready ? '' : ' lock'}" data-book="${b.id}">
           <div>${esc(b.name)}</div>
           <div class="bsub">${b.ready ? '✅ 已录入' : '待录入'}</div>
@@ -260,6 +275,7 @@
       ${wrong.length ? `<button class="btn wrongbtn" id="wrongBtn">📒 错题本（${wrong.length} 个词）</button>` : ''}
       <div class="tip">点单词卡、课文句子即可发音<br>在微信里打开若没有声音，请点右上角「···」→ 在浏览器打开</div>`;
     $all('.book').forEach(el => el.addEventListener('click', () => go('units', { book: el.dataset.book })));
+    $all('.stab').forEach(el => el.addEventListener('click', () => go('home', { stage: el.dataset.stage })));
     const wb = $('#wrongBtn'); if (wb) wb.addEventListener('click', () => go('wrong'));
     const hwc = $('#hwCard'); if (hwc) hwc.addEventListener('click', () => go('homework'));
     $('#toolHw').addEventListener('click', () => go('homework'));
@@ -276,6 +292,13 @@
   /* ---------------- 单元列表 ---------------- */
   function renderUnits() {
     const b = book(view.book); if (!b) return go('home');
+    if (!b.units || !b.units.length) {
+      app.innerHTML = `
+        <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">${esc(b.name)}</div><div></div></div>
+        <div class="card empty">这一册的内容还没录入。<br><br>等有课本了，再让澳牛补上 🙂</div>`;
+      $('#bk').addEventListener('click', () => go('home'));
+      return;
+    }
     const mode = view.mode || '';
     const modeNames = { dictation: '听写', spell: '拼词游戏', trace: '书写练习', cloze: '填空练习' };
     app.innerHTML = `
