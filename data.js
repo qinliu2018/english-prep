@@ -12,15 +12,13 @@
    4. 每个单词：en=英文  zh=中文  emoji=配图  ex=例句（可省略）
    ===================================================================== */
 
-/* 每日作业配置（家长按孩子年级修改）
+/* 每日作业配置
+   留空（HOMEWORK = []）则按 BOOKS 里所有已录入课本的 Unit 1
+   自动生成 复习单词 / 测一测 / 听写 三项（每册一份）。
+   想完全自定义就在数组里写：
    action 可选：review=单词卡, sent=课文跟读, quiz=测一测,
-                dictation=听写, spell=拼词游戏, trace=书写练习
-   不配置则首页不显示作业入口 */
-const HOMEWORK = [
-  { id: 'hw1', title: '预习 Unit 1', book: '3a', unit: 0, action: 'review' },
-  { id: 'hw2', title: 'Unit 1 测一测', book: '3a', unit: 0, action: 'quiz' },
-  { id: 'hw3', title: 'Unit 1 听写', book: '3a', unit: 0, action: 'dictation' }
-];
+                dictation=听写, spell=拼词游戏, trace=书写练习 */
+const HOMEWORK = [];
 
 const BOOKS = [
   {
