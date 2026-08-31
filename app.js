@@ -132,7 +132,19 @@
     d[type] = (d[type] || 0) + 1;
     store.set(dailyKey(), d);
   }
-  const homeworkList = () => (typeof HOMEWORK !== 'undefined' ? HOMEWORK : []);
+  const homeworkList = () => {
+    if (typeof HOMEWORK !== 'undefined' && HOMEWORK.length) return HOMEWORK;
+    const auto = [];
+    BOOKS.forEach(b => {
+      if (!b.ready || !b.units || !b.units.length) return;
+      const i0 = b.units.findIndex(u => u.words && u.words.length);
+      if (i0 < 0) return;
+      auto.push({ id: 'auto_' + b.id + '_review', title: b.name + ' Unit 1 复习单词', book: b.id, unit: i0, action: 'review' });
+      auto.push({ id: 'auto_' + b.id + '_quiz', title: b.name + ' Unit 1 测一测', book: b.id, unit: i0, action: 'quiz' });
+      auto.push({ id: 'auto_' + b.id + '_dictation', title: b.name + ' Unit 1 听写', book: b.id, unit: i0, action: 'dictation' });
+    });
+    return auto;
+  };
   function getHomework() {
     const done = store.get(hwKey(), {});
     return homeworkList().map(t => Object.assign({}, t, { done: !!done[t.id] }));
@@ -678,14 +690,17 @@
     else go('unit', { book: t.book, unit: t.unit, tab: t.action === 'sent' ? 'sent' : 'words', wi: 0 });
   }
   function renderHomework() {
-    const list = getHomework();
+    const stage = view.stage || '小学';
+    const all = getHomework();
+    const list = all.filter(t => stageOf(t.book) === stage);
     const empty = !list.length;
     const bk = id => BOOKS.find(x => x.id === id) || {};
     const unitTitle = (id, i) => { const b = bk(id); return b.units && b.units[i] ? b.units[i].title : ''; };
     app.innerHTML = `
       <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📋 作业本</div><div></div></div>
+      <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
       ${empty ? `
-        <div class="card empty">还没有配置每日作业。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>编辑 <b>HOMEWORK</b> 数组就能添加 🙂</div>
+        <div class="card empty">${stage === '小学' ? '还没有配置每日作业。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>编辑 <b>HOMEWORK</b> 数组就能添加 🙂' : '这个学段还没有已录入的课本。<br>先在 <b>data.js</b> 里加好内容就行 🙂'}</div>
       ` : `
         <div class="card" style="padding:14px 16px;">
           <div style="font-size:15px;font-weight:700;color:#555;margin-bottom:8px;">${dayKey(0)} · 今日任务</div>
@@ -700,9 +715,10 @@
             </div>
           `).join('')}</div>
         </div>
-        <div class="tip">作业内容在 <b>data.js</b> 里配置，每天自动重置。<br>测验 / 听写完成后会自动打勾。<br>点整行可手动切换完成状态。</div>
+        <div class="tip">留空 HOMEWORK 时，按每本已录入课本的 Unit 1 自动生成复习/测一测/听写。<br>测验 / 听写完成后会自动打勾，每天自动重置。</div>
       `}`;
     $('#bk').addEventListener('click', () => go('home'));
+    $all('.stab').forEach(el => el.addEventListener('click', () => go('homework', { stage: el.dataset.stage })));
     if (!empty) {
       $all('.hitem').forEach(el => el.addEventListener('click', e => {
         if (e.target.closest('.hbtn')) return;
