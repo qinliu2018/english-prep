@@ -95,6 +95,7 @@
   }
   function render() {
     if (view.name === 'home') renderHome();
+    else if (view.name === 'pickbook') renderPickBooks();
     else if (view.name === 'units') renderUnits();
     else if (view.name === 'unit') renderUnit();
     else if (view.name === 'quiz') renderQuiz();
@@ -243,7 +244,7 @@
     const wrong = store.get('wrong', []);
     const hw = homeworkProgress();
     const stage = view.stage || '小学';
-    const firstReady = BOOKS.find(b => b.ready);
+    const stageReady = BOOKS.some(b => b.ready && stageOf(b.id) === stage);
     app.innerHTML = `
       <div class="topbar"><div></div><div class="title">📘 英语预习小助手</div><div class="streak">🔥${days}天</div></div>
       ${TTS_OK ? '' : '<div class="warn">⚠️ 当前浏览器不支持发音，请用 Edge / Chrome / Safari 打开</div>'}
@@ -266,10 +267,10 @@
       <div class="tools">
         <button class="tool primary" id="toolHw"><span class="ticon">📋</span>作业本</button>
         <button class="tool alt" id="toolReport"><span class="ticon">📊</span>学习报告</button>
-        <button class="tool" id="toolDict"${firstReady ? '' : ' disabled'}><span class="ticon">✍️</span>听写</button>
-        <button class="tool" id="toolSpell"${firstReady ? '' : ' disabled'}><span class="ticon">🎮</span>拼词</button>
-        <button class="tool" id="toolTrace"${firstReady ? '' : ' disabled'}><span class="ticon">✏️</span>书写</button>
-        <button class="tool" id="toolCloze"${firstReady ? '' : ' disabled'}><span class="ticon">🧩</span>填空</button>
+        <button class="tool" id="toolDict"${stageReady ? '' : ' disabled'}><span class="ticon">✍️</span>听写</button>
+        <button class="tool" id="toolSpell"${stageReady ? '' : ' disabled'}><span class="ticon">🎮</span>拼词</button>
+        <button class="tool" id="toolTrace"${stageReady ? '' : ' disabled'}><span class="ticon">✏️</span>书写</button>
+        <button class="tool" id="toolCloze"${stageReady ? '' : ' disabled'}><span class="ticon">🧩</span>填空</button>
         <button class="tool" id="toolReview"><span class="ticon">🔄</span>复习${reviewDueCount() ? '<span class="badge">' + reviewDueCount() + '</span>' : ''}</button>
       </div>
       ${wrong.length ? `<button class="btn wrongbtn" id="wrongBtn">📒 错题本（${wrong.length} 个词）</button>` : ''}
@@ -280,13 +281,34 @@
     const hwc = $('#hwCard'); if (hwc) hwc.addEventListener('click', () => go('homework'));
     $('#toolHw').addEventListener('click', () => go('homework'));
     $('#toolReport').addEventListener('click', () => go('report'));
-    if (firstReady) {
-      $('#toolDict').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'dictation' }));
-      $('#toolSpell').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'spell' }));
-      $('#toolTrace').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'trace' }));
-      $('#toolCloze').addEventListener('click', () => go('units', { book: firstReady.id, mode: 'cloze' }));
+    if (stageReady) {
+      $('#toolDict').addEventListener('click', () => go('pickbook', { mode: 'dictation', stage }));
+      $('#toolSpell').addEventListener('click', () => go('pickbook', { mode: 'spell', stage }));
+      $('#toolTrace').addEventListener('click', () => go('pickbook', { mode: 'trace', stage }));
+      $('#toolCloze').addEventListener('click', () => go('pickbook', { mode: 'cloze', stage }));
     }
     $('#toolReview').addEventListener('click', () => go('review'));
+  }
+
+  /* ---------------- 选择课本（工具栏工具入口） ---------------- */
+  const MODE_NAMES = { dictation: '听写', spell: '拼词游戏', trace: '书写练习', cloze: '填空练习' };
+  function renderPickBooks() {
+    const mode = view.mode;
+    const stage = view.stage || '小学';
+    const books = BOOKS.filter(b => b.ready && stageOf(b.id) === stage);
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">${esc(MODE_NAMES[mode] || '选择课本')}</div><div></div></div>
+      <div class="card" style="padding:12px 16px;font-size:14px;color:#666;text-align:center;margin-bottom:12px;">选择一本课本，开始${esc(MODE_NAMES[mode] || '练习')}</div>
+      <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
+      <div class="list">${books.map(b => `
+        <button class="unit" data-book="${b.id}">
+          <span>${esc(b.name)}</span>
+          <span class="stars">${b.ready ? '✅ 已录入' : '待录入'}</span>
+        </button>`).join('')}
+      </div>`;
+    $('#bk').addEventListener('click', () => go('home'));
+    $all('.stab').forEach(el => el.addEventListener('click', () => go('pickbook', { mode, stage: el.dataset.stage })));
+    $all('.unit').forEach(el => el.addEventListener('click', () => go('units', { book: el.dataset.book, mode })));
   }
 
   /* ---------------- 单元列表 ---------------- */
@@ -316,7 +338,10 @@
         </button>`;
       }).join('')}
       </div>`;
-    $('#bk').addEventListener('click', () => go('home'));
+    $('#bk').addEventListener('click', () => {
+      if (mode) go('pickbook', { mode, stage: stageOf(b.id) });
+      else go('home');
+    });
     const bq = $('#bookQuiz');
     if (bq) bq.addEventListener('click', () => go('quiz', { book: b.id, unit: 'all' }));
     $all('.unit').forEach(el => el.addEventListener('click', () => {
