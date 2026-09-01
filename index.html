@@ -134,6 +134,20 @@
   .hitem.done .htxt { text-decoration: line-through; color: #aaa; }
   .hitem.done .hbtn { background: #2ec4b6; }
 
+  /* 作业本：按册/单元嵌套分组 */
+  .hwgrp { border-radius: 14px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 10px; }
+  .hwgrp.all-done { opacity: .75; }
+  .hwgrp-hd { display: flex; align-items: center; gap: 10px; padding: 13px 14px; cursor: pointer; user-select: none; }
+  .hwgrp-hd .hwarr { width: 20px; font-size: 15px; color: #999; text-align: center; flex: none; }
+  .hwgrp-hd .hg-txt { flex: 1; min-width: 0; }
+  .hwgrp-hd .hg-name { font-size: 15px; font-weight: 800; color: #555; }
+  .hwgrp-hd .hg-unit { font-size: 12px; color: #999; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hwgrp-hd .hg-prog { flex: none; font-size: 13px; font-weight: 700; color: #2ec4b6; background: #e6fbf8; border-radius: 999px; padding: 3px 10px; }
+  .hwgrp-bd { display: flex; flex-direction: column; gap: 8px; padding: 0 12px 12px; }
+  .hwgrp-bd .hitem { box-shadow: none; border: 1px solid #f0f2f4; }
+  .hwgrp-bd .htxt { display: flex; align-items: center; }
+  .hwtag { display: inline-block; background: #f1f3f5; color: #666; font-size: 12px; font-weight: 700; border-radius: 8px; padding: 3px 9px; }
+
   .statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
   .stat { background: #fff; border-radius: 16px; padding: 14px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,.06); }
   .stat .snum { font-size: 28px; font-weight: 800; color: #ff9f1c; }
