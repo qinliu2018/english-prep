@@ -132,16 +132,44 @@
     d[type] = (d[type] || 0) + 1;
     store.set(dailyKey(), d);
   }
+  // 每册的"当前重点单元"：取该书第一个尚未掌握(未达3星)且含单词的单元；
+  // 若该册全部单元都已掌握，则回落到最后一个含单词的单元做滚动复习。
+  function currentUnitOf(b) {
+    const withWords = (b.units || []).map((u, i) => u.words && u.words.length ? i : -1).filter(i => i >= 0);
+    if (!withWords.length) return -1;
+    for (let i = 0; i < withWords.length; i++) {
+      if ((store.get('stars_' + b.id + '_' + withWords[i], 0) || 0) < 3) return withWords[i];
+    }
+    return withWords[withWords.length - 1];
+  }
+  // 作业任务类型：每项在单元内的小标签与跳转 action 一一对应
+  const HW_TYPES = [
+    { action: 'review',    label: '复习单词', icon: '🔄' },
+    { action: 'quiz',      label: '测一测',   icon: '🎯' },
+    { action: 'dictation', label: '听写',     icon: '✍️' },
+    { action: 'spell',     label: '拼词',     icon: '🎮' },
+    { action: 'trace',     label: '书写',     icon: '✏️' },
+    { action: 'cloze',     label: '填空',     icon: '🧩' }
+  ];
   const homeworkList = () => {
-    if (typeof HOMEWORK !== 'undefined' && HOMEWORK.length) return HOMEWORK;
+    if (typeof HOMEWORK !== 'undefined' && HOMEWORK.length) {
+      return HOMEWORK.map(t => Object.assign({}, t, { type: t.action || 'review' }));
+    }
     const auto = [];
     BOOKS.forEach(b => {
       if (!b.ready || !b.units || !b.units.length) return;
-      const i0 = b.units.findIndex(u => u.words && u.words.length);
+      const i0 = currentUnitOf(b);
       if (i0 < 0) return;
-      auto.push({ id: 'auto_' + b.id + '_review', title: b.name + ' Unit 1 复习单词', book: b.id, unit: i0, action: 'review' });
-      auto.push({ id: 'auto_' + b.id + '_quiz', title: b.name + ' Unit 1 测一测', book: b.id, unit: i0, action: 'quiz' });
-      auto.push({ id: 'auto_' + b.id + '_dictation', title: b.name + ' Unit 1 听写', book: b.id, unit: i0, action: 'dictation' });
+      const u = b.units[i0];
+      const uname = (u.title || '').replace(/^Unit\s*\d+[\s:：]*/i, '').trim() || ('Unit ' + (i0 + 1));
+      HW_TYPES.forEach(t => {
+        if (t.action === 'cloze' && !(u.sentences || []).some(s => s.en && s.en.split(/\s+/).length >= 4)) return;
+        auto.push({
+          id: 'auto_' + b.id + '_' + i0 + '_' + t.action,
+          title: b.name + ' · ' + uname + ' ' + t.label,
+          book: b.id, unit: i0, action: t.action, type: t.action
+        });
+      });
     });
     return auto;
   };
@@ -687,6 +715,7 @@
     else if (t.action === 'dictation') go('dictation', { book: t.book, unit: t.unit });
     else if (t.action === 'spell') go('spell', { book: t.book, unit: t.unit });
     else if (t.action === 'trace') go('trace', { book: t.book, unit: t.unit });
+    else if (t.action === 'cloze') go('cloze', { book: t.book, unit: t.unit });
     else go('unit', { book: t.book, unit: t.unit, tab: t.action === 'sent' ? 'sent' : 'words', wi: 0 });
   }
   function renderHomework() {
@@ -696,30 +725,64 @@
     const empty = !list.length;
     const bk = id => BOOKS.find(x => x.id === id) || {};
     const unitTitle = (id, i) => { const b = bk(id); return b.units && b.units[i] ? b.units[i].title : ''; };
+    // 按册分组，册内按单元聚集，单元内按类型顺序
+    const groups = [];
+    list.forEach(t => {
+      let g = groups.find(x => x.book === t.book && x.unit === t.unit);
+      if (!g) {
+        g = { book: t.book, unit: t.unit, tasks: [] };
+        groups.push(g);
+      }
+      g.tasks.push(t);
+    });
+    groups.sort((a, b) => (a.book === b.book ? a.unit - b.unit : a.book.localeCompare(b.book)));
+    groups.forEach(g => {
+      g.tasks.sort((a, b) => HW_TYPES.findIndex(x => x.action === a.action) - HW_TYPES.findIndex(x => x.action === b.action));
+      g.done = g.tasks.every(t => t.done);
+      g.open = store.get('hwopen_' + g.book + '_' + g.unit, g.done ? 0 : 1) ? true : false;
+    });
+    const iconOf = a => { const x = HW_TYPES.find(t => t.action === a); return x ? x.icon : '🔘'; };
+    const labOf = a => { const x = HW_TYPES.find(t => t.action === a); return x ? x.label : a; };
+    const badgeOf = a => { const x = HW_TYPES.find(t => t.action === a); return x ? `<span class="hwtag">${x.icon} ${x.label}</span>` : ''; };
     app.innerHTML = `
       <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📋 作业本</div><div></div></div>
       <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
       ${empty ? `
-        <div class="card empty">${stage === '小学' ? '还没有配置每日作业。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>编辑 <b>HOMEWORK</b> 数组就能添加 🙂' : '这个学段还没有已录入的课本。<br>先在 <b>data.js</b> 里加好内容就行 🙂'}</div>
+        <div class="card empty">${stage === '小学' ? '还没有可安排的作业。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>编辑 <b>HOMEWORK</b> 数组就能添加 🙂' : '这个学段还没有已录入的课本。<br>先在 <b>data.js</b> 里加好内容就行 🙂'}</div>
       ` : `
         <div class="card" style="padding:14px 16px;">
           <div style="font-size:15px;font-weight:700;color:#555;margin-bottom:8px;">${dayKey(0)} · 今日任务</div>
-          <div class="hwlist2">${list.map((t, idx) => `
-            <div class="hitem${t.done ? ' done' : ''}" data-id="${esc(t.id)}">
-              <div class="hnum">${t.done ? '✓' : idx + 1}</div>
-              <div class="htxt">
-                <div>${esc(t.title)}</div>
-                <div style="font-size:12px;color:#999;font-weight:400;">${esc(bk(t.book).name || '')} · ${esc(unitTitle(t.book, t.unit))}</div>
+          <div style="font-size:12px;color:#999;margin-bottom:8px;">每册只排当前重点单元，掌握后自动推进到下一单元。</div>
+          ${groups.map(g => `
+            <div class="hwgrp${g.done ? ' all-done' : ''}">
+              <div class="hwgrp-hd" data-gk="${esc(g.book)}|${g.unit}">
+                <span class="hwarr">${g.open ? '▾' : '▸'}</span>
+                <div class="hg-txt">
+                  <div class="hg-name">${esc(bk(g.book).name || '')}</div>
+                  <div class="hg-unit">${esc(unitTitle(g.book, g.unit) || '')}</div>
+                </div>
+                <span class="hg-prog">${g.tasks.filter(t => t.done).length}/${g.tasks.length}${g.done ? ' ✓' : ''}</span>
               </div>
-              <button class="hbtn" data-act="${esc(t.id)}">${t.done ? '已完成' : '去完成'}</button>
-            </div>
-          `).join('')}</div>
+              ${g.open ? `<div class="hwgrp-bd">${g.tasks.map(t => `
+                <div class="hitem${t.done ? ' done' : ''}" data-id="${esc(t.id)}">
+                  <div class="hnum">${t.done ? '✓' : labOf(t.action)}</div>
+                  <div class="htxt">
+                    ${badgeOf(t.action)}
+                  </div>
+                  <button class="hbtn" data-act="${esc(t.id)}">${t.done ? '已完成' : '去完成'}</button>
+                </div>`).join('')}</div>` : ''}
+            </div>`).join('')}
         </div>
-        <div class="tip">留空 HOMEWORK 时，按每本已录入课本的 Unit 1 自动生成复习/测一测/听写。<br>测验 / 听写完成后会自动打勾，每天自动重置。</div>
+        <div class="tip">点某项完成；点图标行可打勾。<br>自动生成的作业按每册当前单元推进，每天自动重置。</div>
       `}`;
     $('#bk').addEventListener('click', () => go('home'));
     $all('.stab').forEach(el => el.addEventListener('click', () => go('homework', { stage: el.dataset.stage })));
     if (!empty) {
+      $all('.hwgrp-hd').forEach(hd => hd.addEventListener('click', () => {
+        const [b, u] = hd.dataset.gk.split('|');
+        store.set('hwopen_' + b + '_' + u, (store.get('hwopen_' + b + '_' + u, 1) ? 0 : 1));
+        renderHomework();
+      }));
       $all('.hitem').forEach(el => el.addEventListener('click', e => {
         if (e.target.closest('.hbtn')) return;
         toggleHomework(el.dataset.id); renderHomework();
