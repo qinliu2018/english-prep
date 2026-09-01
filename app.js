@@ -765,7 +765,7 @@
               </div>
               ${g.open ? `<div class="hwgrp-bd">${g.tasks.map(t => `
                 <div class="hitem${t.done ? ' done' : ''}" data-id="${esc(t.id)}">
-                  <div class="hnum">${t.done ? '✓' : labOf(t.action)}</div>
+                  <div class="hnum">${t.done ? '✓' : ''}</div>
                   <div class="htxt">
                     ${badgeOf(t.action)}
                   </div>
