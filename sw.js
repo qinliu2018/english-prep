@@ -2,7 +2,7 @@
    部署到 HTTPS 后，平板"添加到主屏幕"即可离线使用：不开电脑、没网也能照常学习。
    策略：网络优先——在线时总能拿到最新内容，离线时用上次缓存。 */
 
-const CACHE = 'eng-prep-v2';
+const CACHE = 'eng-prep-v3';
 const ASSETS = ['./', './index.html', './app.js', './data.js', './vocab.js', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
