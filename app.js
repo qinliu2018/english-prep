@@ -448,7 +448,10 @@
       <div class="card wordcard" id="wcard">
         <div class="emoji">${esc(w.emoji || '🔤')}</div>
         <div class="wen">${esc(w.en)}</div>
+        ${w.ph ? `<div class="wph">${esc(w.ph)}</div>` : ''}
         <div class="wzh">${esc(w.zh)}</div>
+        ${(w.coll && w.coll.length) ? `<div class="wlists"><div class="wltitle">短语</div>${w.coll.map(c => `<span class="wchip">${esc(c)}</span>`).join('')}</div>` : ''}
+        ${(w.syn && w.syn.length) ? `<div class="wlists"><div class="wltitle">同义词</div>${w.syn.map(s => `<span class="wchip">${esc(s)}</span>`).join('')}</div>` : ''}
         ${w.ex ? `<div class="wex"><button class="mini" id="exBtn">🔊 ${esc(w.ex)}</button></div>` : ''}
         <div class="counter">${i + 1} / ${ws.length} · 点卡片听发音</div>
       </div>
