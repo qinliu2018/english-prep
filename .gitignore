@@ -1,0 +1,16 @@
+# 数据文件的手工备份（data.js.bak / data.js.bak2 / _data_test_copy.js.bak 等）
+*.bak
+*.bak[0-9]
+
+# AI 助手/工具产生的状态目录
+.workbuddy/
+.pdfprev/
+
+# 与站点无关的草稿
+公众号文章.html
+公众号文章.md
+
+# 系统杂物
+Thumbs.db
+.DS_Store
+desktop.ini
