@@ -1,7 +1,7 @@
 {
   "name": "英语预习小助手",
   "short_name": "英语预习",
-  "description": "苏教版小学英语课前预习小工具",
+  "description": "译林版英语预习复习小工具（小学·初中）",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
