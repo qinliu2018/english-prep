@@ -139,8 +139,9 @@
     d[type] = (d[type] || 0) + 1;
     store.set(dailyKey(), d);
   }
-  // 每册的"当前重点单元"：取该书第一个尚未掌握(未达3星)且含单词的单元；
+  // 每册的"当前在学单元"：取该书第一个尚未掌握(未达3星)且含单词的单元；
   // 若该册全部单元都已掌握，则回落到最后一个含单词的单元做滚动复习。
+  // 作业板用它把在学单元置顶（进度仍由课堂决定，孩子自己往下做）。
   function currentUnitOf(b) {
     const withWords = (b.units || []).map((u, i) => u.words && u.words.length ? i : -1).filter(i => i >= 0);
     if (!withWords.length) return -1;
@@ -192,21 +193,23 @@
     const auto = [];
     targets.forEach(b => {
       if (!b.ready || !b.units || !b.units.length) return;
-      const i0 = currentUnitOf(b);
-      if (i0 < 0) return;
-      const u = b.units[i0];
-      const uname = (u.title || '').replace(/^Unit\s*\d+[\s:：]*/i, '').trim() || ('Unit ' + (i0 + 1));
-      let picked = 0;
-      for (let k = 0; k < order.length && picked < daily; k++) {
-        const t = order[k];
-        if (t.action === 'cloze' && !(u.sentences || []).some(s => s.en && s.en.split(/\s+/).length >= 4)) continue;
-        auto.push({
-          id: 'auto_' + b.id + '_' + i0 + '_' + t.action,
-          title: b.name + ' · ' + uname + ' ' + t.label,
-          book: b.id, unit: i0, action: t.action, type: t.action
-        });
-        picked++;
-      }
+      // 整本书都排上作业板：每单元 ≤daily 项，题型全局同一天一致、天天轮换；
+      // 单元进度由孩子自己推——做到哪个单元、做几项，由「去完成」和打勾决定。
+      b.units.forEach((u, i0) => {
+        if (!u.words || !u.words.length) return;
+        const uname = (u.title || '').replace(/^Unit\s*\d+[\s:：]*/i, '').trim() || ('Unit ' + (i0 + 1));
+        let picked = 0;
+        for (let k = 0; k < order.length && picked < daily; k++) {
+          const t = order[k];
+          if (t.action === 'cloze' && !(u.sentences || []).some(s => s.en && s.en.split(/\s+/).length >= 4)) continue;
+          auto.push({
+            id: 'auto_' + b.id + '_' + i0 + '_' + t.action,
+            title: b.name + ' · ' + uname + ' ' + t.label,
+            book: b.id, unit: i0, action: t.action, type: t.action
+          });
+          picked++;
+        }
+      });
     });
     return auto;
   };
@@ -235,6 +238,12 @@
     if (!list.length) return { done: 0, total: 0 };
     const done = list.filter(t => t.done).length;
     return { done, total: list.length };
+  }
+  // 今天轮到哪几类题型（全册统一，用于首页展示）
+  function todayHwLabels() {
+    const acts = {};
+    homeworkList().forEach(t => { acts[t.action] = 1; });
+    return HW_TYPES.filter(t => acts[t.action]).map(t => t.label);
   }
 
   /* ---------------- 学习报告数据 ---------------- */
@@ -330,7 +339,7 @@
         <div class="card hwcard" id="hwCard">
           <div class="hwinfo">
             <div class="hwtit">📋 今日作业</div>
-            <div class="hwsub">${hw.done === hw.total ? '全部完成！太棒了' : '还有 ' + (hw.total - hw.done) + ' 项未完成'}</div>
+            <div class="hwsub">${hw.done === hw.total ? '全部完成！太棒了' : '今日题型：' + todayHwLabels().join(' · ')}</div>
           </div>
           <div class="hwprog">${hw.done}/${hw.total}</div>
         </div>` : ''}
@@ -763,7 +772,7 @@
     app.innerHTML = `
       <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📚 学习规划</div><div class="streak">已选 ${sel.length} 册</div></div>
       <div class="card" style="padding:14px 16px;font-size:14px;color:#666;line-height:1.8;">
-        勾上孩子<b>正在学</b>的课本，「今日作业」每天只为这些册自动出题（每册最多 ${hwDaily()} 项，题型天天轮换）。<br>
+        勾上孩子<b>正在学</b>的课本，「今日作业」自动把这些册的单元排上作业板（每单元最多 ${hwDaily()} 项，题型天天轮换，按课堂进度往下做）。<br>
         <span style="color:#999;">当前在学：${selNames.length ? esc(selNames.join('、')) : '还没选课本'}</span>
       </div>
       <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
@@ -817,7 +826,14 @@
       }
       g.tasks.push(t);
     });
-    groups.sort((a, b) => (a.book === b.book ? a.unit - b.unit : a.book.localeCompare(b.book)));
+    // 册内排序：当前在学单元（第一个未掌握）置顶，其余按单元顺序；方便先做课堂进度那一组
+    const curOf = {};
+    groups.forEach(g => { if (!(g.book in curOf)) { const b = book(g.book); if (b) curOf[g.book] = currentUnitOf(b); } });
+    groups.sort((a, b) => {
+      if (a.book !== b.book) return a.book.localeCompare(b.book);
+      const pa = a.unit === curOf[a.book] ? -1 : 0, pb = b.unit === curOf[b.book] ? -1 : 0;
+      return pa !== pb ? pa - pb : a.unit - b.unit;
+    });
     groups.forEach(g => {
       g.tasks.sort((a, b) => HW_TYPES.findIndex(x => x.action === a.action) - HW_TYPES.findIndex(x => x.action === b.action));
       g.done = g.tasks.every(t => t.done);
@@ -838,7 +854,7 @@
             <span style="font-size:15px;font-weight:700;color:#555;">${dayKey(0)} · 今日任务</span>
             <button class="mini" id="editStudy">📚 换课本</button>
           </div>
-          <div style="font-size:12px;color:#999;margin-bottom:8px;">每册最多 ${hwDaily()} 项，题型按天轮换；作业只排在每册当前重点单元，掌握后自动推进。</div>
+          <div style="font-size:12px;color:#999;margin-bottom:8px;">整册单元都排在板上，每单元最多 ${hwDaily()} 项、题型天天轮换；置顶的是当前在学单元，按课堂进度往下做即可。</div>
           ${groups.map(g => `
             <div class="hwgrp${g.done ? ' all-done' : ''}">
               <div class="hwgrp-hd" data-gk="${esc(g.book)}|${g.unit}">
