@@ -2,7 +2,7 @@
    部署到 HTTPS 后，平板"添加到主屏幕"即可离线使用：不开电脑、没网也能照常学习。
    策略：网络优先——在线时总能拿到最新内容，离线时用上次缓存。 */
 
-const CACHE = 'eng-prep-v3';
+const CACHE = 'eng-prep-v4';
 const ASSETS = ['./', './index.html', './app.js', './data.js', './vocab.js', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -23,11 +23,16 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  let url;
+  try { url = new URL(e.request.url); } catch (err) { return; }
+  if (url.origin !== self.location.origin) return; // 只接管同源请求，避免把 404/跨域响应写进缓存
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+        }
         return res;
       })
       .catch(() => caches.match(e.request).then(hit => hit || caches.match('./index.html')))
