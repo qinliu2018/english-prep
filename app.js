@@ -72,6 +72,12 @@
     const d = new Date(Date.now() - (off || 0) * 86400000);
     return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
   };
+  // 把 'YYYY-M-D' 转成可比较的整数（YYYYMMDD）。dayKey 不补零，
+  // 直接字符串比较日期会在 9/10 月、个位/十位日子之间出错。
+  const dayNum = s => {
+    const m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s || '');
+    return m ? (+m[1]) * 10000 + (+m[2]) * 100 + (+m[3]) : 0;
+  };
   function streakDays() {
     const s = store.get('streak', { last: '', days: 0 });
     if (s.last !== dayKey(0)) {
@@ -107,6 +113,7 @@
     else if (view.name === 'trace') renderTrace();
     else if (view.name === 'cloze') renderCloze();
     else if (view.name === 'review') renderReview();
+    else if (view.name === 'study') renderStudy();
   }
 
   /* ---------------- 数据 ---------------- */
@@ -151,25 +158,55 @@
     { action: 'trace',     label: '书写',     icon: '✏️' },
     { action: 'cloze',     label: '填空',     icon: '🧩' }
   ];
+  const hwPlan = () => (typeof HW_PLAN !== 'undefined' && HW_PLAN) || {};
+  const hwDaily = () => Math.max(1, Math.min(HW_TYPES.length, hwPlan().daily || 3));
+  // 在学课本：App 内「学习规划」勾选优先；没勾过则用 data.js 里 HW_PLAN.books 的默认值
+  function studyBookIds() {
+    const saved = store.get('study', null);
+    if (Array.isArray(saved)) return saved;
+    const b = hwPlan().books;
+    return (b && b.slice()) || [];
+  }
+  function toggleStudy(id) {
+    const cur = studyBookIds().slice();
+    const i = cur.indexOf(id);
+    if (i >= 0) cur.splice(i, 1); else cur.push(id);
+    store.set('study', cur);
+  }
   const homeworkList = () => {
     if (typeof HOMEWORK !== 'undefined' && HOMEWORK.length) {
       return HOMEWORK.map(t => Object.assign({}, t, { type: t.action || 'review' }));
     }
+    const plan = hwPlan();
+    const daily = hwDaily();
+    let types = HW_TYPES;
+    if (plan.types && plan.types.length) {
+      const picked = HW_TYPES.filter(t => plan.types.indexOf(t.action) >= 0);
+      if (picked.length) types = picked;
+    }
+    // 以"当天日期整数"为题型起点做轮换：每天不同、当天内稳定（重复打开不会换题）
+    const off = dayNum(dayKey(0)) % types.length;
+    const order = types.slice(off).concat(types.slice(0, off));
+    const sel = studyBookIds();
+    const targets = BOOKS.filter(b => sel.indexOf(b.id) >= 0);
     const auto = [];
-    BOOKS.forEach(b => {
+    targets.forEach(b => {
       if (!b.ready || !b.units || !b.units.length) return;
       const i0 = currentUnitOf(b);
       if (i0 < 0) return;
       const u = b.units[i0];
       const uname = (u.title || '').replace(/^Unit\s*\d+[\s:：]*/i, '').trim() || ('Unit ' + (i0 + 1));
-      HW_TYPES.forEach(t => {
-        if (t.action === 'cloze' && !(u.sentences || []).some(s => s.en && s.en.split(/\s+/).length >= 4)) return;
+      let picked = 0;
+      for (let k = 0; k < order.length && picked < daily; k++) {
+        const t = order[k];
+        if (t.action === 'cloze' && !(u.sentences || []).some(s => s.en && s.en.split(/\s+/).length >= 4)) continue;
         auto.push({
           id: 'auto_' + b.id + '_' + i0 + '_' + t.action,
           title: b.name + ' · ' + uname + ' ' + t.label,
           book: b.id, unit: i0, action: t.action, type: t.action
         });
-      });
+        picked++;
+      }
     });
     return auto;
   };
@@ -218,7 +255,7 @@
     const arr = [];
     for (let i = 6; i >= 0; i--) {
       const d = store.get('daily_' + dayKey(i), { quiz: 0, dictation: 0, spell: 0, trace: 0, cloze: 0, review: 0 });
-      arr.push({ date: dayKey(i), total: (d.quiz || 0) + (d.dictation || 0) + (d.spell || 0) + (d.trace || 0) });
+      arr.push({ date: dayKey(i), total: (d.quiz || 0) + (d.dictation || 0) + (d.spell || 0) + (d.trace || 0) + (d.cloze || 0) + (d.review || 0) });
     }
     return arr;
   }
@@ -237,15 +274,16 @@
     it.reviewed = (it.reviewed || 0) + 1;
     it.en = en; it.zh = zh; it.type = type;
     if (rating === 'forget') { it.box = 0; it.dueDate = dayKey(0); }
-    else if (rating === 'unsure') { it.box = 1; it.dueDate = dayKey(1); }
-    else { it.box = Math.min((it.box || 0) + 1, 5); it.dueDate = dayKey(REVIEW_INTERVALS[it.box]); }
+    else if (rating === 'unsure') { it.box = 1; it.dueDate = dayKey(-1); }
+    // dayKey(off) 是"off 天前"，安排未来的到期日要传负数
+    else { it.box = Math.min((it.box || 0) + 1, 5); it.dueDate = dayKey(-REVIEW_INTERVALS[it.box]); }
     m[key] = it;
     store.set('review', m);
   }
   function reviewDue() {
     const m = store.get('review', {});
-    const today = dayKey(0);
-    return Object.keys(m).filter(k => m[k].dueDate <= today).map(k => Object.assign({ key: k }, m[k]));
+    const today = dayNum(dayKey(0));
+    return Object.keys(m).filter(k => dayNum(m[k].dueDate) <= today).map(k => Object.assign({ key: k }, m[k]));
   }
   function reviewDueCount() { return reviewDue().length; }
   function rateSectionHtml(items, type) {
@@ -312,6 +350,7 @@
         <button class="tool" id="toolTrace"${stageReady ? '' : ' disabled'}><span class="ticon">✏️</span>书写</button>
         <button class="tool" id="toolCloze"${stageReady ? '' : ' disabled'}><span class="ticon">🧩</span>填空</button>
         <button class="tool" id="toolReview"><span class="ticon">🔄</span>复习${reviewDueCount() ? '<span class="badge">' + reviewDueCount() + '</span>' : ''}</button>
+        <button class="tool" id="toolStudy"><span class="ticon">📚</span>学习规划</button>
       </div>
       ${wrong.length ? `<button class="btn wrongbtn" id="wrongBtn">📒 错题本（${wrong.length} 个词）</button>` : ''}
       <div class="tip">点单词卡、课文句子即可发音<br>在微信里打开若没有声音，请点右上角「···」→ 在浏览器打开</div>`;
@@ -328,6 +367,7 @@
       $('#toolCloze').addEventListener('click', () => go('pickbook', { mode: 'cloze', stage }));
     }
     $('#toolReview').addEventListener('click', () => go('review'));
+    $('#toolStudy').addEventListener('click', () => go('study', { stage }));
   }
 
   /* ---------------- 选择课本（工具栏工具入口） ---------------- */
@@ -372,9 +412,12 @@
         </div>` : ''}
       <div class="list">${b.units.map((u, i) => {
         const st = store.get('stars_' + b.id + '_' + i, 0);
-        return `<button class="unit" data-i="${i}">
+        let dis = '';
+        if (mode === 'cloze') dis = (u.sentences || []).some(s => s.en && s.en.split(/\s+/).length >= 4) ? '' : ' disabled';
+        else if (mode) dis = (u.words && u.words.length) ? '' : ' disabled';
+        return `<button class="unit" data-i="${i}"${dis}>
           <span>${esc(u.title)}</span>
-          <span class="stars">${st ? '⭐'.repeat(st) + '☆'.repeat(3 - st) : '未测试'}</span>
+          <span class="stars">${st ? '⭐'.repeat(st) + '☆'.repeat(3 - st) : (dis ? '无内容' : '未测试')}</span>
         </button>`;
       }).join('')}
       </div>`;
@@ -710,10 +753,46 @@
     const wq = $('#wquiz'); if (wq) wq.addEventListener('click', () => go('quiz', { book: 'wrong' }));
   }
 
+  /* ---------------- 学习规划（勾选在学的册，作业只为这些册生成） ---------------- */
+  function renderStudy() {
+    const stage = view.stage || '小学';
+    const sel = studyBookIds();
+    const ready = BOOKS.filter(b => b.ready);
+    const inStage = ready.filter(b => stageOf(b.id) === stage);
+    const selNames = ready.filter(b => sel.indexOf(b.id) >= 0).map(b => b.name);
+    app.innerHTML = `
+      <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📚 学习规划</div><div class="streak">已选 ${sel.length} 册</div></div>
+      <div class="card" style="padding:14px 16px;font-size:14px;color:#666;line-height:1.8;">
+        勾上孩子<b>正在学</b>的课本，「今日作业」每天只为这些册自动出题（每册最多 ${hwDaily()} 项，题型天天轮换）。<br>
+        <span style="color:#999;">当前在学：${selNames.length ? esc(selNames.join('、')) : '还没选课本'}</span>
+      </div>
+      <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
+      <div class="list">${inStage.length ? inStage.map(b => {
+        const on = sel.indexOf(b.id) >= 0;
+        const wc = (b.units || []).reduce((n, u) => n + ((u.words || []).length), 0);
+        return `<button class="unit${on ? ' sel' : ''}" data-book="${b.id}">
+          <span style="display:flex;align-items:center;gap:10px;min-width:0;">
+            <span class="ucheck">${on ? '✓' : ''}</span>
+            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(b.name)}<span style="font-size:12px;color:#999;font-weight:400;"> · ${wc} 词</span></span>
+          </span>
+          <span class="stars">${on ? '在学' : ''}</span>
+        </button>`;
+      }).join('') : '<div class="card empty">这个学段还没有已录入的课本</div>'}
+      </div>
+      <div class="tip">勾选/取消立即保存，只影响作业，不影响首页浏览课本</div>
+      <button class="btn ghost big" id="goHw" style="margin-top:10px;">📋 去看今日作业</button>`;
+    $('#bk').addEventListener('click', () => go('home'));
+    $all('.stab').forEach(el => el.addEventListener('click', () => go('study', { stage: el.dataset.stage })));
+    $all('.unit[data-book]').forEach(el => el.addEventListener('click', () => { toggleStudy(el.dataset.book); renderStudy(); }));
+    $('#goHw').addEventListener('click', () => go('homework'));
+  }
+
   /* ---------------- 作业本 ---------------- */
   function doHomeworkTask(id) {
     const t = homeworkList().find(x => x.id === id); if (!t) return;
-    markHomeworkDone(id);
+    // 有完成态的练习（做完结果页会自动打勾）点击时不提前打勾；
+    // 单词卡/跟读/书写这类无结果页的动作，点开即视为完成。
+    if (['quiz', 'dictation', 'spell', 'cloze'].indexOf(t.action) < 0) markHomeworkDone(id);
     if (t.action === 'quiz') go('quiz', { book: t.book, unit: t.unit });
     else if (t.action === 'dictation') go('dictation', { book: t.book, unit: t.unit });
     else if (t.action === 'spell') go('spell', { book: t.book, unit: t.unit });
@@ -751,11 +830,15 @@
       <div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">📋 作业本</div><div></div></div>
       <div class="stagetabs">${['小学', '初中', '高中'].map(s => `<button class="stab${s === stage ? ' active' : ''}" data-stage="${s}">${s}</button>`).join('')}</div>
       ${empty ? `
-        <div class="card empty">${stage === '小学' ? '还没有可安排的作业。<br><br>让爸爸妈妈打开 <b>data.js</b>，<br>编辑 <b>HOMEWORK</b> 数组就能添加 🙂' : '这个学段还没有已录入的课本。<br>先在 <b>data.js</b> 里加好内容就行 🙂'}</div>
+        <div class="card empty" style="padding:30px 20px;">这个学段还没选在学的课本。<br><br>
+          <button class="btn" id="pickStudy">📚 选课本，排今日作业</button></div>
       ` : `
         <div class="card" style="padding:14px 16px;">
-          <div style="font-size:15px;font-weight:700;color:#555;margin-bottom:8px;">${dayKey(0)} · 今日任务</div>
-          <div style="font-size:12px;color:#999;margin-bottom:8px;">每册只排当前重点单元，掌握后自动推进到下一单元。</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:15px;font-weight:700;color:#555;">${dayKey(0)} · 今日任务</span>
+            <button class="mini" id="editStudy">📚 换课本</button>
+          </div>
+          <div style="font-size:12px;color:#999;margin-bottom:8px;">每册最多 ${hwDaily()} 项，题型按天轮换；作业只排在每册当前重点单元，掌握后自动推进。</div>
           ${groups.map(g => `
             <div class="hwgrp${g.done ? ' all-done' : ''}">
               <div class="hwgrp-hd" data-gk="${esc(g.book)}|${g.unit}">
@@ -776,10 +859,12 @@
                 </div>`).join('')}</div>` : ''}
             </div>`).join('')}
         </div>
-        <div class="tip">点某项完成；点图标行可打勾。<br>自动生成的作业按每册当前单元推进，每天自动重置。</div>
+        <div class="tip">测一测 / 听写 / 拼词 / 填空做完自动打勾；其余项目点整行可打勾。<br>在学的课本点右上角「📚 换课本」调整；作业每天自动生成、自动重置，题型天天轮换不重样。</div>
       `}`;
     $('#bk').addEventListener('click', () => go('home'));
     $all('.stab').forEach(el => el.addEventListener('click', () => go('homework', { stage: el.dataset.stage })));
+    const ps = $('#pickStudy'); if (ps) ps.addEventListener('click', () => go('study', { stage }));
+    const es = $('#editStudy'); if (es) es.addEventListener('click', () => go('study', { stage }));
     if (!empty) {
       $all('.hwgrp-hd').forEach(hd => hd.addEventListener('click', () => {
         const [b, u] = hd.dataset.gk.split('|');
@@ -984,11 +1069,18 @@
     const ans = slots.map(s => s.c).join('');
     const target = w.en.replace(/[^a-zA-Z]/g, '').toLowerCase();
     if (ans === target) {
-      view.sok++; view.smsg = '拼对啦！';
+      view.sok++; view.smsg = '拼对啦！'; view.strie = 0;
       try { speak('Great job!', 1); } catch (e) {}
       setTimeout(() => { view.si++; view.sslots = []; view.smsg = ''; renderSpellGame(); }, 900);
     } else {
-      view.smsg = '再试试～'; speak(w.en, playRate());
+      view.strie = (view.strie || 0) + 1;
+      if (view.strie >= 2 && !view.swr.some(x => x.en === w.en)) {
+        view.swr.push(w); addWrong(w);
+        view.smsg = '错两次啦，已记进错题本，再想想～';
+      } else {
+        view.smsg = '再试试～';
+      }
+      speak(w.en, playRate());
     }
     renderSpellGame();
   }
@@ -997,18 +1089,21 @@
     const pct = total ? Math.round(ok / total * 100) : 0;
     logActivity('spell');
     autoMarkHomework(view.book, view.unit, 'spell');
+    const swrs = view.swr || [];
     app.innerHTML = `
       <div class="card result">
         <div class="remoji">${pct >= 90 ? '🏆' : pct >= 60 ? '💪' : '🌱'}</div>
         <div class="rscore">${pct} 分</div>
-        <div class="tip">拼对 ${ok} / ${total}</div>
+        <div class="tip">拼对 ${ok} / ${total}${swrs.length ? '，错两次的词已加入错题本' : ''}</div>
+        ${swrs.length ? `<div class="wlist">${swrs.map(w => `<button class="mini" data-en="${esc(w.en)}">🔊 ${esc(w.en)} · ${esc(w.zh)}</button>`).join('')}</div>` : ''}
         <div class="row">
           <button class="btn" id="again">🔁 再来一次</button>
           <button class="btn ghost" id="back">返回</button>
         </div>
       </div>`;
-    $('#again').addEventListener('click', () => { view.si = 0; view.sok = 0; view.swr = []; view.sslots = []; view.smsg = ''; renderSpellGame(); });
+    $('#again').addEventListener('click', () => { view.si = 0; view.sok = 0; view.swr = []; view.sslots = []; view.smsg = ''; view.strie = 0; renderSpellGame(); });
     $('#back').addEventListener('click', () => go('unit', { book: view.book, unit: view.unit }));
+    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
   }
 
   /* ---------------- 书写练习 ---------------- */
@@ -1156,7 +1251,15 @@
     $all('.hole').forEach(function (el) {
       el.addEventListener('click', function () { picks[+el.dataset.h] = null; renderCloze(); });
     });
-    const chk = $('#check'); if (chk) chk.addEventListener('click', function () { view.cchecked = true; renderCloze(); });
+    const chk = $('#check'); if (chk) chk.addEventListener('click', function () {
+      if (!q.scored) {
+        q.scored = true;
+        const allRight = q.holes.every(function (h) { return String(picks[h.k] || '').toLowerCase() === h.word; });
+        if (allRight) view.cok++;
+        else view.cwr.push({ en: q.en, zh: q.zh });
+      }
+      view.cchecked = true; renderCloze();
+    });
     const nx = $('#next'); if (nx) nx.addEventListener('click', function () { view.cqi++; view.cchecked = false; view.cpicks = null; renderCloze(); });
     const ag = $('#again'); if (ag) ag.addEventListener('click', function () { view.cchecked = false; view.cpicks = q.holes.map(function () { return null; }); renderCloze(); });
   }
@@ -1165,23 +1268,29 @@
     const pct = total ? Math.round(ok / total * 100) : 0;
     logActivity('cloze');
     autoMarkHomework(view.book, view.unit, 'cloze');
+    const cwrs = view.cwr || [];
     const citems = view.cqs.map(q => ({ en: q.en, zh: q.zh }));
     app.innerHTML =
       '<div class="card result">' +
         '<div class="remoji">' + (pct >= 90 ? '🏆' : pct >= 60 ? '💪' : '🌱') + '</div>' +
         '<div class="rscore">' + pct + ' 分</div>' +
-        '<div class="tip">填空正确 ' + ok + ' / ' + total + ' 句</div>' +
+        '<div class="tip">填空正确 ' + ok + ' / ' + total + ' 句' + (cwrs.length ? '，错的句子可点 🔊 多听几遍' : '') + '</div>' +
+        (cwrs.length ? `<div class="wlist">${cwrs.map(w => `<button class="mini" data-en="${esc(w.en)}" style="white-space:normal;">🔊 ${esc(w.en)}</button>`).join('')}</div>` : '') +
         rateSectionHtml(citems, 'sent') +
         '<div class="row"><button class="btn" id="again">🔁 再来一次</button><button class="btn ghost" id="back">返回</button></div>' +
       '</div>';
     $('#again').addEventListener('click', function () { view.cqi = null; renderCloze(); });
     $('#back').addEventListener('click', function () { go('unit', { book: view.book, unit: view.unit, tab: 'sent' }); });
+    $all('[data-en]').forEach(el => el.addEventListener('click', () => speak(el.dataset.en, playRate())));
     bindRateSection();
   }
 
   /* ---------------- 复习中心 ---------------- */
   function renderReview() {
-    const due = reviewDue();
+    // 进入复习时快照待复习清单：评分后不再重算列表，避免索引错位漏项；
+    // 评为"忘了"的项排到队尾，本轮再给一次机会。
+    if (!view.dueItems) view.dueItems = reviewDue();
+    const due = view.dueItems;
     if (!due.length) {
       app.innerHTML =
         '<div class="topbar"><button class="back" id="bk">⬅️</button><div class="title">🔄 复习</div><div></div></div>' +
@@ -1214,7 +1323,9 @@
     const rb = $('#rb');
     $all('button', rb).forEach(b => b.addEventListener('click', () => {
       rateReview(it.type, it.en, it.zh || '', b.dataset.r);
-      view.ri++; renderReview();
+      view.ri++;
+      if (b.dataset.r === 'forget') view.dueItems.push(it);
+      renderReview();
     }));
   }
   function renderReviewDone(n) {
@@ -1230,6 +1341,10 @@
   }
 
   /* ---------------- 启动 ---------------- */
+  if (typeof BOOKS === 'undefined' || !Array.isArray(BOOKS) || !BOOKS.length) {
+    app.innerHTML = '<div class="warn" style="margin-top:40px;">⚠️ 内容数据（data.js）加载失败，请检查网络后刷新重试。</div>';
+    return;
+  }
   /* 部署到 HTTPS 后自动启用离线缓存（本地局域网 http 下跳过，不影响现状） */
   if ('serviceWorker' in navigator &&
       (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
